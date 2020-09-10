@@ -1,4 +1,4 @@
-NOTE: this entire repository was created by Wilson X Guillory (wxgillo), see his page for the most up-to-date. 
+NOTE: this entire repository was created by Wilson X Guillory (wxgillo).
 
 # brownlab-workflow
 This is a tutorial for the phylogenomic workflow used by the Brown lab, where we use [UCEs](https://www.ultraconserved.org/) to uncover evolutionary histories, mostly in Neotropical poison frogs (Dendrobatidae). In this tutorial I provide sample data and take you through the steps of read processing, sequence assembly, read-to-locus matching, and sequence alignment, and finally provide a few examples of phylogenetic analyses that can be performed on UCE data.
@@ -232,6 +232,8 @@ for i in *; \
    do echo $i":/home/bender/Desktop/tutorial/2_clean-fastq/"$i"/split-adapter-quality-trimmed/"; \
    done >> ../assembly.conf
 ```
+**JLB Note 4/2020:** Be sure to change your computer name.  In the code above it is 'bender', you can find this by looking at Terminal window- in the green text before the "@" is the computer name.  Also be sure to check the assembly.conf file.  Sometimes the last line is not correct and will make it appear that the code ran incorrectly. 
+
 The first command moves you into the `2_clean-fastq` directory, and the second initiates a text file with the `[samples]` header. The third command is a `for` loop that prints out the name of each sample (represented by `$i`), followed by a colon and lastly the file path to the `split-adapter-quality-trimmed` folder inside of each sample's individual folder. The `split-adapter-quality-trimmed` folders contain .fastq.gz files with the trimmed reads. The assembler needs to know the location of each of these folders for each sample.
 
 Bash tips:
