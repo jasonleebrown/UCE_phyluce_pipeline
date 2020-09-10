@@ -173,7 +173,7 @@ illumiprocessor \
     --r2 _R2 \
     --cores 19
  ```
-**Update JLB 8/2020**: Here is another version of this command that works if you are getting "Errno 8- Exec format error" after executing CHMOD.  Note that trimmomatic is already installed within Phyluce.  The only reason to use the above code specifying Trimmomatic is if you do not want to updated Phyluce and want to use the latest version of Trimmomatic (check version by going to "Home\anaconda2\envs\phyluce\share\trimmomatic-0.39-1\")
+**Update JLB 8/2020**: Here is another version of this command that works if you are getting "Errno 8- Exec format error" after executing CHMOD.  Note that trimmomatic is already installed within Phyluce.  The only reason to use the above code specifying Trimmomatic is if you do not want to updated Phyluce and want to use the latest version of Trimmomatic (check version by going to "Home\anaconda2\envs\phyluce\share\trimmomatic-0.3**XX**\", where **XX** is the version number).
 
 ```
 illumiprocessor \
