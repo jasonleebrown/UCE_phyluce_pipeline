@@ -187,6 +187,8 @@ illumiprocessor \
  
 >*Note that a \ backslash in Bash "escapes" the next character. In this particular command, the backslashes are escaping the invisible \n newline character, so that each argument can be written on a separate line for visual clarity. The entire command is generally written on a single line, but this becomes hard to read as arguments are added.*
 
+>*JLB Note: If you have any error and are prompted to input "Y/n", remember "Y" is capitalized and "n" is lower case ---else the command will error out.*
+
 You will see that most of the commands we use will be structured in this way. Here is how the command is structured (future commands will not be explained in such detail):
 - `--input` requires the input folder containing the raw .fastq.gz files (in this case `1_raw-fastq`)
 - `--output` is the name of the output folder, to be created. Note that we are following the aforementioned numbering structure. If the folder already exists, Illumiprocessor will ask if you want to overwrite it.
