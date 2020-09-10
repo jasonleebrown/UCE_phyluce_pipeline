@@ -160,7 +160,9 @@ Essentially the first step is to copy and paste the entire sample sheet, wholesa
 
 Just copy the different sections of the spreadsheet into a text file, and your configuration should be ready to go.
 ### Running Illumiprocessor
-This is the part where things generally go horribly, woefully wrong. I don't think I've ever run this command and had it work the first time. That's because the configuration file needs to be exactly, perfectly correct, which is difficult to do with large numbers of samples. I include a "troubleshooting" section after this one that lists some of the common problems. Here is the command to be used in this particular case:
+This is the part where things generally go horribly, woefully wrong. I don't think I've ever run this command and had it work the first time. That's because the configuration file needs to be exactly, perfectly correct, which is difficult to do with large numbers of samples. I include a "troubleshooting" section after this one that lists some of the common problems. 
+
+Here is the command to be used in this particular case:
 ```
 illumiprocessor \
     --input 1_raw-fastq \
@@ -171,6 +173,18 @@ illumiprocessor \
     --r2 _R2 \
     --cores 19
  ```
+**Update JLB 8/2020**: Here is another version of this command that works if you are getting "Errno 8- Exec format error" after executing CHMOD.  Note that trimmomatic is already installed within Phyluce.  The only reason to use the above code specifying Trimmomatic is if you do not want to updated Phyluce and want to use the latest version of Trimmomatic (check version by going to "Home\anaconda2\envs\phyluce\share\trimmomatic-0.39-1\")
+
+```
+illumiprocessor \
+    --input 1_raw-fastq \
+    --output 2_clean-fastq \
+    --config illumiprocessor.conf \
+    --r1 _R1 \
+    --r2 _R2 \
+    --cores 4
+ ```
+ 
 >*Note that a \ backslash in Bash "escapes" the next character. In this particular command, the backslashes are escaping the invisible \n newline character, so that each argument can be written on a separate line for visual clarity. The entire command is generally written on a single line, but this becomes hard to read as arguments are added.*
 
 You will see that most of the commands we use will be structured in this way. Here is how the command is structured (future commands will not be explained in such detail):
