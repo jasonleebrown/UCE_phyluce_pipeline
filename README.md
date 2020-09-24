@@ -280,7 +280,7 @@ AbassJB010n1-0182-ABIC_trinity      AhahnJLB17-087-0586-AFIG_trinity  contigs
 AbassJLB07-740-1-0189-ABIJ_trinity  ApeteJLB07-001-0008-AAAI_trinity
 AflavMTR19670-0522-AFCC_trinity     AtrivJMP26720-0524-AFCE_trinity
 ```
-**JLB Note 8/2020:** This is the longest step.  I suggest for the tutorial that you run only 1 or 2 samples.  To do this edit your 'conf.assembly' file in basic text editor removing all but a few samples.  If this process work with your data, I suggest you download the all the assembled files from [here](https://u.pcloud.link/publink/show?code=XZsHyJXZR6gC4LBHdrFjCfkJSp4AdYY528Rk) for use for the remaining tutorial.
+**JLB Note 8/2020:** This is the longest step.  I suggest for going through this tutorial that you run only 1 or 2 samples. To do this, edit your 'conf.assembly' file in basic text editor amd remove all but a few samples.  If - or when - this works for you with no issues, I then suggest you download the other assembled files from [here](https://u.pcloud.link/publink/show?code=XZsHyJXZR6gC4LBHdrFjCfkJSp4AdYY528Rk) for use for the remaining tutorial.  Please use the files you created*, only copying the missing files here.  *this will help us troubleshoot any issues you may encounter during this step - sometimes they are not obvious
 
 The assembly has generated a set of six folders (one per sample) as well as a folder named `contigs`. Inside each sample folder, you will find a `Trinity.fasta` file that contains the assembly, as well as a `contigs.fasta` link that links to that .fasta file. The `contigs` folder further contains links to each sample's .fasta file.
 #### Troubleshooting Trinity
