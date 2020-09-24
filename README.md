@@ -232,7 +232,7 @@ for i in *; \
    do echo $i":/home/bender/Desktop/tutorial/2_clean-fastq/"$i"/split-adapter-quality-trimmed/"; \
    done >> ../assembly.conf
 ```
-**JLB Note 4/2020:** Be sure to change your computer name.  In the code above it is 'bender', you can find this by looking at Terminal window- in the green text before the "@" is the computer name.  Also be sure to check the assembly.conf file.  Sometimes the last line is not correct and will make it appear that the code ran incorrectly. 
+**JLB Note 8/2020:** Be sure to change your computer name.  In the code above it is 'bender', you can find this by looking at Terminal window- in the green text before the "@" is the computer name.  Also be sure to check the assembly.conf file.  Sometimes the last line is not correct and will make it appear that the code ran incorrectly. 
 
 The first command moves you into the `2_clean-fastq` directory, and the second initiates a text file with the `[samples]` header. The third command is a `for` loop that prints out the name of each sample (represented by `$i`), followed by a colon and lastly the file path to the `split-adapter-quality-trimmed` folder inside of each sample's individual folder. The `split-adapter-quality-trimmed` folders contain .fastq.gz files with the trimmed reads. The assembler needs to know the location of each of these folders for each sample.
 
@@ -280,6 +280,8 @@ AbassJB010n1-0182-ABIC_trinity      AhahnJLB17-087-0586-AFIG_trinity  contigs
 AbassJLB07-740-1-0189-ABIJ_trinity  ApeteJLB07-001-0008-AAAI_trinity
 AflavMTR19670-0522-AFCC_trinity     AtrivJMP26720-0524-AFCE_trinity
 ```
+**JLB Note 8/2020:** This is the longest step.  I suggest for the tutorial that you run only 1 or 2 samples.  To do this edit your 'conf.assembly' file in basic text editor removing all but a few samples.  If this process work with your data, I suggest you download the all the assembled files from [here](https://u.pcloud.link/publink/show?code=XZsHyJXZR6gC4LBHdrFjCfkJSp4AdYY528Rk) for use for the remaining tutorial.
+
 The assembly has generated a set of six folders (one per sample) as well as a folder named `contigs`. Inside each sample folder, you will find a `Trinity.fasta` file that contains the assembly, as well as a `contigs.fasta` link that links to that .fasta file. The `contigs` folder further contains links to each sample's .fasta file.
 #### Troubleshooting Trinity
 Generally, the most common error with Trinity will generally be caused by specifying incorrect file paths in your configuration file. Double-check them to make sure they're correct. 
