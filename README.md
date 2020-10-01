@@ -316,6 +316,8 @@ do
     phyluce_assembly_get_fasta_lengths --input $i --csv;
 done > assembly_stats.csv
 ```
+''Column key'': # samples,contigs,total bp,mean length,95 CI length,min length,max length,median legnth,contigs >1kb
+
 The loop will loop through every file ending in .fasta located in the `3_trinity-assemblies/contigs` folder, and then process it using the `phyluce_assembly_get_fasta_lengths` script. (Note that these are not actual .fasta files, but links to them.)
 
 In order listed, the summary stats printed to `assembly_stats.csv` will be:
