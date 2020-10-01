@@ -457,7 +457,7 @@ phyluce_align_seqcap_align \
     --aligner muscle \
     --cores 19 \
     --no-trim \
-    --incomplete-matrix
+    --incomplete-matrix \
     --log-path log
 ```
 Then, you can trim the alignments separately with the command:
