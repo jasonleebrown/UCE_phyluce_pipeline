@@ -303,7 +303,7 @@ This creates two files: the first, `reads.txt`, contains a list of two file endi
 
 **JLB Notes 8/2020:** I received the error 'jellyfish: not found', I solved this by reinstalling Jellyfish using this code: 'conda install jellyfish=2.2.3'.
 
-**JLB Notes 10/2020:** My most rage inducing issue - aside from switch java bullshit (not if you do a new install install hava 1.7 before install conda and phyluce - switch to this version then proceed.  Ok the 'Error: gzip: stdout: Broken pipe' was found in the log files of a Trinity for each sample. Turns out this is a known Trinity bug - the temp fix is remove the 'singleton' reads from each of the 'split-adapter-quality-trimmed' folders in folder '2_clean-fastq'. For details [see](https://github.com/faircloth-lab/phyluce/issues/159). 
+**JLB Notes 10/2020:** Today date my most rage inducing issue - aside from switch java bullshit [see bottom]: 'Error: gzip: stdout: Broken pipe' was found in the log files of a Trinity for each sample. Turns out this is a known Trinity bug - the temp fix is remove the 'singleton' reads from each of the 'split-adapter-quality-trimmed' folders in folder '2_clean-fastq'. For details [see](https://github.com/faircloth-lab/phyluce/issues/159). 
 
 More Bash tips:
 - The `ln` command generates links. Using the `-s` flag generates symbolic links, which we desire here. The first argument is the file to be linked to, and the second argument is the name and path of the link to be generated.
@@ -816,7 +816,25 @@ After you click "Run," the program will run for a few moments and spit out `beas
     
     
     
-    
+**JLB Install notes** to be used alongside the Phyluce [install guide](https://phyluce.readthedocs.io/en/latest/installation.html#path-configuration)
+
+If you do a new install, please install java 1.7 and switch to it before installing conda and phyluce, seriously.  
+To install Java 7 type "sudo apt-get install openjdk-7-jre". If this doesn't work [see](https://askubuntu.com/questions/1034387/how-can-i-install-jdk7-on-ubuntu-18-04-lts-64bit)
+To switch (on a Linux machine), use the following command: `sudo update-alternatives --config java`. The terminal will prompt you to enter the computer's password. Do so, and then select which version of Java to use. In this case, you will want to switch to Java 7 (for me, the choice looks like `/usr/lib/jvm/jdk1.7.0_80/bin/java`). 
+
+-Quick place to find [miniconda](https://docs.conda.io/en/latest/miniconda.html)
+To install then 'cd to download folder' and 'bash Miniconda2-latest-Linux-x86_64.sh'
+
+-If python doesnt show 'anaconda...' type 'export PATH=$HOME/miniconda2/bin:$PATH'
+-To add channels:
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+
+Where to get older [GATK] - minght not be needed (https://console.cloud.google.com/storage/browser/gatk-software/package-archive/gatk?ref=https:%2F%2Fwww.biostars.org%2Fp%2F437847%2F)
+
+To install java from conda (not actually needed) 'conda install -c anaconda java-1.7.0-openjdk-cos6-x86_64' 
+
     
     
     
