@@ -597,7 +597,7 @@ uce-869.nexus
 
 > Regular expression explained: We build the regular expression sequentially to match each line. We need to find the commonalities between each line and represent them using different constructs. First we use a `"` quote to match the starting quote of each line. Then, we use `\d+` to match "one or more digits", which are in the first column. We add `" "` to match the quote, space, quote, that follows the first number. Next we use `.*` as a "wildcard" (analogous to the `*` of Bash), which matches "anything except a line break zero or more times". This construct matches the "uce-4885" part of the first line. Then we close with `.nexus"`, which matches the last portion of the line. Note that the construct `.*.nexus` is enclosed in (parentheses). We do this to "capture" whatever is inside of the parentheses, which we can then use to Replace our match. The Replace construct `\1` signifies the first "captured" match, which is that bit in the parentheses. So basically, we are searching for the whole line, capturing the part we want (the filename), and then replacing the whole line with the capture.  
 
-Now that that's done, we have to take our cleaned list of loci and grab the corresponding .nexus alignment files. First, quit R with `q()`. Then, enter the following Bash commands:
+Now that that's done, we have to take our cleaned list of loci and grab the corresponding .nexus alignment files. First, quit R with `q()`. Then, enter the following Bash commands (**Make sure you are working from the directory 'tutorial/5_taxon-sets/all/'**):
 ```
 mkdir muscle-nexus-clean-75p_3
 cd muscle-nexus-clean-75p
