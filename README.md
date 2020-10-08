@@ -612,7 +612,7 @@ After running the command, `muscle-nexus-clean-75p_3` contains 385 loci. That's 
 ### Concatenating alignments
 The final step before phylogenetic analysis is to concatenate your set of filtered loci into a single alignment. Concatenation in this context means that your alignments will be combined into a single file, and lined up one after another. Note that concatenation is a problematic assumption in phylogenetics and is mostly used for convenience; this is because you're assuming that all of your loci are evolving as a "supergene", when we know in fact this is not the case. We can use "partitions" to divide the concatenated matrix into portions corresponding to each locus, and then assign a different substitution model to each; while more technically "correct," this does have the side effect of making your phylogenetic analysis take way longer. In this tutorial we will not be using partitions, although I will show you how to generate them automatically if you want to use them.
 
-To concatenate the loci in `muscle-nexus-clean-75p_3`, use this command:
+To concatenate the loci in `muscle-nexus-clean-75p_3`, use this command (**Make sure you are working from the directory 'tutorial/5_taxon-sets/all/'**):
 ```
 phyluce_align_format_nexus_files_for_raxml \
     --alignments muscle-nexus-clean-75p_3 \
