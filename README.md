@@ -558,9 +558,9 @@ sum(inform$pis) #total number of PIS for informative loci
 fivenum(inform$pis) #summary stats for informative loci (min, lower quartile, median, upper quartile, max)
 inform_names <- inform$locusname #get locus names of informative loci for locus filtering
 #write locus names to a file
-write.table(inform_names, file = "inform_names_PIS_3.txt")
+write.table(inform_names, file = "inform_names_PIS_15.txt")
 ```
-This writes a file named `inform_names_PIS_3.txt` to `muscle-nexus-clean-75p`. The file contains the names of all UCE loci that meet the criteria you set in the above code block (3 < PIS < 15).
+This writes a file named `inform_names_PIS_15.txt` to `muscle-nexus-clean-75p`. The file contains the names of all UCE loci that meet the criteria you set in the above code block (3 < PIS < 15).
 
 In one of my projects, I desired instead to find the 200 *most parsimony-informative* loci rather than filter for an unknown number that fit specific criteria. This involves ranking the loci by number of PIS and then taking the top 200 (or whatever number you want). To do this, run this code block:
 ```
@@ -571,7 +571,7 @@ pistab_sorted_truncated <- pistab_sorted[1:200,]
 topnames <- pistab_sorted_truncated$locusname
 write.table(topnames, file = "top200names.txt")
 ```
-This writes a file named `top200names.txt` to `muscle-nexus-clean-75p` that is similar in structure and principle to `inform_names_PIS_3.txt`. 
+This writes a file named `top200names.txt` to `muscle-nexus-clean-75p` that is similar in structure and principle to `inform_names_PIS_15.txt`. 
 
 Now we have a list of the loci we desire (whether loci that fit a certain range of PIS or the most informative X loci). We now need to use this list to grab the .nexus alignment files for those loci. First we need to modify the list file itself to be in a usable format. Currently, the list file should look something like this:
 ```
@@ -601,12 +601,12 @@ Now that that's done, we have to take our cleaned list of loci and grab the corr
 ```
 mkdir muscle-nexus-clean-75p_3
 cd muscle-nexus-clean-75p
-for n in $(cat inform_names_PIS_3.txt); \
+for n in $(cat inform_names_PIS_15.txt); \
    do cp "$n" ../muscle-nexus-clean-75p_3; \
 done
 cd ..
 ```
-We first create a new directory `muscle-nexus-clean-75p_3` to place our filtered loci in (the `_3` part signifies that we filtered loci with fewer than 3 PIS). Then, we go into the `muscle-nexus-clean-75p` directory. The final section is a `for` loop that, for every line in `inform_names_PIS_3.txt` (i.e., for every locus with 3 < PIS < 15), copy that locus' corresponding .nexus file from `muscle-nexus-clean-75p` to `muscle-nexus-clean-75p_3`. Finally, we go back to the `all` directory to prepare for the next step.
+We first create a new directory `muscle-nexus-clean-75p_3` to place our filtered loci in (the `_3` part signifies that we filtered loci with fewer than 3 PIS). Then, we go into the `muscle-nexus-clean-75p` directory. The final section is a `for` loop that, for every line in `inform_names_PIS_15.txt` (i.e., for every locus with 3 < PIS < 15), copy that locus' corresponding .nexus file from `muscle-nexus-clean-75p` to `muscle-nexus-clean-75p_3`. Finally, we go back to the `all` directory to prepare for the next step.
 
 After running the command, `muscle-nexus-clean-75p_3` contains 385 loci. That's quite a lot of filtering. You may wish to filter less stringently in order to retain more loci. I'll be working on the loci in this folder for the remainder of the tutorial.
 ### Concatenating alignments
