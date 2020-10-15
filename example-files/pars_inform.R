@@ -29,7 +29,7 @@ pistab <- read.delim("list_of_pis_by_locus.txt", header=TRUE, sep = " ")
 pistab_sorted <- pistab[order(-pistab$pis),]
 pistab_sorted_truncated <- pistab_sorted[1:200,]
 topnames <- pistab_sorted_truncated$locusname
-write.table(topnames, file = "top200names.txt")
+write.table(topnames, file = "top200names.txt",quote=FALSE, row.names=FALSE,col.names=FALSE)
 
 ###calculate summary data and visualize PIS variables###
 par_data <- as.data.frame(read.table("list_of_pis_by_locus.txt", header = TRUE))
