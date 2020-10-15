@@ -664,6 +664,29 @@ Running only 6 taxa, 385 loci, and over 19 cores, the analysis finished in a mat
 
 ![raxml tree](https://i.imgur.com/iVswDBF.png)  
 This is more or less in line with what we know of the *Ameerega* phylogeny. The node labels are boostrap values, a measure of support for that node. You can add them by selecting "label" as the displayed value for node labels in FigTree.
+
+**JLB Update 10/2020**
+I strongly suggest you install raxml a more traditional way. Here's the RAxML command I used:
+```
+sudo apt update
+sudo apt install raxml
+```
+
+Then to run your analysis type this:
+```
+raxmlHPC-PTHREADS-AVX \
+	-f a \
+	-x $RANDOM \
+	-p $RANDOM \
+	-# autoMRE \
+	-m GTRGAMMA \
+	-s muscle-nexus-clean-75p_3.phylip \
+	-n muscle-nexus-raxml_75p_3 \
+	-T 7
+```
+
+
+
 ### Maximum likelihood analysis with IQ-TREE
 RAxML is very popular, but I actually prefer to use [IQ-TREE](http://www.iqtree.org/), an alternative ML phylogenetics program. I like IQ-TREE because it has great documentation (and a flashy website), flexible and easy-to-understand options, and most importantly it integrates model selection with a wide array of substitution models, certainly more than are offered by RAxML. I generally use IQ-TREE for all of my ML analyses. 
 
