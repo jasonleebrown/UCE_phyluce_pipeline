@@ -663,9 +663,13 @@ To see more of RAxML's options, you can type `~/Documents/RAxML/raxmlHPC-PTHREAD
 Running only 6 taxa, 385 loci, and over 19 cores, the analysis finished in a matter of seconds. You can view the tree by installing [FigTree](https://github.com/rambaut/figtree/releases). To open it on a Linux machine, simply type `figtree` into the Terminal (note that you have to be running Java 8, not Java 7). Open the file `RAxML_bipartitions.muscle-nexus-raxml_75p_3`. Figtree contains numerous options for manipulating images of phylogenetic trees. You can reroot, rotate branches, adjust branch widths, create a circle tree, and more. Here is a modified image of my RAxML tree:  
 
 ![raxml tree](https://i.imgur.com/iVswDBF.png)  
-This is more or less in line with what we know of the *Ameerega* phylogeny. The node labels are boostrap values, a measure of support for that node. You can add them by selecting "label" as the displayed value for node labels in FigTree.
 
-**JLB Update 10/2020**
+This is more or less in line with what we know of the *Ameerega* phylogeny. The node labels are boostrap values, a measure of support for that node. You can add them by selecting "label" as the displayed value for node labels in FigTree.
+**JLB Update viewing trees - 10/2020**
+Viewing trees via FigTree is perfectly fine, however I hate changing Java back and forth. Thus, I prefer to use the website [TreeView](http://etetoolkit.org/treeview/).  Select 'Tree in Newick Format' and select the file "RAxML_bestTree.muscle-nexus-raxml_75p_3".
+
+
+**JLB Update on running and install RAxML - 10/2020**
 I strongly suggest you install raxml a more traditional way. Here's the RAxML command I used:
 ```
 sudo apt update
