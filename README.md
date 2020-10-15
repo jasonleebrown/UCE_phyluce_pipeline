@@ -739,6 +739,12 @@ First we go back into `all`, then we make a new directory to hold the gene trees
 ```
 for i in *.nexus; do ~/Desktop/Bioinformatics/iqtree-1.6.5-Linux/bin/iqtree -s $i -bb 1000 -m GTR -nt AUTO -czb -redo; done
 ```
+**JLB update 10/2020** 
+For this code to work for me I had to remove versioning from IQ-TREE by typing:
+```
+for i in *.nexus; do iqtree -s $i -bb 1000 -m GTR -nt AUTO -czb -redo; done
+```
+
 Forgive my crude presentation of this command, but it is tried and true. Basically, we are simply looping over every .nexus file in this folder and running it through IQ-TREE, with 1,000 ultrafast bootstrap replicates and a GTR substitution model. The `-nt AUTO` option specifies that the program will automatically decide how many threads to use, which was apparently necessary for this run. The `-czb` option contracts very short branch lengths (common in gene trees) to polytomies, which reduces gene tree bias. The `-redo` option allows you to repeat the command without manually deleting previous results, which is handy when you're troubleshooting. Unfortunately, since the `-nt AUTO` option was necessary, many of the trees were run with 1 core only, so the analysis took a decent amount of time - about seven hours. With more cores, this would have been shorter so you might try experimenting with small numbers rather than going for the `AUTO` option. When running a full gene tree analysis with ~1000 loci and >30 taxa, this process usually takes a day or so even with the full compliment of cores.
 >*Note that in the above command, I call the full filepath to an IQ-TREE v 1.6.5 executable, rather than just calling `iqtree` like I did in the previous section. On my machine, calling `iqtree` only calls v 1.5.5, which does not have the `-czb` option.*
 
