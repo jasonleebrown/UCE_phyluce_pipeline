@@ -573,6 +573,8 @@ write.table(topnames, file = "top200names.txt",quote=FALSE, row.names=FALSE,col.
 ```
 This writes a file named `top200names.txt` to `muscle-nexus-clean-75p` that is similar in structure and principle to `inform_names_PIS_15.txt`. 
 
+**JLB UPDATE 10/2020** The follow section is likely not needed, just check to make sure your output matches the format in the second block. 
+**JLB UPDATE 10/2020: Ignore START** 
 Now we have a list of the loci we desire (whether loci that fit a certain range of PIS or the most informative X loci). We now need to use this list to grab the .nexus alignment files for those loci. First we need to check to see that the list needs to be modified. Does the list file should look something like this? If so follow the following bit. In the end we want it to look like the next example (just names - no quotes or row numbers). If yours currently looks like this, then skip this section.  
 ```
 "x"
@@ -585,7 +587,10 @@ Now we have a list of the loci we desire (whether loci that fit a certain range 
 ```
 We need to change it so that all that remains are .nexus filenames. We can use regular expressions to do this. If you don't know, regular expressions are code constructs that are commonly used to search and replace specific patterns in text. They are very intimidating to look at at first, but learning them can make you a badass. You can use Bash commands like `sed` and `awk` to use regular expressions in the Terminal, but we can also do it using the find-and-replace (ctrl+H) utility in gedit. Other text editor programs like Notepad++ also support the use of regular expressions. 
 
-First, go ahead and manually remove the first line `"x"`. Then, open find-and-replace and make sure the "Regular expression" box is ticked. In the "Find" box, type in `"\d+" "(.*.nexus)"`. This is the "search" portion of the regular expression. Then, in the "Replace" box, simply type `\1`. This is the "replace" portion. If you click "Find", the program should highlight everything in the file. Click "Replace All", and you should be left with only the file names, no quotes. Doesn't that feel good? The file should now look like this:
+First, go ahead and manually remove the first line `"x"`. Then, open find-and-replace and make sure the "Regular expression" box is ticked. In the "Find" box, type in `"\d+" "(.*.nexus)"`. This is the "search" portion of the regular expression. Then, in the "Replace" box, simply type `\1`. This is the "replace" portion. If you click "Find", the program should highlight everything in the file. Click "Replace All", and you should be left with only the file names, no quotes. Doesn't that feel good? 
+
+**JLB UPDATE 10/2020: Ignore END** 
+The file should now look like this:
 ```
 uce-4885.nexus
 uce-2564.nexus
