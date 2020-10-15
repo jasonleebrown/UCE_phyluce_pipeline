@@ -573,8 +573,8 @@ write.table(topnames, file = "top200names.txt",quote=FALSE, row.names=FALSE,col.
 ```
 This writes a file named `top200names.txt` to `muscle-nexus-clean-75p` that is similar in structure and principle to `inform_names_PIS_15.txt`. 
 
-**JLB TIP**
-To quit R type: ```quit("yes")```
+**JLB pro tip**
+To quit R, type: ```quit("yes")```
 
 **JLB UPDATE 10/2020** The follow section is likely not needed (I adjusted the R code), just check to make sure your output matches the format in the second block. 
 
