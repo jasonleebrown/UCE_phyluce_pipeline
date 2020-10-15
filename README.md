@@ -558,7 +558,7 @@ sum(inform$pis) #total number of PIS for informative loci
 fivenum(inform$pis) #summary stats for informative loci (min, lower quartile, median, upper quartile, max)
 inform_names <- inform$locusname #get locus names of informative loci for locus filtering
 #write locus names to a file
-write.table(inform_names, file = "inform_names_PIS_15.txt")
+write.table(inform_names, file = "inform_names_PIS_15.txt",quote=FALSE, row.names=FALSE,col.names=FALSE)
 ```
 This writes a file named `inform_names_PIS_15.txt` to `muscle-nexus-clean-75p`. The file contains the names of all UCE loci that meet the criteria you set in the above code block (3 < PIS < 15).
 
@@ -573,10 +573,12 @@ write.table(topnames, file = "top200names.txt",quote=FALSE, row.names=FALSE,col.
 ```
 This writes a file named `top200names.txt` to `muscle-nexus-clean-75p` that is similar in structure and principle to `inform_names_PIS_15.txt`. 
 
+**JLB TIP**
+To quit R type: ```quit("yes")```
+
 **JLB UPDATE 10/2020** The follow section is likely not needed (I adjusted the R code), just check to make sure your output matches the format in the second block. 
 
 
-************************************
 **JLB UPDATE 10/2020: Ignore START** 
 ************************************
 
@@ -596,7 +598,6 @@ First, go ahead and manually remove the first line `"x"`. Then, open find-and-re
 
 **********************************
 **JLB UPDATE 10/2020: Ignore END** 
-**********************************
 
 The file should now look like this:
 ```
