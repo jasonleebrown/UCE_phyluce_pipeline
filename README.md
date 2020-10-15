@@ -740,7 +740,7 @@ First we go back into `all`, then we make a new directory to hold the gene trees
 for i in *.nexus; do ~/Desktop/Bioinformatics/iqtree-1.6.5-Linux/bin/iqtree -s $i -bb 1000 -m GTR -nt AUTO -czb -redo; done
 ```
 **JLB update 10/2020** 
-For this code to work for me I had to remove versioning from IQ-TREE by typing:
+For this code to work for me I had to remove the software version/location:
 ```
 for i in *.nexus; do iqtree -s $i -bb 1000 -m GTR -nt AUTO -czb -redo; done
 ```
