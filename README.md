@@ -697,15 +697,17 @@ RAxML is very popular, but I actually prefer to use [IQ-TREE](http://www.iqtree.
 We already made a directory for IQ-TREE when we concatenated our alignments. Go ahead and go into it with `cd muscle-nexus-iqtree-75p_3`. Then run the following command:
 ```
 iqtree \
-	-s muscle-nexus-clean-75p_3.phylip \
-	-bb 10000 \
-	-m GTR \
-	-nt 19
+-s muscle-nexus-clean-75p_3.phylip \
+-bb 10000 \
+-m GTR \
+-nt 19
 ```
 - `-s` input alignment file.
 - `-bb` number of ultrafast bootstrap replicates. Another advantage of IQ-TREE is its super-fast bootstrapping algorithm, which allows you to go for a larger number of bootstraps in a reasonable amount of time. Make sure to cite [Minh et al. 2013](https://academic.oup.com/mbe/article/30/5/1188/997508) if you use it.
 - `-m` substitution model. I use GTR to be roughly equivalent to RAxML. You can also use `-m MFP` to initiate ModelFinder Plus, which will find the best-fit substitution model before running the tree search. 
 - `-nt` number of threads (cores).
+
+**JLB Note 10/2020** The above syntax had some issues for me, if you have an error type manually typing this syntax or paste this: ```iqtree -s muscle-nexus-clean-75p_3.phylip -bb 10000 -m GTR -nt 7```
 
 There are many many more options and things you can do with IQ-TREE - this is about as basic of an analysis as you can do with it. The output tree is stored in the file `muscle-nexus-clean-75p_3.phylip.treefile`, which I show below:  
 
