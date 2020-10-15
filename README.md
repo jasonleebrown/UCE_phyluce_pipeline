@@ -569,11 +569,11 @@ pistab <- read.delim("list_of_pis_by_locus.txt", header=TRUE, sep = " ")
 pistab_sorted <- pistab[order(-pistab$pis),]
 pistab_sorted_truncated <- pistab_sorted[1:200,]
 topnames <- pistab_sorted_truncated$locusname
-write.table(topnames, file = "top200names.txt")
+write.table(topnames, file = "top200names.txt",quote=FALSE, row.names=FALSE,col.names=FALSE)
 ```
 This writes a file named `top200names.txt` to `muscle-nexus-clean-75p` that is similar in structure and principle to `inform_names_PIS_15.txt`. 
 
-Now we have a list of the loci we desire (whether loci that fit a certain range of PIS or the most informative X loci). We now need to use this list to grab the .nexus alignment files for those loci. First we need to modify the list file itself to be in a usable format. Currently, the list file should look something like this:
+Now we have a list of the loci we desire (whether loci that fit a certain range of PIS or the most informative X loci). We now need to use this list to grab the .nexus alignment files for those loci. First we need to check to see that the list needs to be modified. Does the list file should look something like this? If so follow the following bit. In the end we want it to look like the next example (just names - no quotes or row numbers). If yours currently looks like this, then skip this section.  
 ```
 "x"
 "1" "uce-4885.nexus"
