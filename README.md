@@ -669,11 +669,12 @@ This is more or less in line with what we know of the *Ameerega* phylogeny. The 
 Viewing trees via FigTree is perfectly fine, however I hate changing Java back and forth. Thus, I prefer to use the website [TreeView](http://etetoolkit.org/treeview/).  Select 'Tree in Newick Format' and select the file "RAxML_bestTree.muscle-nexus-raxml_75p_3".
 
 
-**JLB Update on running and install RAxML - 10/2020**
+**JLB Update on running RAxML and installing RAxML/IQ-TREE - 10/2020**
 I strongly suggest you install raxml a more traditional way. Here's the RAxML command I used:
 ```
 sudo apt update
 sudo apt install raxml
+sudo apt install iqtree
 ```
 
 Then to run your analysis type this:
