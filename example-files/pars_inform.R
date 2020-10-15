@@ -42,5 +42,4 @@ sum(inform$pis) #total number of PIS for informative loci
 fivenum(inform$pis) #summary stats for informative loci (min, lower quartile, median, upper quartile, max)
 inform_names <- inform$locusname #get locus names of informative loci for locus filtering
 #write locus names to a file
-write.table(inform_names, file = "inform_names_PIS_15.txt",
-            quote=FALSE, row.names=FALSE,col.names=FALSE)
+write.table(inform_names, file = "inform_names_PIS_15.txt", quote=FALSE, row.names=FALSE,col.names=FALSE)
