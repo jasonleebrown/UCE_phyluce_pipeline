@@ -1,0 +1,20 @@
+Ok, I started to update that text document, but it's gonna take a bit longer than just writing things down quick in an email. I will still do it at some point, but for now see if you can follow this email:
+So I've made a couple improvements to this pipeline, which are:
+1) For read alignment, using BWA-MEM instead of hisat2. I get much more complete locus reconstructions with BWA-MEM based on how it aligns reads to the tips of each locus. Basically it works out that my alignments have something like 30% more nucleotides in them by using BWA, and the trees look slightly better (fewer elongated tips, which I guess are from singleton sites).
+You can make this change easily by changing the hisat2 command to this:
+bwa mem /media/evan/DEVIN/UCEs/analyses/Ranitomeya/read_alignment_phylogeny/reference_sets/UCE/uce_consensus_reference.fasta *READ1.fastq *READ2.fastq > $sample.sam
+2) Whereas the previous pipeline used that samtools mpileup/bcftools/seqtk procedure to extract fastas from bams, I now do it in ANGSD with a single command. This should resolve the problems you mention in your previous email. Also, ANGSD is just way better cause it lets you control a few key parameters in this process. (Weirdly, the parameters are not mentioned in the ANGSD documentation, but they are there...). 
+This is what my angsd command looks like:
+angsd -doFasta 4 -doCounts 1 -minQ 20 -minMapQ 30 -remove_bads 1 -uniqueOnly -setMinDepth 2 -iupacRatio 0.2 -i $file
+The key things I've played with here are:
+doFasta 4 -- This has to do with how alleles/sequencing errors are resolved into either majority rule calls, ambiguity codes, etc. Related to this is iupacRatio, which isn't really explained by the angsd docs, but it seems to be the proportion of conflicting bases above which the nucleotide would get an IUPAC ambiguity code. If you leave out this parameter, it looks like a single conflicting base from a read would cause angsd to spit out an ambiguity code, which makes your alignment completely full of them. So this parameter makes it so that sequencing errors don't prevent a base call, while proper alleles get an ambiguity code, which seems like the correct way to do it (rather than force a base call at an allele, which is what happens with the standard phyluce pipeline as this is what the de novo assemblies do).
+setMinDepth 2 -- Minimum read depth required for a base call. You may need to mess with this. If you set it to 1, you get better locus reconstruction but with more dubious base calls (like bases being only supported by 1 read), and the trees are longer. Too high (like 10) is too conservative, with shorter alignments resulting. I've had pretty good results in the 2-4 range. 
+
+So overall, for step 3 now, I split it up into two processes: (1) Make your bam files, and (2) Make your fastas. By splitting it up like this, you just make all your bam files once, and that's done. Then you can feed them to angsd, playing with the angsd parameters as you wish, and you don't need to redo your bams every time, which saves a ton of time/computing. 
+You can see this in the two updated scripts I'm attaching. The bams loop makes the bams (using 6 threads). The angsd loop extracts the fastas. 
+One important thing, because of the way angsd writes the fasta headers, you'll see that each fasta header is like >sample-name.bam|uce-locus rather than >sample-name|uce-locus
+So, for that awk command to correctly parse out the loci, you need to remove the .bam from the headers first:
+sed -i 's/.bam//' cat.fasta
+
+Alright, hope that helps. Glad to see you are giving this a shot. Personally I am getting much better results compared to phyluce, but your mileage may vary.
+-Evan
