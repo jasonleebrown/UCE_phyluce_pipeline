@@ -446,21 +446,29 @@ If you follow the phyluce pipeline, it should be this folder:
 
 Then put the script in that folder and run it.
 
-```./emboss_UCE_consensus_loop.sh```
+```
+./emboss_UCE_consensus_loop.sh
+```
 
 To run type: 
 
-```bash emboss_UCE_consensus_loop.sh```
+```
+bash emboss_UCE_consensus_loop.sh
+```
 
 This should spit out a new folder called ‘consensus’, where each locus is represented by a single sequence.
 
 2) Concatenate these to a single fasta file (change to newly created consensus folder)
 
-```cat *.fasta > uce_consensus_reference.fasta```
+```
+cat *.fasta > uce_consensus_reference.fasta
+```
 
 3) Index this file with hisat2 to turn it into a reference for read alignment
 
-```hisat2-build uce_consensus_reference.fasta uce_consensus_index -p 6```
+```
+hisat2-build uce_consensus_reference.fasta uce_consensus_index -p 6
+```
 
 This will make something like eight ht2 files. You’ll need these for the next steps.
 
@@ -469,15 +477,20 @@ This will make something like eight ht2 files. You’ll need these for the next 
 Make the following directories in whatever work directory you want:
 work_directory/fastas  – This will hold the per-sample read alignment results. Empty for now.
 
-```mkdir -p work_directory/fastas```
+```
+mkdir -p work_directory/fastas
+```
 
 'work_directory/reference_sets/UCE' – This will hold your hisat2 index files and the uce_consensus_reference.fasta
 
-```mkdir -p work_directory/reference_sets/UCE```
+```
+mkdir -p work_directory/reference_sets/UCE
+```
 
 'work_directory/samples' – This holds your folders corresponding to each sample to be included in the phylogeny. To do this, go to the ‘clean-fastq’ folder of one of your phyluce runs. Copy (or link) these folders into this samples directory.
 
-```mkdir -p work_directory/reference_sets
+```
+mkdir -p work_directory/reference_sets
 mkdir -p work_directory/angsd_bams
 ```
 
@@ -493,15 +506,25 @@ Note- go to folder 'work_directory/samples'
 
 First index your UCE file
 
-```bwa index /home/jason/Desktop/tutorial/work_directory/reference_sets/UCE/uce_consensus_reference.fasta```
+```
+bwa index /home/jason/Desktop/tutorial/work_directory/reference_sets/UCE/uce_consensus_reference.fasta
+```
 
 Now run the bash script- before you run it make sure you change the directories inside of the script.
 
-```bash bams_loopBWA-MEM-UCE.sh```
+```
+bash bams_loopBWA-MEM-UCE.sh
+```
 
 If you error out -change: 
 
-```samtools sort $sample.bam -o $sample.sorted.bam``` to  ```samtools sort $sample.bam $sample.sorted```
+```
+samtools sort $sample.bam -o $sample.sorted.bam
+``` 
+to
+```
+samtools sort $sample.bam $sample.sorted
+```
 
 #### Twomey Step 4: Rearrange resulting fasta files into an alignment```
 
@@ -509,37 +532,52 @@ If the above steps worked correctly, your work_directory/‘angsd_bams’ or cop
 
 1) First, concatenate all these resulting fasta files. Do this into a new subdirectory:
 
-```mkdir explode```
-
-```cat *fasta > explode/cat.fasta```
+```
+mkdir explode
+cat *fasta > explode/cat.fasta
+```
 
 2) Enter the ‘explode’ directory. The cat.fasta needs to be exploded so that the fastas are arranged by locus rather than by sample:
 
-```awk '/^>/{split($1,a,"[|.]")}{print >> a[2]".fa"}' cat.fasta```
+```
+awk '/^>/{split($1,a,"[|.]")}{print >> a[2]".fa"}' cat.fasta
+```
 
 3) Reformat headers. They currently look like: > sample_locality_001|uce-con_1 and need to lose the locus ID. Run this command on the directory of by-locus .fa files (will be thousands of files)
 
-```sed -i 's/|uce-.*//' *.fa```
+```
+sed -i 's/|uce-.*//' *.fa
+```
 
 4) Run the seqret_loop.sh script in the same directory as all these .fa files. This will pad the lociso that they are all the same length (adding dashes to the sequences to make the lengths correct), so that they are recognized as alignments.
 
-```./seqret_loop.sh ```
+```
+./seqret_loop.sh 
+```
 
 5) Even though these loci are already aligned (because the sequences were extracted from reads that aligned to a reference), I have found that re-aligning each locus with Muscle can fix some minor alignment issues (I think this has to do with indels). So run the muscle_loop script on the seqret output. This can take a while, like a few hours.
 
-```./muscle_loop.sh```
+```
+./muscle_loop.sh
+```
 
 6) Concatenate loci with AMAS.
 
-```AMAS.py concat -i *.fasta -f fasta -d dna```
+```
+AMAS.py concat -i *.fasta -f fasta -d dna
+```
 
 7) The alignment will have a bunch of question marks in it. I guess these are from the read alignments. I replace them with – so that the alignments can be cleaned up with trimal (trimal will not touch question marks). It is possible this is a bad idea.
 
-```sed -i 's/?/-/g' concatenated.out```
+```
+sed -i 's/?/-/g' concatenated.out
+```
 
 8) Last step is to clean up the alignments with trimal to remove columns composed of mostly missing data. The gappyout option gives an alignment roughly twice as long as the no_gaps option; in my experience the trees come out identical but with support values slightly higher when using gappyout.
 
-```trimal -in concatenated.out -out trimal_gappyout.fasta -gappyout```
+```
+trimal -in concatenated.out -out trimal_gappyout.fasta -gappyout
+```
 
 This alignment should now be ready to use (e.g., IQ-Tree).
 
