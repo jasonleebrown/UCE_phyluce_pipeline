@@ -407,7 +407,7 @@ This is a good command to run over your lunch break if you have a lot of samples
 
 If you look at the to-screen output of the previous command, it will tell you how many UCE loci were recovered for each sample. We targeted around 5,000 loci in total, but for most samples we retain ~1,500. This is pretty normal for our poison frog samples.
 
-#### Twomey Data Polishing Pipeline - OPTIONAL, but highly encouraged
+## Twomey Data Polishing Pipeline - OPTIONAL, but highly encouraged
 _____________________________________________________________________________________________________________________________________________
 This pipeline takes your current results and realligns them to concencus sequences generated from all your input sequences. The need for this arrose when Evan Twomey was checking loci-level allignments and he noted several taxa where mis-alligned at the end.  
 
@@ -417,7 +417,7 @@ Some reasons to go through all this hassle:
 –	You don’t need to have full contigs for this to work, which is a big advantage. For example, if a particular individual only had spotty read coverage for a certain locus, which would preclude assembling a full-length contig, that is no problem here because individual reads can align to a reference with no requirement for contiguity.
 –	You can easily change the reference sequence to recover off-target sequences. This is now how I do mitochondrial assembly: I just use a mitochondrial genome from a close relative for the reference sequence instead of the UCE loci. There are also lots of nuclear loci (e.g. 28S) that can be reliably recovered across samples.
 
-## Software Dependencies: 
+#### Software Dependencies: 
 '''We specify the version used, but it probably doesn’t matter. If you hit any problems with any steps though, check the versions.
 EMBOSS (6.6.0.0) ```conda install EMBOSS``` 
 Hisat2 (2.1.0) ```conda install hisat2```
@@ -428,7 +428,7 @@ AMAS (https://github.com/marekborowiec/AMAS) ```conda install AMAS```
 TrimAl (1.4)
 Angsd (x): ```conda install -c bioconda angsd```
 
-## Twomey Step 1. Make a reference for read-alignment
+#### Twomey Step 1. Make a reference for read-alignment
 General goal here is to extract a consensus sequence for each UCE locus, and turn these into a reference fasta for read alignment.
 
 1) Run the emboss_UCE_consensus script in the directory containing all your UCE loci. These should be the loci that are aligned but not filtered, because even if a UCE was recovered only for a single sample, it could be useful for read alignment. Basically don’t throw out any loci at this stage.
@@ -451,7 +451,7 @@ This should spit out a new folder called ‘consensus’, where each locus is re
 ```hisat2-build uce_consensus_reference.fasta uce_consensus_index -p 6```
 This will make something like eight ht2 files. You’ll need these for the next steps.
 
-## Twomey Step 2. Organize a directory structure
+#### Twomey Step 2. Organize a directory structure
 Make the following directories in whatever work directory you want:
 work_directory/fastas  – This will hold the per-sample read alignment results. Empty for now.
 ```mkdir -p work_directory/fastas```
@@ -465,17 +465,17 @@ work_directory/samples/amazonica_Iquitos_JLB08_0264/split-adapter-quality-trimme
 work/directory/samples/benedicta_Pampa_Hermosa_0050/split-adapter-quality-trimmed
 etc.
 
-## Twomey Step 3. Align per-sample reads to reference and extract sequence for each locus
+#### Twomey Step 3. Align per-sample reads to reference and extract sequence for each locus
 All you have to do here is place the read_map_UCE_loop_HaploidCall.sh script into the work_directory/samples folder, and run it. Results will appear in work_directory/fastas as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
 note- go to folder 'work_directory/samples'
 First index your UCE file
 ```bwa index /home/jason/Desktop/tutorial/work_directory/reference_sets/UCE/uce_consensus_reference.fasta```
 Now run the bash script- before you run it make sure you change the directories inside of the script.
 ```bash bams_loopBWA-MEM-UCE.sh```
-If 
-ou error out - change: ```samtools sort $sample.bam -o $sample.sorted.bam``` to  ```samtools sort $sample.bam $sample.sorted```
+If you error out -change: 
+```samtools sort $sample.bam -o $sample.sorted.bam``` to  ```samtools sort $sample.bam $sample.sorted```
 
-## Tw```omey Step 4: Rearrange resulting fasta files into an alignment```
+#### Twomey Step 4: Rearrange resulting fasta files into an alignment```
 
 If the above steps worked correctly, your work_directory/‘angsd_bams’ or copy to work_directory/‘fasta’ folder should be filled with a fasta file for each sample. This step is to make these files into something useable for phylogenetics.
 1) First, concatenate all these resulting fasta files. Do this into a new subdirectory:
