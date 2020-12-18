@@ -406,6 +406,99 @@ phyluce_assembly_get_fastas_from_match_counts \
 This is a good command to run over your lunch break if you have a lot of samples. For us, it should only take about a minute or two. This command generates a big .fasta file, `all-taxa-incomplete.fasta`, that contains each sample's set of UCE loci. I recommend against attempting to open the file in a GUI program to view it, as it is probably so big that it'll lock up your computer. You can use `less -S all-taxa-incomplete.fasta` to view it seamlessly in Terminal.
 
 If you look at the to-screen output of the previous command, it will tell you how many UCE loci were recovered for each sample. We targeted around 5,000 loci in total, but for most samples we retain ~1,500. This is pretty normal for our poison frog samples.
+
+#### Twomey Data Polishing Pipeline - OPTIONAL, but highly encouraged
+_____________________________________________________________________________________________________________________________________________
+This pipeline takes your current results and realligns them to concencus sequences generated from all your input sequences. The need for this arrose when Evan Twomey was checking loci-level allignments and he noted several taxa where mis-alligned at the end.  
+
+Additonal encouragement from Evan Twomey:
+Some reasons to go through all this hassle:
+–	This was the only thing that solved my issue with conspicuously long branch lengths for certain terminals. This is because if you think of the reference sequence as a “good” sequence with minimal or no artifacts, then only well-matching reads will align and be used to extract the sequence. Reads or parts of reads that do not align will not make it into the sequence.
+–	You don’t need to have full contigs for this to work, which is a big advantage. For example, if a particular individual only had spotty read coverage for a certain locus, which would preclude assembling a full-length contig, that is no problem here because individual reads can align to a reference with no requirement for contiguity.
+–	You can easily change the reference sequence to recover off-target sequences. This is now how I do mitochondrial assembly: I just use a mitochondrial genome from a close relative for the reference sequence instead of the UCE loci. There are also lots of nuclear loci (e.g. 28S) that can be reliably recovered across samples.
+
+## Software Dependencies: 
+'''We specify the version used, but it probably doesn’t matter. If you hit any problems with any steps though, check the versions.
+EMBOSS (6.6.0.0) ```conda install EMBOSS``` 
+Hisat2 (2.1.0) ```conda install hisat2```
+Samtools (0.1.19)
+Seqtk (1.2) ```conda install seqtk```
+Muscle (3.8)
+AMAS (https://github.com/marekborowiec/AMAS) ```conda install AMAS```
+TrimAl (1.4)
+Angsd (x): ```conda install -c bioconda angsd```
+
+## Twomey Step 1. Make a reference for read-alignment
+General goal here is to extract a consensus sequence for each UCE locus, and turn these into a reference fasta for read alignment.
+
+1) Run the emboss_UCE_consensus script in the directory containing all your UCE loci. These should be the loci that are aligned but not filtered, because even if a UCE was recovered only for a single sample, it could be useful for read alignment. Basically don’t throw out any loci at this stage.
+
+If you follow the phyluce pipeline, it should be this folder:
+"taxon-sets/all/mafft-fasta-internal-trimmed-gblocks-clean"
+
+Then put the script in that folder and run it.
+```./emboss_UCE_consensus_loop.sh```
+
+To run type: 
+```bash emboss_UCE_consensus_loop.sh```
+
+This should spit out a new folder called ‘consensus’, where each locus is represented by a single sequence.
+
+2) Concatenate these to a single fasta file (change to newly created consensus folder)
+```cat *.fasta > uce_consensus_reference.fasta```
+
+3) Index this file with hisat2 to turn it into a reference for read alignment
+```hisat2-build uce_consensus_reference.fasta uce_consensus_index -p 6```
+This will make something like eight ht2 files. You’ll need these for the next steps.
+
+## Twomey Step 2. Organize a directory structure
+Make the following directories in whatever work directory you want:
+work_directory/fastas  – This will hold the per-sample read alignment results. Empty for now.
+```mkdir -p work_directory/fastas```
+'work_directory/reference_sets/UCE' – This will hold your hisat2 index files and the uce_consensus_reference.fasta
+```mkdir -p work_directory/reference_sets/UCE```
+'work_directory/samples' – This holds your folders corresponding to each sample to be included in the phylogeny. To do this, go to the ‘clean-fastq’ folder of one of your phyluce runs. Copy (or link) these folders into this samples directory.
+```mkdir -p work_directory/reference_sets```
+```mkdir -p work_directory/angsd_bams```
+For example, for the samples directory, the path to your sample reads would be something like:
+work_directory/samples/amazonica_Iquitos_JLB08_0264/split-adapter-quality-trimmed
+work/directory/samples/benedicta_Pampa_Hermosa_0050/split-adapter-quality-trimmed
+etc.
+
+## Twomey Step 3. Align per-sample reads to reference and extract sequence for each locus
+All you have to do here is place the read_map_UCE_loop_HaploidCall.sh script into the work_directory/samples folder, and run it. Results will appear in work_directory/fastas as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
+note- go to folder 'work_directory/samples'
+First index your UCE file
+```bwa index /home/jason/Desktop/tutorial/work_directory/reference_sets/UCE/uce_consensus_reference.fasta```
+Now run the bash script- before you run it make sure you change the directories inside of the script.
+```bash bams_loopBWA-MEM-UCE.sh```
+If 
+ou error out - change: ```samtools sort $sample.bam -o $sample.sorted.bam``` to  ```samtools sort $sample.bam $sample.sorted```
+
+## Tw```omey Step 4: Rearrange resulting fasta files into an alignment```
+
+If the above steps worked correctly, your work_directory/‘angsd_bams’ or copy to work_directory/‘fasta’ folder should be filled with a fasta file for each sample. This step is to make these files into something useable for phylogenetics.
+1) First, concatenate all these resulting fasta files. Do this into a new subdirectory:
+```mkdir explode```
+```cat *fasta > explode/cat.fasta```
+2) Enter the ‘explode’ directory. The cat.fasta needs to be exploded so that the fastas are arranged by locus rather than by sample:
+```awk '/^>/{split($1,a,"[|.]")}{print >> a[2]".fa"}' cat.fasta```
+3) Reformat headers. They currently look like: > sample_locality_001|uce-con_1 and need to lose the locus ID. Run this command on the directory of by-locus .fa files (will be thousands of files)
+```sed -i 's/|uce-.*//' *.fa```
+4) Run the seqret_loop.sh script in the same directory as all these .fa files. This will pad the lociso that they are all the same length (adding dashes to the sequences to make the lengths correct), so that they are recognized as alignments.
+```./seqret_loop.sh ```
+5) Even though these loci are already aligned (because the sequences were extracted from reads that aligned to a reference), I have found that re-aligning each locus with Muscle can fix some minor alignment issues (I think this has to do with indels). So run the muscle_loop script on the seqret output. This can take a while, like a few hours.
+```./muscle_loop.sh```
+6) Concatenate loci with AMAS.
+```AMAS.py concat -i *.fasta -f fasta -d dna```
+7) The alignment will have a bunch of question marks in it. I guess these are from the read alignments. I replace them with – so that the alignments can be cleaned up with trimal (trimal will not touch question marks). It is possible this is a bad idea.
+```sed -i 's/?/-/g' concatenated.out```
+8) Last step is to clean up the alignments with trimal to remove columns composed of mostly missing data. The gappyout option gives an alignment roughly twice as long as the no_gaps option; in my experience the trees come out identical but with support values slightly higher when using gappyout.
+```trimal -in concatenated.out -out trimal_gappyout.fasta -gappyout```
+
+This alignment should now be ready to use (e.g., Iq-tree).
+
+_____________________________________________________________________________________________________________________________________________
 #### Getting summary statistics for our UCE loci
 We can use a few commands to look at summary stats pertaining to the UCE loci for each sample. First we need to "explode" the huge .fasta file we generated in the previous step to create a separate .fasta file for each sample.
 ```
