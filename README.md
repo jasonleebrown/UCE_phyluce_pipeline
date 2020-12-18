@@ -411,10 +411,16 @@ If you look at the to-screen output of the previous command, it will tell you ho
 _____________________________________________________________________________________________________________________________________________
 This pipeline takes your current results and realligns them to concencus sequences generated from all your input sequences. The need for this arrose when Evan Twomey was checking loci-level allignments and he noted several taxa where mis-alligned at the end.  
 
+All scripts referenced here are in the folder 'twomey_scripts'.   Besure to open each script before running to make sure your directories match the script directories.  If you do not check this- the scripts are guaranteed to fail.
+
 Additonal encouragement from Evan Twomey:
+
 Some reasons to go through all this hassle:
+
 –	This was the only thing that solved my issue with conspicuously long branch lengths for certain terminals. This is because if you think of the reference sequence as a “good” sequence with minimal or no artifacts, then only well-matching reads will align and be used to extract the sequence. Reads or parts of reads that do not align will not make it into the sequence.
+
 –	You don’t need to have full contigs for this to work, which is a big advantage. For example, if a particular individual only had spotty read coverage for a certain locus, which would preclude assembling a full-length contig, that is no problem here because individual reads can align to a reference with no requirement for contiguity.
+
 –	You can easily change the reference sequence to recover off-target sequences. This is now how I do mitochondrial assembly: I just use a mitochondrial genome from a close relative for the reference sequence instead of the UCE loci. There are also lots of nuclear loci (e.g. 28S) that can be reliably recovered across samples.
 
 #### Software Dependencies: 
