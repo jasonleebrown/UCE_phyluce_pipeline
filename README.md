@@ -587,6 +587,9 @@ trimal -in concatenated.out -out trimal_gappyout.fasta -gappyout
 
 This alignment should now be ready to use (e.g., IQ-Tree).
 
+## Phasing information (optional and coming soon). 
+Phasing is the process of inferring haplotypes from genotype data.  This can be very useful for population-level analyses. 
+
 #### End of Twomey Pipeline
 _____________________________________________________________________________________________________________________________________________
 #### Getting summary statistics for our UCE loci
