@@ -563,7 +563,7 @@ sed -i 's/|uce-.*//' *.fa
 
 4) Run the seqret_loop.sh script in the same directory as all these .fa files. This will pad the lociso that they are all the same length (adding dashes to the sequences to make the lengths correct), so that they are recognized as alignments.
 
-JLB: Note - make sure all files in this folder that are *.fa extensions are desired - I had a rouge .fa file ("bam.fa") in my folder that created a ton of confusion.  The files shoud be named to match UCE name.
+JLB 12.2020: Note - make sure all files in this folder that are *.fa and *.fasta extensions are desired - I had a rouge .fa file ("bam.fa") other .fasta files in my folder that created a ton of confusion.  The files you want shoud be named to match UCE name.  I recommend creating a new folder or removing all other files from this directory (minus the .sh files)
 
 ```
 ./seqret_loop.sh 
