@@ -435,7 +435,12 @@ Seqtk (1.2) ```conda install seqtk```
 
 Muscle (3.8)
 
-AMAS (https://github.com/marekborowiec/AMAS) ```conda install AMAS```
+AMAS (https://github.com/marekborowiec/AMAS) ```conda install AMAS``` and 
+```
+sudo apt-get install python3
+pip install amas
+```
+IMPORTANT - pay particular attendtion to where this script is installed.  For Bender it is located in: "/home/bender/miniconda2/envs/phyluce/lib/python2.7/site-packages/amas/AMAS.py"
 
 TrimAl (1.4)
 
@@ -582,8 +587,9 @@ mkdir muscle
 6) Concatenate loci with AMAS.
 
 ```
-AMAS.py concat -i *.fasta -f fasta -d dna
+python  /home/bender/miniconda2/envs/phyluce/lib/python2.7/site-packages/amas/AMAS.py concat -i *.fasta -f fasta -d dna
 ```
+Note JLB 12/2020: notice the specific location of AMAS.py (found when installing it see above)
 
 7) The alignment will have a bunch of question marks in it. I guess these are from the read alignments. I replace them with – so that the alignments can be cleaned up with trimal (trimal will not touch question marks). It is possible this is a bad idea.
 
