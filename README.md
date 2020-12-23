@@ -554,7 +554,7 @@ cat *fasta > explode/cat.fasta
 awk '/^>/{split($1,a,"[|.]")}{print >> a[2]".fa"}' cat.fasta
 ```
 
-If this didn't create 1000 of files run this (removing "." for search):
+IMPORTANT. If this didn't create 1000s of files, re-run this step with a slightly altered code (removing "." from search after pipe):
 ```
 awk '/^>/{split($1,a,"[|]")}{print >> a[2]".fa"}' cat.fasta
 ```
@@ -575,21 +575,23 @@ JLB 12.2020: Note - make sure all files in this folder that are *.fa and *.fasta
 ```
 
 5) Even though these loci are already aligned (because the sequences were extracted from reads that aligned to a reference), I have found that re-aligning each locus with Muscle can fix some minor alignment issues (I think this has to do with indels). So run the muscle_loop script on the seqret output. This can take a while, like a few hours.
+Do this into the new directory:
 
 ```
 mkdir muscle
 ```
-
+Then run the script:
 ```
 ./muscle_loop.sh
 ```
 
-6) Concatenate loci with AMAS.
+6) Concatenate loci with AMAS. To do this, enter the newly created 'muscle' directory and then run this script:
 
 ```
 python  /home/bender/miniconda2/envs/phyluce/lib/python2.7/site-packages/amas/AMAS.py concat -i *.fasta -f fasta -d dna
 ```
-Note JLB 12/2020: notice the specific location of AMAS.py (found when installing it see above)
+
+JLB 12.2020: Note the specific location of "AMAS.py" (found when installing it see above)
 
 7) The alignment will have a bunch of question marks in it. I guess these are from the read alignments. I replace them with – so that the alignments can be cleaned up with trimal (trimal will not touch question marks). It is possible this is a bad idea.
 
