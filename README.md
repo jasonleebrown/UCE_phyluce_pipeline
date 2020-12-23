@@ -549,6 +549,12 @@ cat *fasta > explode/cat.fasta
 awk '/^>/{split($1,a,"[|.]")}{print >> a[2]".fa"}' cat.fasta
 ```
 
+If this didn't create 1000 of files run this (removing "." for search):
+```
+awk '/^>/{split($1,a,"[|]")}{print >> a[2]".fa"}' cat.fasta
+```
+
+
 3) Reformat headers. They currently look like: > sample_locality_001|uce-con_1 and need to lose the locus ID. Run this command on the directory of by-locus .fa files (will be thousands of files)
 
 ```
