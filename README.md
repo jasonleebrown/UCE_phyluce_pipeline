@@ -572,6 +572,10 @@ JLB 12.2020: Note - make sure all files in this folder that are *.fa and *.fasta
 5) Even though these loci are already aligned (because the sequences were extracted from reads that aligned to a reference), I have found that re-aligning each locus with Muscle can fix some minor alignment issues (I think this has to do with indels). So run the muscle_loop script on the seqret output. This can take a while, like a few hours.
 
 ```
+mkdir muscle
+```
+
+```
 ./muscle_loop.sh
 ```
 
