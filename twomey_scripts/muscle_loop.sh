@@ -1,4 +1,4 @@
 for file in *.fa
 do
-    muscle $file -o muscle/$file
+    muscle -in $file -out muscle/$file
 done
