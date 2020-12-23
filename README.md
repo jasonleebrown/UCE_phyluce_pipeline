@@ -597,7 +597,7 @@ sed -i 's/?/-/g' concatenated.out
 trimal -in concatenated.out -out trimal_gappyout.fasta -gappyout
 ```
 
-This alignment should now be ready to use (e.g., IQ-Tree).
+This alignment should now be ready to use (e.g., IQ-Tree).   However, I suggest you jump to locus filtering from this step.
 
 #### Phasing loci (optional and coming soon). 
 Phasing is the process of inferring haplotypes from genotype data.  This can be very useful for population-level analyses. 
