@@ -1,44 +1,42 @@
 NOTE: this entire repository was created by Wilson X Guillory [wxgillo](https://github.com/wxguillo).
 
-
-
 # brownlab-workflow
 This is a tutorial for the phylogenomic workflow used by the Brown lab, where we use [UCEs](https://www.ultraconserved.org/) to uncover evolutionary histories, mostly in Neotropical poison frogs (Dendrobatidae). In this tutorial I provide sample data and take you through the steps of read processing, sequence assembly, read-to-locus matching, and sequence alignment, and finally provide a few examples of phylogenetic analyses that can be performed on UCE data.
 ## Contents
-- [Directory structure and example files](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#directory-structure-and-example-files)
-   - [Using miniconda2](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#using-miniconda2)
-- [Read trimming](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#read-trimming)
-   - [Making the Illumiprocessor configuration file](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#making-the-illumiprocessor-configuration-file)
-      - [Making the configuration file quickly with Excel](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#making-the-configuration-file-quickly-with-excel)
-   - [Running Illumiprocessor](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#running-illumiprocessor)
-      - [Troubleshooting Illumiprocessor](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#troubleshooting-illumiprocessor)
-- [Sequence assembly](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#sequence-assembly)
-   - [Making the assembly configuration file](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#making-the-assembly-configuration-file)
-   - [Running Trinity to assemble cleaned reads](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#running-trinity-to-assemble-cleaned-reads)
-      - [Troubleshooting Trinity](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#troubleshooting-trinity)
-- [Locus matching](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#locus-matching)
-   - [Matching contigs to probes](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#matching-contigs-to-probes)
-   - [Extracting UCE locus data](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#extracting-uce-locus-data)
-      - [Creating taxon sets](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#creating-taxon-sets)
-      - [Getting .fasta files for each sample and UCE locus](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#getting-fasta-files-for-each-sample-and-uce-locus)
-      - [Getting summary statistics for our UCE loci](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#getting-summary-statistics-for-our-uce-loci)
-- [Sequence alignment](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#sequence-alignment)
-   - [Locus filtering](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#locus-filtering)
-      - [Filtering by completeness](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#filtering-by-completeness)
-      - [Filtering by parsimony-informative sites](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#filtering-by-parsimony-informative-sites)
-   - [Concatenating alignments](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#concatenating-alignments)
-- [Phylogenetic analysis](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#phylogenetic-analysis)
-   - [Maximum likelihood analysis with RAxML](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#maximum-likelihood-analysis-with-raxml)
-   - [Maximum likelihood analysis with IQ-TREE](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#maximum-likelihood-analysis-with-iq-tree)
-   - [Coalescent analysis with ASTRAL](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#coalescent-analysis-with-astral)
-      - [Constructing gene trees with IQ-TREE for ASTRAL input](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#constructing-gene-trees-with-iq-tree-for-astral-input)
-      - [Creating a mapping file for ASTRAL](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#creating-a-mapping-file-for-astral)
-      - [Running ASTRAL](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#running-astral)
-   - [Bayesian analysis with BEAST](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#bayesian-analysis-with-beast)
-      - [Subsetting loci for BEAST](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#subsetting-loci-for-beast)
-      - [Setting up a BEAST run with BEAUti](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#setting-up-a-beast-run-with-beauti)
-      - [Running BEAST](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#running-beast)
-      - [Processing BEAST output](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#processing-beast-output)
+- [Directory structure and example files](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#directory-structure-and-example-files)
+   - [Using miniconda2](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#using-miniconda2)
+- [Read trimming](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#read-trimming)
+   - [Making the Illumiprocessor configuration file](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#making-the-illumiprocessor-configuration-file)
+      - [Making the configuration file quickly with Excel](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#making-the-configuration-file-quickly-with-excel)
+   - [Running Illumiprocessor](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-illumiprocessor)
+      - [Troubleshooting Illumiprocessor](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#troubleshooting-illumiprocessor)
+- [Sequence assembly](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sequence-assembly)
+   - [Making the assembly configuration file](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#making-the-assembly-configuration-file)
+   - [Running Trinity to assemble cleaned reads](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-trinity-to-assemble-cleaned-reads)
+      - [Troubleshooting Trinity](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#troubleshooting-trinity)
+- [Locus matching](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#locus-matching)
+   - [Matching contigs to probes](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#matching-contigs-to-probes)
+   - [Extracting UCE locus data](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#extracting-uce-locus-data)
+      - [Creating taxon sets](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#creating-taxon-sets)
+      - [Getting .fasta files for each sample and UCE locus](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#getting-fasta-files-for-each-sample-and-uce-locus)
+      - [Getting summary statistics for our UCE loci](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#getting-summary-statistics-for-our-uce-loci)
+- [Sequence alignment](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sequence-alignment)
+   - [Locus filtering](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#locus-filtering)
+      - [Filtering by completeness](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-completeness)
+      - [Filtering by parsimony-informative sites](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-parsimony-informative-sites)
+   - [Concatenating alignments](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#concatenating-alignments)
+- [Phylogenetic analysis](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#phylogenetic-analysis)
+   - [Maximum likelihood analysis with RAxML](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#maximum-likelihood-analysis-with-raxml)
+   - [Maximum likelihood analysis with IQ-TREE](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#maximum-likelihood-analysis-with-iq-tree)
+   - [Coalescent analysis with ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#coalescent-analysis-with-astral)
+      - [Constructing gene trees with IQ-TREE for ASTRAL input](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#constructing-gene-trees-with-iq-tree-for-astral-input)
+      - [Creating a mapping file for ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#creating-a-mapping-file-for-astral)
+      - [Running ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-astral)
+   - [Bayesian analysis with BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#bayesian-analysis-with-beast)
+      - [Subsetting loci for BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#subsetting-loci-for-beast)
+      - [Setting up a BEAST run with BEAUti](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#setting-up-a-beast-run-with-beauti)
+      - [Running BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-beast)
+      - [Processing BEAST output](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#processing-beast-output)
 
 ## Directory structure and example files
 In this tutorial I will be using a Linux machine (named Bender) for all steps. We need to start by creating a directory to put the example data in.  
@@ -999,7 +997,7 @@ Bayesian phylogenetic methods are commonly regarded as "the best" and "most robu
 #### Subsetting loci for BEAST
 There are three things that can make a BEAST run take an intractably long amount of time to converge: having lots of sequence data (=loci), lots of taxa (=samples), or too few threads (=cores). We know we'll be using 19 cores, and we already have a very small number of taxa (n=6), but we still have a decent number of loci (n=385). We're going to further subset our collection of loci to increase computational efficiency. Doing this does suck because you're effectively ignoring a large portion of your data, but as one reviewer once told me, "Nobody has seventy years to wait for their BEAST run to converge".
 
-There are a couple ways to subset your loci. One is to use the X most parsimony-informative loci, which I showed you how to find in [this section](https://github.com/wxguillo/brownlab-workflow/blob/master/README.md#filtering-by-parsimony-informative-sites). Another is to use a subset of random loci. We'll do this for demonstrative purposes. To get a list of, let's say 50 random loci, use this command (make sure you're in the `all` directory):
+There are a couple ways to subset your loci. One is to use the X most parsimony-informative loci, which I showed you how to find in [this section](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-parsimony-informative-sites). Another is to use a subset of random loci. We'll do this for demonstrative purposes. To get a list of, let's say 50 random loci, use this command (make sure you're in the `all` directory):
 ```
 shuf -n50 muscle-nexus-clean-75p/inform_names_PIS_3.txt > random_loci_n50.txt
 ```
@@ -1074,8 +1072,6 @@ We now use TreeAnnotator to visualize our posterior "tree-cloud" as a single tre
 After you click "Run," the program will run for a few moments and spit out `beast_n50.treefile`. Since this was a pretty flawed BEAST run, our output isn't anything visualizable as it has very very short branch lengths - but this exercise took you through the motions of doing a Bayesian divergence time analysis in BEAST. 
     
     
-    
-    
 **JLB Install notes** to be used alongside the Phyluce [install guide](https://phyluce.readthedocs.io/en/latest/installation.html#path-configuration)
 
 If you do a new install, please install java 1.7 and switch to it before installing conda and phyluce, seriously.  
@@ -1095,6 +1091,7 @@ Where to get older [GATK] - minght not be needed (https://console.cloud.google.c
 
 To install java from conda (not actually needed) 'conda install -c anaconda java-1.7.0-openjdk-cos6-x86_64' 
 
+    
     
     
     
