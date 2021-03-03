@@ -472,7 +472,7 @@ phyluce_align_get_trimal_trimmed_alignments_from_untrimmed \
 	--output-format nexus
 ```
 
-###Twomey Pipeline
+### Twomey Pipeline
 #### Twomey Data Polishing Pipeline - OPTIONAL, but highly encouraged
 _____________________________________________________________________________________________________________________________________________
 This pipeline takes your current results and realligns them to concencus sequences generated from all your input sequences. The need for this arrose when Evan Twomey was checking loci-level allignments and he noted several taxa where mis-alligned at the end.  
