@@ -407,6 +407,69 @@ This is a good command to run over your lunch break if you have a lot of samples
 
 If you look at the to-screen output of the previous command, it will tell you how many UCE loci were recovered for each sample. We targeted around 5,000 loci in total, but for most samples we retain ~1,500. This is pretty normal for our poison frog samples.
 
+#### Getting summary statistics for our UCE loci
+We can use a few commands to look at summary stats pertaining to the UCE loci for each sample. First we need to "explode" the huge .fasta file we generated in the previous step to create a separate .fasta file for each sample.
+```
+phyluce_assembly_explode_get_fastas_file \
+    --input all-taxa-incomplete.fasta \
+    --output exploded-fastas \
+    --by-taxon
+```
+This generates a folder `exploded-fastas` that contains six .fasta files, one for each sample, containing the (unaligned) UCE loci for that sample. Next use this command to generate summary stats:
+```
+for i in exploded-fastas/*.fasta;
+do
+    phyluce_assembly_get_fasta_lengths --input $i --csv;
+done
+```
+This is the same command that you might have used to get assembly summary statistics earlier. Like that case, the output will be organized as a .csv file with the following columns:
+>sample,contigs,total bp,mean length,95 CI length,min,max,median,contigs >1kb
+## Sequence alignment
+The final step before we get to the phylogenetic analysis is sequence alignment. Like sequence assembly, alignment is a classic problem in bioinformatics that has built the careers of several computational biologists. Basically, we need to "align" DNA sequences (think of strings of ATGCGCGTACG... etc.) for each of our samples, so that homologous base pairs are located in the same column. This is a difficult problem because divergent taxa can have very different sequences even for the same gene, making the question of "are these base pairs actually homologous?" fairly nebulous. The desired end results of sequence alignment is a matrix where every column corresponds exactly to homologous base pairs for each taxon (which are represented by rows). The phylogenetics program you use will compare the sequences in the alignment to determine their evolutionary relationships. More divergent sequences should lead to those species being further removed from each other in the phylogeny.
+
+PHYLUCE is integrated with the alignment programs [MAFFT](https://mafft.cbrc.jp/alignment/software/) and [MUSCLE](http://www.drive5.com/muscle/). Faircloth recommends using MAFFT, but it's mostly a matter of personal preference. As a creature of habit, I always tend to use MUSCLE, and will be using that program in this tutorial. Also note that PHYLUCE will perform edge-trimming of alignments (basically an alignment cleaning step) unless otherwise specified. Faircloth recommends this for "closely-related taxa" (<30-50 Ma), which our poison frogs are, so we will allow the edge-trimming.
+
+To perform per-locus alignments, use the following command:
+```
+phyluce_align_seqcap_align \
+    --fasta all-taxa-incomplete.fasta \
+    --output-format nexus \
+    --output muscle-nexus \
+    --taxa 6 \
+    --aligner muscle \
+    --cores 19 \
+    --incomplete-matrix \
+    --log-path log
+```
+- The `--output-format` flag specifies the format of the alignment output. We are using [nexus](http://wiki.christophchamp.com/index.php?title=NEXUS_file_format) format here, a popular format that contains a bit more information than .fasta.
+- The `--taxa` flag specifies the number of taxa in the alignment. I have missed changing this before, and didn't encounter any problems, but it may have a role in parallelization or something performance-related.
+- The `--aligner` flag is used to specify either `muscle` or `mafft`. 
+- Remember to specify the proper number of cores for your machine.
+
+This command creates a folder called `muscle-nexus` that has individual per-locus .fasta files, each containing a sequence alignment for that locus. You can easily check how many loci you have by checking how many .fasta files are in this folder; in our case, we have 2,019 (what a coincidence).  
+
+If all of your alignments are getting dropped (I've had this problem with newer versions of Phyluce), it's likely because you have edge-trimming turned on. Use the following command instead:
+```
+phyluce_align_seqcap_align \
+    --fasta all-taxa-incomplete.fasta \
+    --output-format nexus \
+    --taxa 6 \
+    --output muscle-nexus \
+    --aligner muscle \
+    --cores 19 \
+    --no-trim \
+    --incomplete-matrix \
+    --log-path log
+```
+Then, you can trim the alignments separately with the command:
+```
+phyluce_align_get_trimal_trimmed_alignments_from_untrimmed \
+	--alignments muscle-nexus \
+	--output muscle-nexus-trimmed \
+	--input-format nexus \
+	--output-format nexus
+```
+
 ## Twomey Data Polishing Pipeline - OPTIONAL, but highly encouraged
 _____________________________________________________________________________________________________________________________________________
 This pipeline takes your current results and realligns them to concencus sequences generated from all your input sequences. The need for this arrose when Evan Twomey was checking loci-level allignments and he noted several taxa where mis-alligned at the end.  
@@ -612,68 +675,6 @@ Phasing is the process of inferring haplotypes from genotype data.  This can be 
 
 #### End of Twomey Pipeline
 _____________________________________________________________________________________________________________________________________________
-#### Getting summary statistics for our UCE loci
-We can use a few commands to look at summary stats pertaining to the UCE loci for each sample. First we need to "explode" the huge .fasta file we generated in the previous step to create a separate .fasta file for each sample.
-```
-phyluce_assembly_explode_get_fastas_file \
-    --input all-taxa-incomplete.fasta \
-    --output exploded-fastas \
-    --by-taxon
-```
-This generates a folder `exploded-fastas` that contains six .fasta files, one for each sample, containing the (unaligned) UCE loci for that sample. Next use this command to generate summary stats:
-```
-for i in exploded-fastas/*.fasta;
-do
-    phyluce_assembly_get_fasta_lengths --input $i --csv;
-done
-```
-This is the same command that you might have used to get assembly summary statistics earlier. Like that case, the output will be organized as a .csv file with the following columns:
->sample,contigs,total bp,mean length,95 CI length,min,max,median,contigs >1kb
-## Sequence alignment
-The final step before we get to the phylogenetic analysis is sequence alignment. Like sequence assembly, alignment is a classic problem in bioinformatics that has built the careers of several computational biologists. Basically, we need to "align" DNA sequences (think of strings of ATGCGCGTACG... etc.) for each of our samples, so that homologous base pairs are located in the same column. This is a difficult problem because divergent taxa can have very different sequences even for the same gene, making the question of "are these base pairs actually homologous?" fairly nebulous. The desired end results of sequence alignment is a matrix where every column corresponds exactly to homologous base pairs for each taxon (which are represented by rows). The phylogenetics program you use will compare the sequences in the alignment to determine their evolutionary relationships. More divergent sequences should lead to those species being further removed from each other in the phylogeny.
-
-PHYLUCE is integrated with the alignment programs [MAFFT](https://mafft.cbrc.jp/alignment/software/) and [MUSCLE](http://www.drive5.com/muscle/). Faircloth recommends using MAFFT, but it's mostly a matter of personal preference. As a creature of habit, I always tend to use MUSCLE, and will be using that program in this tutorial. Also note that PHYLUCE will perform edge-trimming of alignments (basically an alignment cleaning step) unless otherwise specified. Faircloth recommends this for "closely-related taxa" (<30-50 Ma), which our poison frogs are, so we will allow the edge-trimming.
-
-To perform per-locus alignments, use the following command:
-```
-phyluce_align_seqcap_align \
-    --fasta all-taxa-incomplete.fasta \
-    --output-format nexus \
-    --output muscle-nexus \
-    --taxa 6 \
-    --aligner muscle \
-    --cores 19 \
-    --incomplete-matrix \
-    --log-path log
-```
-- The `--output-format` flag specifies the format of the alignment output. We are using [nexus](http://wiki.christophchamp.com/index.php?title=NEXUS_file_format) format here, a popular format that contains a bit more information than .fasta.
-- The `--taxa` flag specifies the number of taxa in the alignment. I have missed changing this before, and didn't encounter any problems, but it may have a role in parallelization or something performance-related.
-- The `--aligner` flag is used to specify either `muscle` or `mafft`. 
-- Remember to specify the proper number of cores for your machine.
-
-This command creates a folder called `muscle-nexus` that has individual per-locus .fasta files, each containing a sequence alignment for that locus. You can easily check how many loci you have by checking how many .fasta files are in this folder; in our case, we have 2,019 (what a coincidence).  
-
-If all of your alignments are getting dropped (I've had this problem with newer versions of Phyluce), it's likely because you have edge-trimming turned on. Use the following command instead:
-```
-phyluce_align_seqcap_align \
-    --fasta all-taxa-incomplete.fasta \
-    --output-format nexus \
-    --taxa 6 \
-    --output muscle-nexus \
-    --aligner muscle \
-    --cores 19 \
-    --no-trim \
-    --incomplete-matrix \
-    --log-path log
-```
-Then, you can trim the alignments separately with the command:
-```
-phyluce_align_get_trimal_trimmed_alignments_from_untrimmed \
-	--alignments muscle-nexus \
-	--output muscle-nexus-trimmed \
-	--input-format nexus \
-	--output-format nexus
-```
 ### Locus filtering
 Locus filtering is the final step before phylogenetic analysis can happen. Filtering out uninformative or largely incomplete loci can improve performance and efficiency. In our pipeline there are generally two types of locus filtering we'll be performing:
 - **Filtering by completeness:** This step is technically optional but you should still do it. It removes loci that are only possessed by a few taxa, which can bias your results if left alone.
