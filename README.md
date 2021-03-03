@@ -21,8 +21,8 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Getting .fasta files for each sample and UCE locus](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#getting-fasta-files-for-each-sample-and-uce-locus)
       - [Getting summary statistics for our UCE loci](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#getting-summary-statistics-for-our-uce-loci)
 - [Sequence alignment](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sequence-alignment)
-- [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey)
-- [Phasing data](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#phasing)
+- [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
+- [Phasing data](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#phasing-haplotypes)
 - [Locus filtering](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#locus-filtering)
       - [Filtering by completeness](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-completeness)
       - [Filtering by parsimony-informative sites](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-parsimony-informative-sites)
@@ -472,7 +472,8 @@ phyluce_align_get_trimal_trimmed_alignments_from_untrimmed \
 	--output-format nexus
 ```
 
-### Twomey Data Polishing Pipeline - OPTIONAL, but highly encouraged
+###Twomey Pipeline
+#### Twomey Data Polishing Pipeline - OPTIONAL, but highly encouraged
 _____________________________________________________________________________________________________________________________________________
 This pipeline takes your current results and realligns them to concencus sequences generated from all your input sequences. The need for this arrose when Evan Twomey was checking loci-level allignments and he noted several taxa where mis-alligned at the end.  
 
@@ -674,7 +675,9 @@ This alignment should now be ready to use (e.g., IQ-Tree).   However, I suggest 
 
 #### End of Twomey Pipeline
 _____________________________________________________________________________________________________________________________________________
-### Phasing loci (work in progress). 
+
+### Phasing Haplotypes
+(work in progress)
 
 Phasing is the process of inferring haplotypes from genotype data.  This can be very useful for population-level analyses. We are phasing based on the pipeline The following workflow derives from Andermann et al. 2018 (https://doi.org/10.1093/sysbio/syy039) and the Phyluce pipeline (https://phyluce.readthedocs.io/en/latest/tutorial-two.html)
 
