@@ -590,17 +590,10 @@ bwa index /home/jason/Desktop/tutorial/work_directory/reference_sets/UCE/uce_con
 Now run the bash script- before you run it make sure you change the directories inside of the script.
 
 ```
-bash bams_loopBWA-MEM-UCE.sh
-```
+Before running go to ‘angsd_bams’ folder.
+Then run script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
+To do this type: bash  angsd_Dofasta4_iupac0.2_minDepth_2.sh
 
-If you error out -change: 
-
-```
-samtools sort $sample.bam -o $sample.sorted.bam
-``` 
-to
-```
-samtools sort $sample.bam $sample.sorted
 ```
 
 #### Twomey Step 4: Rearrange resulting fasta files into an alignment```
