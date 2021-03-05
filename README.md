@@ -588,7 +588,7 @@ bwa index /home/jason/Desktop/tutorial/work_directory/reference_sets/UCE/uce_con
 ```
 
 
-Now run the bash script- before you run it make sure you change the directories inside of the script.
+Now run the bash script "bams_loopBWA-MEM-UCE.sh"- before you run it make sure you change the directories inside of the script.
 
 ```bash bams_loopBWA-MEM-UCE.sh```
 
