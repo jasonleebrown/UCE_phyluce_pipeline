@@ -598,9 +598,9 @@ To:
 ```samtools sort $sample.bam $sample.sorted```
 
 
-## Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
+Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
 
-Before running go to ‘angsd_bams’ folder
+Go to ‘angsd_bams’ folder
 
 To run script type: 
 ```
