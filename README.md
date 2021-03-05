@@ -592,9 +592,13 @@ Now run the bash script- before you run it make sure you change the directories 
 
 ```bash bams_loopBWA-MEM-UCE.sh```
 
-JLB Note 2/2021: if you error out -  change: “samtools sort $sample.bam -o $sample.sorted.bam” to   “samtools sort $sample.bam $sample.sorted"
+JLB Note 2/2021: If you error out - in the script "bash bams_loopBWA-MEM-UCE.sh", change: 
+```samtools sort $sample.bam -o $sample.sorted.bam``` 
+To:
+```samtools sort $sample.bam $sample.sorted```
 
-Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
+
+## Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
 
 Before running go to ‘angsd_bams’ folder
 
