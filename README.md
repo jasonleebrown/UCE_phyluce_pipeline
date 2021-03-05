@@ -642,18 +642,18 @@ sed -i 's/|uce-.*//' *.fa
 JLB 12.2020: Note - make sure all files in this folder that are *.fa and *.fasta extensions are desired - I had a rouge .fa file ("bam.fa") other .fasta files in my folder that created a ton of confusion.  The files you want shoud be named to match UCE name.  I recommend creating a new folder or removing all other files from this directory (minus the .sh files)
 
 ```
-./seqret_loop.sh 
+bash seqret_loop.sh 
 ```
 
 5) Even though these loci are already aligned (because the sequences were extracted from reads that aligned to a reference), I have found that re-aligning each locus with Muscle can fix some minor alignment issues (I think this has to do with indels). So run the muscle_loop script on the seqret output. This can take a while, like a few hours.
-Do this into the new directory:
+Enter the Seqret loop directory, copy the 'muscle_loop.sh' into this diretory.  Then created a new folder (below) and run the script (also below).
 
 ```
 mkdir muscle
 ```
 Then run the script:
 ```
-./muscle_loop.sh
+bash muscle_loop.sh
 ```
 
 6) Concatenate loci with AMAS. To do this, enter the newly created 'muscle' directory and then run this script:
