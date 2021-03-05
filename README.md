@@ -594,7 +594,7 @@ Now run the bash script- before you run it make sure you change the directories 
 
 JLB Note 2/2021: If you error out - in the script "bash bams_loopBWA-MEM-UCE.sh", change: 
 ```samtools sort $sample.bam -o $sample.sorted.bam``` 
-To:
+to 
 ```samtools sort $sample.bam $sample.sorted```
 
 
