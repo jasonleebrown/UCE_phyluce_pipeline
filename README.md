@@ -558,13 +558,18 @@ work_directory/fastas  – This will hold the per-sample read alignment results.
 mkdir -p work_directory/fastas
 ```
 
-'work_directory/reference_sets/UCE' – This will hold your hisat2 index files and the uce_consensus_reference.fasta
+'work_directory/reference_sets/UCE' – This will hold your hisat2 index files and the 'uce_consensus_reference.fasta' just created (you can copy that there)
 
 ```
 mkdir -p work_directory/reference_sets/UCE
 ```
 
-'work_directory/samples' – This holds your folders corresponding to each sample to be included in the phylogeny. To do this, go to the ‘clean-fastq’ folder of one of your phyluce runs. Copy (or link) these folders into this samples directory.
+'work_directory/samples' – This holds your folders corresponding to each sample to be included in the phylogeny. To do this, go to the ‘2_clean-fastq’ folder of one of your phyluce runs. Copy (or link) these folders into this 'samples' directory.
+
+For example, for the samples directory, the path to your sample reads would be something like:
+work_directory/samples/amazonica_Iquitos_JLB08_0264/split-adapter-quality-trimmed
+work/directory/samples/benedicta_Pampa_Hermosa_0050/split-adapter-quality-trimmed
+etc.
 
 ```
 mkdir -p work_directory/reference_sets
@@ -572,18 +577,10 @@ mkdir -p work_directory/angsd_bams
 mkdir -p work_directory/samples
 ```
 
-
-Now copy contents of the folder '2_clean_fastq' from previous step to your 'work_directory/samples' folder.
-
-For example, for the samples directory, the path to your sample reads would be something like:
-work_directory/samples/amazonica_Iquitos_JLB08_0264/split-adapter-quality-trimmed
-work/directory/samples/benedicta_Pampa_Hermosa_0050/split-adapter-quality-trimmed
-etc.
-
 #### Twomey Step 3. Align per-sample reads to reference and extract sequence for each locus
 All you have to do here is place the read_map_UCE_loop_HaploidCall.sh script into the work_directory/samples folder, and run it. Results will appear in work_directory/fastas as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
 
-Copy the 'usc_consensus_reference.fasta' to the folder below.
+Make sure that you have copied 'usc_consensus_reference.fasta' to the folder below.
 
 First index your UCE file
 
