@@ -569,7 +569,11 @@ mkdir -p work_directory/reference_sets/UCE
 ```
 mkdir -p work_directory/reference_sets
 mkdir -p work_directory/angsd_bams
+mkdir -p work_directory/samples
 ```
+
+
+Now copy contents of the folder '2_clean_fastq' from previous step to your 'work_directory/samples' folder.
 
 For example, for the samples directory, the path to your sample reads would be something like:
 work_directory/samples/amazonica_Iquitos_JLB08_0264/split-adapter-quality-trimmed
@@ -579,14 +583,15 @@ etc.
 #### Twomey Step 3. Align per-sample reads to reference and extract sequence for each locus
 All you have to do here is place the read_map_UCE_loop_HaploidCall.sh script into the work_directory/samples folder, and run it. Results will appear in work_directory/fastas as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
 
-Note- go to folder 'work_directory/samples'
+Copy the 'usc_consensus_reference.fasta' to the folder below.
 
 First index your UCE file
 
 ```
-bwa index /home/jason/Desktop/tutorial/work_directory/reference_sets/UCE/uce_consensus_reference.fasta
+bwa index /home/bender/Desktop/tutorial/work_directory/reference_sets/UCE/uce_consensus_reference.fasta
 ```
 
+Go to folder 'work_directory/samples'
 
 Now run the bash script "bams_loopBWA-MEM-UCE.sh"- before you run it make sure you change the directories inside of the script.
 
