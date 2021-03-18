@@ -661,6 +661,8 @@ Then run the script:
 bash muscle_loop.sh
 ```
 
+JLB 3.2021: IMPORTANT - if you plan to filter the data for completeness or for PIS - use the output from Muscle here as inputs.  Then you can return to these few scripts to contatenate 
+
 6) Concatenate loci with AMAS. To do this, enter the newly created 'muscle' directory and then run this script:
 
 ```
