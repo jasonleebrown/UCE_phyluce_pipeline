@@ -27,6 +27,7 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Filtering by completeness](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-completeness)
       - [Filtering by parsimony-informative sites](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-parsimony-informative-sites)
    - [Concatenating alignments](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#concatenating-alignments)
+-[Removing individuals from final alignments](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#removing-inidivuals-from-alignments)
 - [Phylogenetic analysis](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#phylogenetic-analysis)
    - [Maximum likelihood analysis with RAxML](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#maximum-likelihood-analysis-with-raxml)
    - [Maximum likelihood analysis with IQ-TREE](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#maximum-likelihood-analysis-with-iq-tree)
@@ -1088,6 +1089,18 @@ phyluce_align_format_nexus_files_for_raxml \
     --charsets
 ```
 The output will be a new folder named `muscle-nexus-iqtree-75p_3` that contains two files: `muscle-nexus-clean-75p_3.phylip`, a [PHYLIP](http://scikit-bio.org/docs/0.5.0/generated/skbio.io.format.phylip.html)-formatted alignment file containing all 385 retained loci, and `muscle-nexus-clean-75p_3.charsets`, a list of partitions that was generated because we specified the `--charsets` option. This list specifies the location of each locus in the alignment and can be used to specify partitions for phylogenetic analysis, although we will not be using it.
+
+### Removing inidivuals from alignments
+After finishing a project I highly recommend that you run a quick IQTREE analysis to vet the quality of input data. Many times you will have a few sequences that are complete garbage (>50% ambiguity/gap composition).  What do you do?  Remove the crap.  I've found that the easiest way to do this in a concatonated allignment is to explode the fasta files by individual.  
+
+To do this go to the folder with your final alignment. If you have lots of other .fasta or.fa files in that folder, I strongly suggest that copy the alignment to a new folder. Then to explode it type:
+'''awk '/^>/{split($1,a,"[>]")}{print >> a[2]".fa"}' trimal_gappyout.fasta''' 
+This explodes the aligment named 'trimal_gappyout.fasta'.
+Now delete unwanted individuals.  
+Once done deleting files, type:
+'''cat *.fa > trimal_gappyout_fix.fasta'''
+The new file should work just fine.
+
 ## Phylogenetic analysis
 Now we're finally at the good part. This isn't intended to be a comprehensive guide for constructing phylogenies but I will show you how to perform some basic analyses using various methods. The previous steps outlined in this guide are basically a pipeline for preparing your data for this step, which is the actual data analysis part of your project. 
 
