@@ -1188,7 +1188,17 @@ iqtree \
 - `-m` substitution model. I use GTR to be roughly equivalent to RAxML. You can also use `-m MFP` to initiate ModelFinder Plus, which will find the best-fit substitution model before running the tree search. 
 - `-nt` number of threads (cores).
 
-**JLB Note 10/2020** The above syntax had some issues for me, if you have an error type manually typing this syntax or paste this: ```iqtree -s muscle-nexus-clean-75p_3.phylip -bb 10000 -m GTR -nt 7```
+**Running a partitioned analyses**
+All you need is a partion file - typically when you concatonate this is created.
+
+```
+iqtree  -s trimal_gappyout.fasta -spp partitions2.txt -bb 10000 -m MFP -nt 10
+```
+
+**JLB Note 10/2020** The above syntax had some issues for me, if you have an error type manually typing this syntax or paste this: 
+```
+iqtree -s muscle-nexus-clean-75p_3.phylip -bb 10000 -m GTR -nt 7
+```
 
 There are many many more options and things you can do with IQ-TREE - this is about as basic of an analysis as you can do with it. The output tree is stored in the file `muscle-nexus-clean-75p_3.phylip.treefile`, which I show below:  
 
