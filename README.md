@@ -26,7 +26,7 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
 - [Locus filtering](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#locus-filtering)
     - [Filtering by completeness](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-completeness)
      - [Filtering by parsimony-informative sites](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-parsimony-informative-sites)
-     - [Concatenating alignments](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#concatenating-alignments)
+- [Concatenating alignments](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#concatenating-alignments)
 - [Removing individuals from final alignments](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#removing-inidivuals-from-alignments)
 - [Phylogenetic analysis](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#phylogenetic-analysis)
    - [Maximum likelihood analysis with RAxML](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#maximum-likelihood-analysis-with-raxml)
