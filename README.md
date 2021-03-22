@@ -1090,7 +1090,7 @@ phyluce_align_format_nexus_files_for_raxml \
 ```
 The output will be a new folder named `muscle-nexus-iqtree-75p_3` that contains two files: `muscle-nexus-clean-75p_3.phylip`, a [PHYLIP](http://scikit-bio.org/docs/0.5.0/generated/skbio.io.format.phylip.html)-formatted alignment file containing all 385 retained loci, and `muscle-nexus-clean-75p_3.charsets`, a list of partitions that was generated because we specified the `--charsets` option. This list specifies the location of each locus in the alignment and can be used to specify partitions for phylogenetic analysis, although we will not be using it.
 
-### Removing inidivuals from alignments
+### Removing individuals from alignments
 After finishing a project I highly recommend that you run a quick IQTREE analysis to vet the quality of input data. Many times you will have a few sequences that are complete garbage (>50% ambiguity/gap composition).  What do you do?  Remove the crap.  I've found that the easiest way to do this in a concatonated allignment is to explode the fasta files by individual.  
 
 To do this go to the folder with your final alignment. If you have lots of other .fasta or.fa files in that folder, I strongly suggest that copy the alignment to a new folder. Then to explode it type:
