@@ -1094,11 +1094,15 @@ The output will be a new folder named `muscle-nexus-iqtree-75p_3` that contains 
 After finishing a project I highly recommend that you run a quick IQTREE analysis to vet the quality of input data. Many times you will have a few sequences that are complete garbage (>50% ambiguity/gap composition).  What do you do?  Remove the crap.  I've found that the easiest way to do this in a concatonated allignment is to explode the fasta files by individual.  
 
 To do this go to the folder with your final alignment. If you have lots of other .fasta or.fa files in that folder, I strongly suggest that copy the alignment to a new folder. Then to explode it type:
-'''awk '/^>/{split($1,a,"[>]")}{print >> a[2]".fa"}' trimal_gappyout.fasta''' 
+```
+awk '/^>/{split($1,a,"[>]")}{print >> a[2]".fa"}' trimal_gappyout.fasta
+```
 This explodes the aligment named 'trimal_gappyout.fasta'.
 Now delete unwanted individuals.  
 Once done deleting files, type:
-'''cat *.fa > trimal_gappyout_fix.fasta'''
+```
+cat *.fa > trimal_gappyout_fix.fasta
+```
 The new file should work just fine.
 
 ## Phylogenetic analysis
