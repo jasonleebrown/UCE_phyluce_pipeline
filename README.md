@@ -1188,8 +1188,8 @@ iqtree \
 - `-m` substitution model. I use GTR to be roughly equivalent to RAxML. You can also use `-m MFP` to initiate ModelFinder Plus, which will find the best-fit substitution model before running the tree search. 
 - `-nt` number of threads (cores).
 
-**Running a partitioned analyses**
-All you need is a partion file - typically when you concatonate this is created.
+**Running a partitioned analyses.**
+For this you need is a partion file, which is created when you concatenate your sequences.
 
 ```
 iqtree  -s trimal_gappyout.fasta -spp partitions2.txt -bb 10000 -m MFP -nt 10
