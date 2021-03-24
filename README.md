@@ -90,6 +90,12 @@ On my computer I've installed Phyluce (the suite of programs we'll use to do mos
 ```
 conda activate phyluce
 ```
+or
+```
+conda activate phyluce-1.7.1
+```
+
+
 You should notice a `(phyluce)` modifier appear before your command prompt in Terminal now. If you want to leave the Phyluce environment, run:
 ```
 conda deactivate
@@ -906,6 +912,8 @@ The output will look something like the following
     2018-07-27 10:02:24,681 - phyluce_snp_phase_uces - INFO - Balancing FASTA files
     2018-07-27 10:02:24,682 - phyluce_snp_phase_uces - INFO - Symlinking FASTA files
 
+
+**NOTE JLB: SEE** https://phyluce.readthedocs.io/en/latest/daily-use/daily-use-4-workflows.html & https://github.com/faircloth-lab/phyluce/issues/222
 
 The program automatically produces a consensus sequence for each of these phased bam files (= allele sequence) and stores these allele sequences of all samples in a joined FASTA file (``joined_allele_sequences_all_samples.fasta``). This allele FASTA is deposited in the subfolder ``fastas`` within your output folder (e.g. ``/path/to/multialign-bams-phased-reads/fastas``).
 
