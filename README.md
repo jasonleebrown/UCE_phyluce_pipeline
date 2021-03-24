@@ -306,7 +306,7 @@ This creates two files: the first, `reads.txt`, contains a list of two file endi
 
 **JLB Notes 8/2020:** I received the error 'jellyfish: not found', I solved this by reinstalling Jellyfish using this code: 'conda install jellyfish=2.2.3'.
 
-**JLB Notes 10/2020:** Today date my most rage inducing issue - aside from switch java bullshit [see bottom]: 'Error: gzip: stdout: Broken pipe' was found in the log files of a Trinity for each sample. Turns out this is a known Trinity bug - the temp fix is remove the 'singleton' reads from each of the 'split-adapter-quality-trimmed' folders in folder '2_clean-fastq'. For details [see](https://github.com/faircloth-lab/phyluce/issues/159). 
+**JLB Notes 10/2020:** This has offically been my most rage inducing issue - aside from the switching java bullshit [see bottom]: 'Error: gzip: stdout: Broken pipe' was found in the log files of a Trinity for each sample. Turns out this is a known Trinity bug - the temp fix is remove the 'singleton' reads from each of the 'split-adapter-quality-trimmed' folders in folder '2_clean-fastq'. For details [see](https://github.com/faircloth-lab/phyluce/issues/159). 
 
 More Bash tips:
 - The `ln` command generates links. Using the `-s` flag generates symbolic links, which we desire here. The first argument is the file to be linked to, and the second argument is the name and path of the link to be generated.
