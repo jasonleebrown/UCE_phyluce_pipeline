@@ -429,9 +429,17 @@ phyluce_workflow --config phase_wf2.conf \
     --workflow phasing \
     --cores 8
 ```
-When code runs, make sure to look at the last line of text - this step crashes a lot.
+When code runs, make sure to look at the last line of text - this step crashes a lot. Note that if it crashes, from what I can tell - the output fasta files are completely fine to use.   
 
-Right now, what you do with these files is left up to you (e.g. in terms of merging their contents and getting the data aligned). You can essentially group all the *.0.fasta and *.1.fasta files for all taxa together as new “assemblies” of data and start the phyluce analysis process over from "phyluce_assembly_match_contigs_to_probes" step.
+If you can isolated the effor
+
+Right now, what you do with these files is left up to you (e.g. in terms of merging their contents and getting the data aligned). You can essentially group all the *.0.fasta and *.1.fasta files for all taxa together as new “assemblies” of data and start the phyluce analysis process over from "phyluce_assembly_match_contigs_to_probes" step.  Input your fasta files as contigs,  in place of the "--contigs 3_trinity-assemblies/contigs" parameter.  For example 
+```
+phyluce_assembly_match_contigs_to_probes \
+    --contigs phase_S2/fasta \
+    --probes uce-5k-probes.fasta \
+    --output 4_uce-search-results
+```
 
 -------------------------------------OPTIONAL STEP - PHASING END-------------------------------
 
