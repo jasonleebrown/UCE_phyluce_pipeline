@@ -331,6 +331,110 @@ The loop will loop through every file ending in .fasta located in the `3_trinity
 
 In order listed, the summary stats printed to `assembly_stats.csv` will be:
 >sample,contigs,total bp,mean length,95 CI length,min,max,median,contigs >1kb
+
+-------------------------------------OPTIONAL STEP - PHASING START-------------------------------
+### Phasing Haplotypes
+(work in progress)
+**NOTE JLB: SEE** https://phyluce.readthedocs.io/en/latest/daily-use/daily-use-4-workflows.html & https://github.com/faircloth-lab/phyluce/issues/222
+
+
+Phasing is the process of inferring haplotypes from genotype data.  This can be very useful for population-level analyses. We are phasing based on the pipeline The following workflow derives from Andermann et al. 2018 (https://doi.org/10.1093/sysbio/syy039) and the Phyluce pipeline (https://phyluce.readthedocs.io/en/latest/tutorial-two.html)
+
+To phase your UCE data, you need to have individual-specific "reference" contigs against which to align your raw reads.  Generally speaking, you can create these individual-specific reference contigs at several stages of the phyluce_ pipeline, and the stage at which you choose to do this may depend on the analyses that you are running.  That said, I think that the best way to proceed uses edge-trimmed exploded alignments as your reference contigs, aligns raw reads to those, and uses the exploded alignments and raw reads to phase your data.
+
+.. attention::  We have not implemented code that you can
+    use if you are trimming your alignment data with some other
+    approach (e.g. gblocks_ or trimal_).
+
+Phasing requires two steps and the use of an update-to-date version of phyluce.   To activate a newer version, type this (remember to update version number):
+
+```
+conda activate phyluce-1.7.1
+```
+
+**Step 1: Mapping**.  
+The “mapping” workflow precedes all other workflows and is responsible for mapping reads to contigs, marking duplicates, computing coverage, and outputting BAM files representing the mapped reads. In order to run this new workflow, create a YAML-formatted configuration file that contains the names and paths (relative or absolute) to your contigs and your trimmed reads:
+
+**phase_wf1.conf**
+```
+reads:
+    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/2_clean-fastq/AbassJB010n1-0182-ABIC/split-adapter-quality-trimmed/
+    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/2_clean-fastq/AbassJLB07-740-1-0189-ABIJ/split-adapter-quality-trimmed/
+    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/2_clean-fastq/AflavMTR19670-0522-AFCC/split-adapter-quality-trimmed/
+    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/2_clean-fastq/AhahnJLB17-087-0586-AFIG/split-adapter-quality-trimmed/
+    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/2_clean-fastq/ApeteJLB07-001-0008-AAAI/split-adapter-quality-trimmed/
+    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/2_clean-fastq/AtrivJMP26720-0524-AFCE/split-adapter-quality-trimmed/
+
+contigs:
+    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AbassJB010n1-0182-ABIC.contigs.fasta
+    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AbassJLB07-740-1-0189-ABIJ.contigs.fasta
+    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AflavMTR19670-0522-AFCC.contigs.fasta
+    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AhahnJLB17-087-0586-AFIG.contigs.fasta
+    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/ApeteJLB07-001-0008-AAAI.contigs.fasta
+    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AtrivJMP26720-0524-AFCE.contigs.fasta
+```
+
+Note that this step uses the 'trinity contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor.  An easy way to get a list of all your samples is to navigate to the '3_trinity-assemblies/contigs' folder and type 
+```
+ls > sample_list.txt
+```
+You can use this to create the above file.
+
+Then run the following code to map your data.
+```
+phyluce_workflow --config phase_wf1.conf \
+    --output phase1 \
+    --workflow mapping \
+    --cores 1
+```
+**Step 2: Mapping** 
+Before doing this step you need to make sure you have an edited pilon.py file.  To find the location of this file type "which pilon".  Open this up and look for the line with:
+```
+default_jvm_mem_opts = [....]
+```
+If it has not been edited it will look like:
+```
+default_jvm_mem_opts = ['-Xms512m', '-Xmx1g']
+```
+It should read as follows, thus edit or confirm that the line states:
+```
+default_jvm_mem_opts = ['-Xms512m', '-Xmx100g']
+```
+If you have edited the file, save it.
+
+Now you are ready to proceed.  You now need to create another configuration file.  This one needs to have the location of the 'bam' and 'fasta' files output from step 1. **Do not** use the contigs input into step 1.  
+
+**phase_wf2.conf**
+```
+bams:
+    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AbassJB010n1-0182-ABIC.fxm.sorted.md.bam
+    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AbassJLB07-740-1-0189-ABIJ.fxm.sorted.md.bam
+    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AflavMTR19670-0522-AFCC.fxm.sorted.md.bam
+    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AhahnJLB17-087-0586-AFIG.fxm.sorted.md.bam
+    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/ApeteJLB07-001-0008-AAAI.fxm.sorted.md.bam
+    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AtrivJMP26720-0524-AFCE.fxm.sorted.md.bam
+
+contigs:
+    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/phase_s1/references/AbassJB010n1-0182-ABIC.contigs.fasta
+    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/phase_s1/references/AbassJLB07-740-1-0189-ABIJ.contigs.fasta
+    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/phase_s1/references/AflavMTR19670-0522-AFCC.contigs.fasta
+    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/phase_s1/references/AhahnJLB17-087-0586-AFIG.contigs.fasta
+    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/phase_s1/references/ApeteJLB07-001-0008-AAAI.contigs.fasta
+    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/phase_s1/references/AtrivJMP26720-0524-AFCE.contigs.fasta
+```
+Then run the following code to phase your data:
+```
+phyluce_workflow --config phase_wf2.conf \
+    --output phase2 \
+    --workflow phasing \
+    --cores 8
+```
+When code runs, make sure to look at the last line of text - this step crashes a lot.
+
+Right now, what you do with these files is left up to you (e.g. in terms of merging their contents and getting the data aligned). You can essentially group all the *.0.fasta and *.1.fasta files for all taxa together as new “assemblies” of data and start the phyluce analysis process over from "phyluce_assembly_match_contigs_to_probes" step.
+
+-------------------------------------OPTIONAL STEP - PHASING END-------------------------------
+
 ## Locus matching
 The next step is going to be a sequence of PHYLUCE commands that essentially takes your assemblies, finds the UCEs inside of them, and then conveniently packages them so that you can later align them.
 ### Matching contigs to probes
@@ -694,106 +798,6 @@ This alignment should now be ready to use (e.g., IQ-Tree).   However, I suggest 
 
 #### End of Twomey Pipeline
 _____________________________________________________________________________________________________________________________________________
-
-### Phasing Haplotypes
-(work in progress)
-**NOTE JLB: SEE** https://phyluce.readthedocs.io/en/latest/daily-use/daily-use-4-workflows.html & https://github.com/faircloth-lab/phyluce/issues/222
-
-
-Phasing is the process of inferring haplotypes from genotype data.  This can be very useful for population-level analyses. We are phasing based on the pipeline The following workflow derives from Andermann et al. 2018 (https://doi.org/10.1093/sysbio/syy039) and the Phyluce pipeline (https://phyluce.readthedocs.io/en/latest/tutorial-two.html)
-
-To phase your UCE data, you need to have individual-specific "reference" contigs against which to align your raw reads.  Generally speaking, you can create these individual-specific reference contigs at several stages of the phyluce_ pipeline, and the stage at which you choose to do this may depend on the analyses that you are running.  That said, I think that the best way to proceed uses edge-trimmed exploded alignments as your reference contigs, aligns raw reads to those, and uses the exploded alignments and raw reads to phase your data.
-
-.. attention::  We have not implemented code that you can
-    use if you are trimming your alignment data with some other
-    approach (e.g. gblocks_ or trimal_).
-
-Phasing requires two steps and the use of an update-to-date version of phyluce.   To activate a newer version, type this (remember to update version number):
-
-```
-conda activate phyluce-1.7.1
-```
-
-**Step 1: Mapping**.  
-The “mapping” workflow precedes all other workflows and is responsible for mapping reads to contigs, marking duplicates, computing coverage, and outputting BAM files representing the mapped reads. In order to run this new workflow, create a YAML-formatted configuration file that contains the names and paths (relative or absolute) to your contigs and your trimmed reads:
-
-**phase_wf1.conf**
-```
-reads:
-    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/2_clean-fastq/AbassJB010n1-0182-ABIC/split-adapter-quality-trimmed/
-    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/2_clean-fastq/AbassJLB07-740-1-0189-ABIJ/split-adapter-quality-trimmed/
-    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/2_clean-fastq/AflavMTR19670-0522-AFCC/split-adapter-quality-trimmed/
-    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/2_clean-fastq/AhahnJLB17-087-0586-AFIG/split-adapter-quality-trimmed/
-    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/2_clean-fastq/ApeteJLB07-001-0008-AAAI/split-adapter-quality-trimmed/
-    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/2_clean-fastq/AtrivJMP26720-0524-AFCE/split-adapter-quality-trimmed/
-
-contigs:
-    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AbassJB010n1-0182-ABIC.contigs.fasta
-    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AbassJLB07-740-1-0189-ABIJ.contigs.fasta
-    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AflavMTR19670-0522-AFCC.contigs.fasta
-    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AhahnJLB17-087-0586-AFIG.contigs.fasta
-    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/ApeteJLB07-001-0008-AAAI.contigs.fasta
-    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AtrivJMP26720-0524-AFCE.contigs.fasta
-```
-
-Note that this step uses the 'trinity contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor.  An easy way to get a list of all your samples is to navigate to the '3_trinity-assemblies/contigs' folder and type 
-```
-ls > sample_list.txt
-```
-You can use this to create the above file.
-
-Then run the following code to map your data.
-```
-phyluce_workflow --config phase_wf1.conf \
-    --output phase1 \
-    --workflow mapping \
-    --cores 1
-```
-**Step 2: Mapping** 
-Before doing this step you need to make sure you have an edited pilon.py file.  To find the location of this file type "which pilon".  Open this up and look for the line with:
-```
-default_jvm_mem_opts = [....]
-```
-If it has not been edited it will look like:
-```
-default_jvm_mem_opts = ['-Xms512m', '-Xmx1g']
-```
-It should read as follows, thus edit or confirm that the line states:
-```
-default_jvm_mem_opts = ['-Xms512m', '-Xmx100g']
-```
-If you have edited the file, save it.
-
-Now you are ready to proceed.  You now need to create another configuration file.  This one needs to have the location of the 'bam' and 'fasta' files output from step 1. **Do not** use the contigs input into step 1.  
-
-**phase_wf2.conf**
-```
-bams:
-    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AbassJB010n1-0182-ABIC.fxm.sorted.md.bam
-    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AbassJLB07-740-1-0189-ABIJ.fxm.sorted.md.bam
-    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AflavMTR19670-0522-AFCC.fxm.sorted.md.bam
-    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AhahnJLB17-087-0586-AFIG.fxm.sorted.md.bam
-    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/ApeteJLB07-001-0008-AAAI.fxm.sorted.md.bam
-    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/phase_s1/mapped_reads/AtrivJMP26720-0524-AFCE.fxm.sorted.md.bam
-
-contigs:
-    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/phase_s1/references/AbassJB010n1-0182-ABIC.contigs.fasta
-    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/phase_s1/references/AbassJLB07-740-1-0189-ABIJ.contigs.fasta
-    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/phase_s1/references/AflavMTR19670-0522-AFCC.contigs.fasta
-    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/phase_s1/references/AhahnJLB17-087-0586-AFIG.contigs.fasta
-    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/phase_s1/references/ApeteJLB07-001-0008-AAAI.contigs.fasta
-    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/phase_s1/references/AtrivJMP26720-0524-AFCE.contigs.fasta
-```
-Then run the following code to phase your data:
-```
-phyluce_workflow --config phase_wf2.conf \
-    --output phase2 \
-    --workflow phasing \
-    --cores 8
-```
-When code runs, make sure to look at the last line of text - this step crashes a lot.
-
-Right now, what you do with these files is left up to you (e.g. in terms of merging their contents and getting the data aligned). You can essentially group all the *.0.fasta and *.1.fasta files for all taxa together as new “assemblies” of data and start the phyluce analysis process over from "phyluce_assembly_match_contigs_to_probes" step.
 
 
 ### Locus filtering
