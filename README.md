@@ -268,7 +268,7 @@ You should go back into the `tutorial` directory after this. Use:
 cd ..
 ```
 ### Running Spades to assemble cleaned reads
-With the assembly configuration file completed, we can now run Spades (note taht if you used Trinity in the past- this has been replaced with Spades). Use the following PHYLUCE command:
+With the assembly configuration file completed, we can now run Spades (note that if you used Trinity in the past- this has been replaced with Spades). Use the following PHYLUCE command:
 ```
 phyluce_assembly_assemblo_spades \
     --conf assembly.conf \
@@ -439,7 +439,7 @@ When code runs, make sure to look at the last line of text - this step crashes a
 
 If you can isolated the effor
 
-Right now, what you do with these files is left up to you (e.g. in terms of merging their contents and getting the data aligned). You can essentially group all the *.0.fasta and *.1.fasta files for all taxa together as new “assemblies” of data and start the phyluce analysis process over from "phyluce_assembly_match_contigs_to_probes" step.  Input your fasta files as contigs,  in place of the "--contigs 3_trinity-assemblies/contigs" parameter.  For example 
+Right now, what you do with these files is left up to you (e.g. in terms of merging their contents and getting the data aligned). You can essentially group all the *.0.fasta and *.1.fasta files for all taxa together as new “assemblies” of data and start the phyluce analysis process over from "phyluce_assembly_match_contigs_to_probes" step.  Input your fasta files as contigs,  in place of the "--contigs 3_spades-assemblies/contigs" parameter.  For example 
 ```
 phyluce_assembly_match_contigs_to_probes \
     --contigs phase_S2/fasta \
@@ -455,13 +455,13 @@ The next step is going to be a sequence of PHYLUCE commands that essentially tak
 The first of these commands is `phyluce_assembly_match_contigs_to_probes`, which matches your contigs to the set of UCE probes used during sequencing. If you haven't already, download the `uce-5k-probes.fasta` file from the `example-files` directory of this repository and put it in `tutorial`. This .fasta file contains the sequences of these UCE probes. The command is as follows:
 ```
 phyluce_assembly_match_contigs_to_probes \
-    --contigs 3_trinity-assemblies/contigs \
+    --contigs 3_spades-assemblies/contigs \
     --probes uce-5k-probes.fasta \
     --output 4_uce-search-results
 ```
 For a lot of samples, this command can last long enough to give you a coffee break. For our six samples, it should take only a few seconds. The output will be located in the new folder `4_uce-search-results`. Inside it, you will find six [.lastz](http://www.bx.psu.edu/miller_lab/dist/README.lastz-1.02.00/README.lastz-1.02.00a.html) files, which is another sequence storage format. There will also be a `probe.matches.sqlite` file, which is a database relating each contig to each probe.
 
-If you have issues getting this command to work, it's likely that it's because you copied assemblies over from another directory, which breaks the links in the `contigs` folder of `3_trinity-assemblies`. You can resurrect these links using the `ln -s` command and a `for` loop, or by using it individually for particular samples. You need to link to the `Trinity.fasta` file in that particular sample's assembly directory. You will also need to remake links if you alter a sample's name, say if you forgot to remove periods from names or something like that.
+If you have issues getting this command to work, it's likely that it's because you copied assemblies over from another directory, which breaks the links in the `contigs` folder of `3_spades-assemblies`. You can resurrect these links using the `ln -s` command and a `for` loop, or by using it individually for particular samples. You need to link to the `contigs.fasta` file in that particular sample's assembly directory. You will also need to remake links if you alter a sample's name, say if you forgot to remove periods from names or something like that.
 ### Extracting UCE locus data
 The next portion takes the matched contigs/probes and extracts usable sequence data in .fasta format for each sample, organized by UCE locus. There is a bit of setup we have to do first.
 #### Creating taxon sets
