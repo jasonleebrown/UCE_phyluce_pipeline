@@ -13,8 +13,8 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
 - [Sequence assembly](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sequence-assembly)
    - [Making the assembly configuration file](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#making-the-assembly-configuration-file)
    - [Running Trinity to assemble cleaned reads - legacy code](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-trinity-to-assemble-cleaned-reads)
-   - [Running Spades to assemble cleaned reads](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-spades-to-assemble-cleaned-reads)
-      - [Troubleshooting Trinity](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#troubleshooting-trinity)
+     - [Troubleshooting Trinity](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#troubleshooting-trinity)
+   - [Running Spades to assemble cleaned reads](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-spades-to-assemble-cleaned-reads) 
 - [Locus matching](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#locus-matching)
    - [Matching contigs to probes](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#matching-contigs-to-probes)
    - [Extracting UCE locus data](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#extracting-uce-locus-data)
@@ -230,7 +230,7 @@ The next step is to assemble our raw reads into usable data. This is the first s
 
 Sequence assembly is basically the process of putting your raw sequence data into a format at least reminiscent of the way the DNA was organized in life. Imagine that you have one hundred copies of a book, and you put them all in a paper shredder. Now you have to reconstruct the book from the shredded chunks. Since you have multiple copies, not all of which were shredded in the same way, you can find chunks that partially match and use these matches to connect to the next sentence. Now, however, imagine that the book contains several pages that are just ["All work and no play makes Jack a dull boy"](https://www.youtube.com/watch?v=4lQ_MjU4QHw) over and over. This makes the process much more difficult because this construction causes extreme ambiguity. This is an analogy to how assembly works, and also how repeating DNA elements make assembly difficult. This is why many computational biologists have made their careers based on writing powerful de novo assembly programs.
 
-PHYLUCE can assemble sequences using the programs [velvet](https://www.ebi.ac.uk/~zerbino/velvet/), [ABySS](http://www.bcgsc.ca/platform/bioinfo/software/abyss), and [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki). Out of these, ABySS is probably regarded as "the best" in terms of assembly accuracy, but Faircloth recommends using Trinity out of a combination of good speed, and providing longer contigs. I have used Trinity in all of my Brown Lab projects and will use it in this tutorial.
+PHYLUCE can assemble sequences using the programs [velvet](https://www.ebi.ac.uk/~zerbino/velvet/), [ABySS](http://www.bcgsc.ca/platform/bioinfo/software/abyss), and [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki). Out of these, ABySS is probably regarded as "the best" in terms of assembly accuracy, but Faircloth recommends using Trinity out of a combination of good speed, and providing longer contigs. I have used Trinity in all of my Brown Lab projects and will use it in this tutorial.  **JLB Update 4/2021** Note Trinity is not longer supported by phyluce. Now we use Spades for assembly!
 
 Just like with Illumiprocessor, the first thing we need to do is... make a configuration file!
 ### Making the assembly configuration file
@@ -268,7 +268,7 @@ You should go back into the `tutorial` directory after this. Use:
 cd ..
 ```
 ### Running Spades to assemble cleaned reads
-With the assembly configuration file completed, we can now run Spades (not if you used Trinity in the past- this has been replaced with Spades). Use the following PHYLUCE command:
+With the assembly configuration file completed, we can now run Spades (note taht if you used Trinity in the past- this has been replaced with Spades). Use the following PHYLUCE command:
 ```
 phyluce_assembly_assemblo_spades \
     --conf assembly.conf \
@@ -287,13 +287,13 @@ ls 3_spades-assemblies
 ```
 should display:
 ```
-AbassJB010n1-0182-ABIC_trinity      AhahnJLB17-087-0586-AFIG_trinity  contigs
-AbassJLB07-740-1-0189-ABIJ_trinity  ApeteJLB07-001-0008-AAAI_trinity
-AflavMTR19670-0522-AFCC_trinity     AtrivJMP26720-0524-AFCE_trinity
+AbassJB010n1-0182-ABIC_spades      AhahnJLB17-087-0586-AFIG_spades  contigs
+AbassJLB07-740-1-0189-ABIJ_spades  ApeteJLB07-001-0008-AAAI_spades
+AflavMTR19670-0522-AFCC_spades     AtrivJMP26720-0524-AFCE_spades
 ```
 **JLB Note 8/2020:** This is the longest step.  I suggest for going through this tutorial that you run only 1 or 2 samples. To do this, edit your 'conf.assembly' file in basic text editor amd remove all but a few samples.  If - or when - this works for you with no issues, I then suggest you download the other assembled files from [here](https://u.pcloud.link/publink/show?code=XZsHyJXZR6gC4LBHdrFjCfkJSp4AdYY528Rk) for use for the remaining tutorial.  Please use the files you created*, only copying the missing files here.  *this will help us troubleshoot any issues you may encounter during this step - sometimes they are not obvious
 
-The assembly has generated a set of six folders (one per sample) as well as a folder named `contigs`. Inside each sample folder, you will find a `Trinity.fasta` file that contains the assembly, as well as a `contigs.fasta` link that links to that .fasta file. The `contigs` folder further contains links to each sample's .fasta file.
+The assembly has generated a set of six folders (one per sample) as well as a folder named `contigs`. Inside each sample folder, you will find a `contigs.fasta` file that contains the assembly, as well as a `contigs.fasta` link that links to that .fasta file. The `contigs` folder further contains links to each sample's .fasta file.
 #### Troubleshooting Spades
 Generally, the most common error with Spades will generally be caused by specifying incorrect file paths in your configuration file. Double-check them to make sure they're correct. 
 
