@@ -348,7 +348,7 @@ Phasing is the process of inferring haplotypes from genotype data.  This can be 
 
 To phase your UCE data, you need to have individual-specific "reference" contigs against which to align your raw reads.  Generally speaking, you can create these individual-specific reference contigs at several stages of the phyluce_ pipeline, and the stage at which you choose to do this may depend on the analyses that you are running.  That said, I think that the best way to proceed uses edge-trimmed exploded alignments as your reference contigs, aligns raw reads to those, and uses the exploded alignments and raw reads to phase your data.
 
-.. attention::  We have not implemented code that you can
+..attention::  We have not implemented code that you can
     use if you are trimming your alignment data with some other
     approach (e.g. gblocks_ or trimal_).
 
@@ -380,11 +380,25 @@ contigs:
     AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AtrivJMP26720-0524-AFCE.contigs.fasta
 ```
 
-Note that this step uses the 'spades contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor.  An easy way to get a list of all your samples is to navigate to the '3_spades-assemblies/contigs' folder and type 
+### Making the assembly configuration file
+Note that this step uses the 'spades contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor.  An easy way to get a list of all your samples is to navigate to the '2_clean-fastq' and run the code below (for the file name for the start of each block) and then goto  '3_spades-assemblies/contigs' to get the end filename of the second block (again running the code below - note that you can change output to whatever).
+
 ```
 ls > sample_list.txt
 ```
-You can use this to create the above file.
+You can use these text files to create the above configuration file. You manually merge the data from the 'sample_list.txt' (from 2_clean-fastq) with your Illumiprocessor configuration file (see above) to create the first block.  
+
+You can make it with a simple Bash script (NOT FINISHED):
+```
+cd 3_spades-assemblies
+echo "[samples]" > ../assembly.conf
+for i in *; \
+   do echo $i":/home/bender/Desktop/tutorial/2_clean-fastq/"$i"/split-adapter-quality-trimmed/"; \
+   done >> ../assembly.conf
+```
+
+
+Once your files has been created.
 
 Then run the following code to map your data.
 ```
