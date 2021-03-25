@@ -326,14 +326,14 @@ More Bash tips:
 ### Viewing assembly summary stats
 You can use a PHYLUCE command embedded in a simple `for` loop to generate a .csv file containing assembly summary stats. You may wish to put some of them in a publication, or to use them to check that your assembly went well.
 ```
-for i in 3_trinity-assemblies/contigs/*.fasta;
+for i in 3_spades-assemblies/contigs/*.fasta;
 do
     phyluce_assembly_get_fasta_lengths --input $i --csv;
 done > assembly_stats.csv
 ```
 ''Column key'': # samples,contigs,total bp,mean length,95 CI length,min length,max length,median legnth,contigs >1kb
 
-The loop will loop through every file ending in .fasta located in the `3_trinity-assemblies/contigs` folder, and then process it using the `phyluce_assembly_get_fasta_lengths` script. (Note that these are not actual .fasta files, but links to them.)
+The loop will loop through every file ending in .fasta located in the `3_spades-assemblies/contigs` folder, and then process it using the `phyluce_assembly_get_fasta_lengths` script. (Note that these are not actual .fasta files, but links to them.)
 
 In order listed, the summary stats printed to `assembly_stats.csv` will be:
 >sample,contigs,total bp,mean length,95 CI length,min,max,median,contigs >1kb
@@ -372,15 +372,15 @@ reads:
     AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/2_clean-fastq/AtrivJMP26720-0524-AFCE/split-adapter-quality-trimmed/
 
 contigs:
-    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AbassJB010n1-0182-ABIC.contigs.fasta
-    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AbassJLB07-740-1-0189-ABIJ.contigs.fasta
-    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AflavMTR19670-0522-AFCC.contigs.fasta
-    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AhahnJLB17-087-0586-AFIG.contigs.fasta
-    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/ApeteJLB07-001-0008-AAAI.contigs.fasta
-    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/3_trinity-assemblies/contigs/AtrivJMP26720-0524-AFCE.contigs.fasta
+    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AbassJB010n1-0182-ABIC.contigs.fasta
+    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AbassJLB07-740-1-0189-ABIJ.contigs.fasta
+    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AflavMTR19670-0522-AFCC.contigs.fasta
+    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AhahnJLB17-087-0586-AFIG.contigs.fasta
+    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/ApeteJLB07-001-0008-AAAI.contigs.fasta
+    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AtrivJMP26720-0524-AFCE.contigs.fasta
 ```
 
-Note that this step uses the 'trinity contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor.  An easy way to get a list of all your samples is to navigate to the '3_trinity-assemblies/contigs' folder and type 
+Note that this step uses the 'spades contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor.  An easy way to get a list of all your samples is to navigate to the '3_spades-assemblies/contigs' folder and type 
 ```
 ls > sample_list.txt
 ```
@@ -523,7 +523,7 @@ mkdir log
 Then we use the following command
 ```
 phyluce_assembly_get_fastas_from_match_counts \
-    --contigs ../../3_trinity-assemblies/contigs \
+    --contigs ../../3_spades-assemblies/contigs \
     --locus-db ../../4_uce-search-results/probe.matches.sqlite \
     --match-count-output all-taxa-incomplete.conf \
     --output all-taxa-incomplete.fasta \
