@@ -12,7 +12,8 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Troubleshooting Illumiprocessor](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#troubleshooting-illumiprocessor)
 - [Sequence assembly](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sequence-assembly)
    - [Making the assembly configuration file](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#making-the-assembly-configuration-file)
-   - [Running Trinity to assemble cleaned reads](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-trinity-to-assemble-cleaned-reads)
+   - [Running Trinity to assemble cleaned reads - legacy code](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-trinity-to-assemble-cleaned-reads)
+   - [Running Spades to assemble cleaned reads](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-spades-to-assemble-cleaned-reads)
       - [Troubleshooting Trinity](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#troubleshooting-trinity)
 - [Locus matching](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#locus-matching)
    - [Matching contigs to probes](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#matching-contigs-to-probes)
@@ -266,22 +267,23 @@ You should go back into the `tutorial` directory after this. Use:
 ```
 cd ..
 ```
-### Running Trinity to assemble cleaned reads
-With the assembly configuration file completed, we can now run Trinity. Use the following PHYLUCE command:
+### Running Spades to assemble cleaned reads
+With the assembly configuration file completed, we can now run Spades (not if you used Trinity in the past- this has been replaced with Spades). Use the following PHYLUCE command:
 ```
-phyluce_assembly_assemblo_trinity \
+phyluce_assembly_assemblo_spades \
     --conf assembly.conf \
-    --output 3_trinity-assemblies \
+    --output 3_spades-assemblies \
     --clean \
+    --memory 124 \
     --cores 19
 ```
 - `--clean` specifies that you want to remove extraneous temporary files. This makes the output directory much smaller.
 
 Hopefully your run works the first time. This is generally one of the longest-duration steps in the pipeline - each assembly generally takes an hour to complete with 19 cores. For a set of 96 samples, this process can take most of a working week. I like to run it over a weekend. For these six samples, the run took about four and a half hours with 19 cores.
 
-When the assemblies have finished, you should have a folder called `3_trinity-assemblies` in your `tutorial` folder. Using the command:
+When the assemblies have finished, you should have a folder called `3_spades-assemblies` in your `tutorial` folder. Using the command:
 ```
-ls 3_trinity-assemblies
+ls 3_spades-assemblies
 ```
 should display:
 ```
@@ -292,10 +294,18 @@ AflavMTR19670-0522-AFCC_trinity     AtrivJMP26720-0524-AFCE_trinity
 **JLB Note 8/2020:** This is the longest step.  I suggest for going through this tutorial that you run only 1 or 2 samples. To do this, edit your 'conf.assembly' file in basic text editor amd remove all but a few samples.  If - or when - this works for you with no issues, I then suggest you download the other assembled files from [here](https://u.pcloud.link/publink/show?code=XZsHyJXZR6gC4LBHdrFjCfkJSp4AdYY528Rk) for use for the remaining tutorial.  Please use the files you created*, only copying the missing files here.  *this will help us troubleshoot any issues you may encounter during this step - sometimes they are not obvious
 
 The assembly has generated a set of six folders (one per sample) as well as a folder named `contigs`. Inside each sample folder, you will find a `Trinity.fasta` file that contains the assembly, as well as a `contigs.fasta` link that links to that .fasta file. The `contigs` folder further contains links to each sample's .fasta file.
-#### Troubleshooting Trinity
-Generally, the most common error with Trinity will generally be caused by specifying incorrect file paths in your configuration file. Double-check them to make sure they're correct. 
+#### Troubleshooting Spades
+Generally, the most common error with Spades will generally be caused by specifying incorrect file paths in your configuration file. Double-check them to make sure they're correct. 
 
-Other possible issues can arise if you copied the trimmed reads over from another directory without preserving folder structure. This can break the symlinks (symbolic links) that are in the `raw-reads` subfolder of each sample's folder. They need to be replaced for Trinity to function. You can do that with the following Bash commands:
+Another common error has to due with memmory. First make sure you have edited the 'phyluce.conf' file (located in: /Home/miniconda2/envs/phyluce-X.x.x/phyluce/config/).  Add the following lines to the Spades section:
+```
+[spades]
+max_memory:128
+cov_cutoff:5
+```
+Make sure the memory matches your system (for lab computers it will be either 128 or 156).
+
+Other possible issues can arise if you copied the trimmed reads over from another directory without preserving folder structure. This can break the symlinks (symbolic links) that are in the `raw-reads` subfolder of each sample's folder. They need to be replaced for  Spades to function. You can do that with the following Bash commands:
 ```
 cd 2_clean-fastq
 echo "-READ1.fastq.gz" > reads.txt
@@ -309,10 +319,6 @@ for j in $(cat reads.txt); \
 cd ..
 ```
 This creates two files: the first, `reads.txt`, contains a list of two file endings that will be looped over to construct proper symlink names; the second, `taxa.txt`, contains a simple list of all of the samples in the `2_clean-fastq` folder. The next command is a set of two nested `for` loops that basically reads as "For both file endings listed in `reads.txt`, and then for every sample listed in `taxa.txt`, generate a symlink in the `raw-reads` directory for that sample that leads to the corresponding .fastq.gz file in the `split-adapter-quality-trimmed` folder for this sample".
-
-**JLB Notes 8/2020:** I received the error 'jellyfish: not found', I solved this by reinstalling Jellyfish using this code: 'conda install jellyfish=2.2.3'.
-
-**JLB Notes 10/2020:** This has offically been my most rage inducing issue - aside from the switching java bullshit [see bottom]: 'Error: gzip: stdout: Broken pipe' was found in the log files of a Trinity for each sample. Turns out this is a known Trinity bug - the temp fix is remove the 'singleton' reads from each of the 'split-adapter-quality-trimmed' folders in folder '2_clean-fastq'. For details [see](https://github.com/faircloth-lab/phyluce/issues/159). 
 
 More Bash tips:
 - The `ln` command generates links. Using the `-s` flag generates symbolic links, which we desire here. The first argument is the file to be linked to, and the second argument is the name and path of the link to be generated.
@@ -1251,7 +1257,73 @@ Where to get older [GATK] - minght not be needed (https://console.cloud.google.c
 
 To install java from conda (not actually needed) 'conda install -c anaconda java-1.7.0-openjdk-cos6-x86_64' 
 
-    
+### Running Trinity to assemble cleaned reads
+With the assembly configuration file completed, we can now run Trinity. Use the following PHYLUCE command:
+```
+phyluce_assembly_assemblo_trinity \
+    --conf assembly.conf \
+    --output 3_trinity-assemblies \
+    --clean \
+    --cores 19
+```
+- `--clean` specifies that you want to remove extraneous temporary files. This makes the output directory much smaller.
+
+Hopefully your run works the first time. This is generally one of the longest-duration steps in the pipeline - each assembly generally takes an hour to complete with 19 cores. For a set of 96 samples, this process can take most of a working week. I like to run it over a weekend. For these six samples, the run took about four and a half hours with 19 cores.
+
+When the assemblies have finished, you should have a folder called `3_trinity-assemblies` in your `tutorial` folder. Using the command:
+```
+ls 3_trinity-assemblies
+```
+should display:
+```
+AbassJB010n1-0182-ABIC_trinity      AhahnJLB17-087-0586-AFIG_trinity  contigs
+AbassJLB07-740-1-0189-ABIJ_trinity  ApeteJLB07-001-0008-AAAI_trinity
+AflavMTR19670-0522-AFCC_trinity     AtrivJMP26720-0524-AFCE_trinity
+```
+**JLB Note 8/2020:** This is the longest step.  I suggest for going through this tutorial that you run only 1 or 2 samples. To do this, edit your 'conf.assembly' file in basic text editor amd remove all but a few samples.  If - or when - this works for you with no issues, I then suggest you download the other assembled files from [here](https://u.pcloud.link/publink/show?code=XZsHyJXZR6gC4LBHdrFjCfkJSp4AdYY528Rk) for use for the remaining tutorial.  Please use the files you created*, only copying the missing files here.  *this will help us troubleshoot any issues you may encounter during this step - sometimes they are not obvious
+
+The assembly has generated a set of six folders (one per sample) as well as a folder named `contigs`. Inside each sample folder, you will find a `Trinity.fasta` file that contains the assembly, as well as a `contigs.fasta` link that links to that .fasta file. The `contigs` folder further contains links to each sample's .fasta file.
+#### Troubleshooting Trinity
+Generally, the most common error with Trinity will generally be caused by specifying incorrect file paths in your configuration file. Double-check them to make sure they're correct. 
+
+Other possible issues can arise if you copied the trimmed reads over from another directory without preserving folder structure. This can break the symlinks (symbolic links) that are in the `raw-reads` subfolder of each sample's folder. They need to be replaced for Trinity to function. You can do that with the following Bash commands:
+```
+cd 2_clean-fastq
+echo "-READ1.fastq.gz" > reads.txt
+echo "-READ2.fastq.gz" >> reads.txt
+ls > taxa.txt
+for j in $(cat reads.txt); \
+   do for i in $(cat taxa.txt); \
+         do ln -s $i/split-adapter-quality-trimmed/$i$j $i/raw-reads/$i$j; \
+         done; \
+   done
+cd ..
+```
+This creates two files: the first, `reads.txt`, contains a list of two file endings that will be looped over to construct proper symlink names; the second, `taxa.txt`, contains a simple list of all of the samples in the `2_clean-fastq` folder. The next command is a set of two nested `for` loops that basically reads as "For both file endings listed in `reads.txt`, and then for every sample listed in `taxa.txt`, generate a symlink in the `raw-reads` directory for that sample that leads to the corresponding .fastq.gz file in the `split-adapter-quality-trimmed` folder for this sample".
+
+**JLB Notes 8/2020:** I received the error 'jellyfish: not found', I solved this by reinstalling Jellyfish using this code: 'conda install jellyfish=2.2.3'.
+
+**JLB Notes 10/2020:** This has offically been my most rage inducing issue - aside from the switching java bullshit [see bottom]: 'Error: gzip: stdout: Broken pipe' was found in the log files of a Trinity for each sample. Turns out this is a known Trinity bug - the temp fix is remove the 'singleton' reads from each of the 'split-adapter-quality-trimmed' folders in folder '2_clean-fastq'. For details [see](https://github.com/faircloth-lab/phyluce/issues/159). 
+
+More Bash tips:
+- The `ln` command generates links. Using the `-s` flag generates symbolic links, which we desire here. The first argument is the file to be linked to, and the second argument is the name and path of the link to be generated.
+- The `cat` command at its most basic level prints a file. It stands for "concatenate" and can be used to combine files if you specify more than one. In `for` loops, the construct `$(cat taxa.txt)` (using `taxa.txt` as an example file) can be used to loop over each line in that file.
+### Viewing assembly summary stats
+You can use a PHYLUCE command embedded in a simple `for` loop to generate a .csv file containing assembly summary stats. You may wish to put some of them in a publication, or to use them to check that your assembly went well.
+```
+for i in 3_trinity-assemblies/contigs/*.fasta;
+do
+    phyluce_assembly_get_fasta_lengths --input $i --csv;
+done > assembly_stats.csv
+```
+''Column key'': # samples,contigs,total bp,mean length,95 CI length,min length,max length,median legnth,contigs >1kb
+
+The loop will loop through every file ending in .fasta located in the `3_trinity-assemblies/contigs` folder, and then process it using the `phyluce_assembly_get_fasta_lengths` script. (Note that these are not actual .fasta files, but links to them.)
+
+In order listed, the summary stats printed to `assembly_stats.csv` will be:
+>sample,contigs,total bp,mean length,95 CI length,min,max,median,contigs >1kb
+
+
     
     
     
