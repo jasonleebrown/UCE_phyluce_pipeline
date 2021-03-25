@@ -405,7 +405,7 @@ Then run the following code to map your data.
 phyluce_workflow --config phase_wf1.conf \
     --output phase1 \
     --workflow mapping \
-    --cores 1
+    --cores 12
 ```
 **Step 2: Mapping** 
 Before doing this step you need to make sure you have an edited pilon.py file.  To find the location of this file type "which pilon".  Open this up and look for the line with:
@@ -447,7 +447,7 @@ Then run the following code to phase your data:
 phyluce_workflow --config phase_wf2.conf \
     --output phase2 \
     --workflow phasing \
-    --cores 8
+    --cores 12
 ```
 When code runs, make sure to look at the last line of text - this step crashes a lot. Note that if it crashes, from what I can tell - the output fasta files are completely fine to use.   
 
