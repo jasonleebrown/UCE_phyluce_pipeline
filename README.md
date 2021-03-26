@@ -383,22 +383,19 @@ contigs:
 ### Making the assembly configuration file
 Note that this step uses the 'spades contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor. 
 
-You can make most of it with two simple Bash scripts (NOT FINISHED):
-TOP part
+You can make the script with a simple Bash scripts (NOT FINISHED). Start from base 'tutorial' folder.  Be sure to edit the 2 locations"/home/bender/Desktop/tutorial" to match your computer/path folder structure:
+
 ```
 cd 2_clean-fastq
-echo "[samples]" > ../phase_wf1_top.conf
+echo "reads:" > ../phase_wf1.conf
 for i in *; \
-   do echo $i": /home/bender/Desktop/tutorial/2_clean-fastq/"$i"/split-adapter-quality-trimmed/"; \
-   done >> ../phase_wf1_top.conf
-```
-BOTTOM part
-```
-cd 2_clean-fastq
-echo "[samples]" > ../phase_wf1_bottom.conf
+   do echo "    "$i": /home/bender/Desktop/tutorial/2_clean-fastq/"$i"/split-adapter-quality-trimmed/"; \
+   done >> ../phase_wf1.conf
+echo "\n" > ../phase_wf1.conf
+echo "contigs:" > ../phase_wf1.conf
 for i in *; \
-   do echo $i": /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/"$i".contigs.fasta"; \
-   done >> ../phase_wf1_bottom.conf
+   do echo "    "$i": /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/"$i".contigs.fasta"; \
+   done >> ../phase_wf1.conf
 ```
 
 Once your files has been created.  Merge them in a text editor and add the 'reads:' and 'contigs:' parts, and spaces if necessary. Save as 'phase_wf1.conf'
