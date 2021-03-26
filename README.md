@@ -1287,6 +1287,17 @@ Where to get older [GATK] - minght not be needed (https://console.cloud.google.c
 To install java from conda (not actually needed) 'conda install -c anaconda java-1.7.0-openjdk-cos6-x86_64' 
 
 ### Running Trinity to assemble cleaned reads
+
+There is a known issue with Trinity that causes it to crash when singltons are included in analyses. Thus we can exlude them (in place) by renaming them with the following code (run from '2_clean_fastq' folder):
+```
+find . -iname "*READ-singleton.fastq.gz" -exec rename 's/READ-singleton.fastq.gz/_iiixXxXxiii.fastq.gz/' '{}' \;
+```
+
+To change back (after running trinity) type:
+```
+find . -iname "*_iiixXxXxiii.fastq.gz" -exec rename 's/_iiixXxXxiii.fastq.gz/READ-singleton.fastq.gz/' '{}' \;
+```
+ 
 With the assembly configuration file completed, we can now run Trinity. Use the following PHYLUCE command:
 ```
 phyluce_assembly_assemblo_trinity \
