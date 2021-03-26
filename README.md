@@ -387,15 +387,16 @@ You can make the script with a simple Bash scripts (NOT FINISHED). Start from ba
 
 ```
 cd 2_clean-fastq
-echo "reads:" > ../phase_wf1.conf
+echo "reads:" > ../phase_wfA.conf
 for i in *; \
    do echo "    "$i": /home/bender/Desktop/tutorial/2_clean-fastq/"$i"/split-adapter-quality-trimmed/"; \
-   done >> ../phase_wf1.conf
-echo "\n" > ../phase_wf1.conf
-echo "contigs:" > ../phase_wf1.conf
+   done >> ../phase_wfA.conf
+echo -en "\ncontigs:\n" > ../phase_wfB.conf
 for i in *; \
    do echo "    "$i": /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/"$i".contigs.fasta"; \
-   done >> ../phase_wf1.conf
+   done >> ../phase_wfB.conf
+cat ../phase_wfA.conf ../phase_wfB.conf > ../phase_wf1.conf
+rm  ../phase_wfA.conf; rm ../phase_wfB.conf 
 ```
 
 Then run the following code to map your data.
@@ -447,16 +448,18 @@ You can make the script with a simple Bash scripts (NOT FINISHED). Start from ba
 
 ```
 cd 2_clean-fastq
-echo "bams:" > ../phase_wf2.conf
+echo "bams:" > ../phase_wfC.conf
 for i in *; \
    do echo "    "$i": /home/bender/Desktop/btutorial/phase_s1/mapped_reads/"$i".fxm.sorted.md.bam"; \
-   done >> ../phase_wf2.conf
-echo "\n" > ../phase_wf2.conf
-echo "contigs:" > ../phase_wf2.conf
+   done >> ../phase_wfC.conf
+echo -en "\ncontigs:\n" > ../phase_wfD.conf
 for i in *; \
    do echo "    "$i": /home/bender/Desktop/btutorial/phase_s1/references/"$i".contigs.fasta"; \
-   done >> ../phase_wf2.conf
+   done >> ../phase_wfD.conf
+cat ../phase_wfC.conf ../phase_wfD.conf > ../phase_wf2.conf
+rm  ../phase_wfC.conf; rm ../phase_wfD.conf 
 ```
+
 
 Then run the following code to phase your data.  Do not use more than 8 cores - this process is super memory intensive (requires ca. 120 gbs for 8 cores):
 ```
