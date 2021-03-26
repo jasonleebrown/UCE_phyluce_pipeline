@@ -364,20 +364,20 @@ The “mapping” workflow precedes all other workflows and is responsible for m
 **phase_wf1.conf**
 ```
 reads:
-    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/2_clean-fastq/AbassJB010n1-0182-ABIC/split-adapter-quality-trimmed/
-    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/2_clean-fastq/AbassJLB07-740-1-0189-ABIJ/split-adapter-quality-trimmed/
-    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/2_clean-fastq/AflavMTR19670-0522-AFCC/split-adapter-quality-trimmed/
-    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/2_clean-fastq/AhahnJLB17-087-0586-AFIG/split-adapter-quality-trimmed/
-    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/2_clean-fastq/ApeteJLB07-001-0008-AAAI/split-adapter-quality-trimmed/
-    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/2_clean-fastq/AtrivJMP26720-0524-AFCE/split-adapter-quality-trimmed/
+    AbassJB010n1-0182-ABIC: /home/bender/Desktop/tutorial/2_clean-fastq/AbassJB010n1-0182-ABIC/split-adapter-quality-trimmed/
+    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/tutorial/2_clean-fastq/AbassJLB07-740-1-0189-ABIJ/split-adapter-quality-trimmed/
+    AflavMTR19670-0522-AFCC: /home/bender/Desktop/tutorial/2_clean-fastq/AflavMTR19670-0522-AFCC/split-adapter-quality-trimmed/
+    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/tutorial/2_clean-fastq/AhahnJLB17-087-0586-AFIG/split-adapter-quality-trimmed/
+    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/tutorial/2_clean-fastq/ApeteJLB07-001-0008-AAAI/split-adapter-quality-trimmed/
+    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/tutorial/2_clean-fastq/AtrivJMP26720-0524-AFCE/split-adapter-quality-trimmed/
 
 contigs:
-    AbassJB010n1-0182-ABIC: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AbassJB010n1-0182-ABIC.contigs.fasta
-    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AbassJLB07-740-1-0189-ABIJ.contigs.fasta
-    AflavMTR19670-0522-AFCC: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AflavMTR19670-0522-AFCC.contigs.fasta
-    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AhahnJLB17-087-0586-AFIG.contigs.fasta
-    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/ApeteJLB07-001-0008-AAAI.contigs.fasta
-    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/3_spades-assemblies/contigs/AtrivJMP26720-0524-AFCE.contigs.fasta
+    AbassJB010n1-0182-ABIC: /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/AbassJB010n1-0182-ABIC.contigs.fasta
+    AbassJLB07-740-1-0189-ABIJ: /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/AbassJLB07-740-1-0189-ABIJ.contigs.fasta
+    AflavMTR19670-0522-AFCC: /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/AflavMTR19670-0522-AFCC.contigs.fasta
+    AhahnJLB17-087-0586-AFIG: /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/AhahnJLB17-087-0586-AFIG.contigs.fasta
+    ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/ApeteJLB07-001-0008-AAAI.contigs.fasta
+    AtrivJMP26720-0524-AFCE: /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/AtrivJMP26720-0524-AFCE.contigs.fasta
 ```
 
 ### Making the assembly configuration file
