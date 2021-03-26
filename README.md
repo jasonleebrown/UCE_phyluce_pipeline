@@ -398,8 +398,6 @@ for i in *; \
    done >> ../phase_wf1.conf
 ```
 
-Once your files has been created.  Merge them in a text editor and add the 'reads:' and 'contigs:' parts, and spaces if necessary. Save as 'phase_wf1.conf'
-
 Then run the following code to map your data.
 ```
 phyluce_workflow --config phase_wf1.conf \
@@ -442,6 +440,24 @@ contigs:
     ApeteJLB07-001-0008-AAAI: /home/bender/Desktop/btutorial/phase_s1/references/ApeteJLB07-001-0008-AAAI.contigs.fasta
     AtrivJMP26720-0524-AFCE: /home/bender/Desktop/btutorial/phase_s1/references/AtrivJMP26720-0524-AFCE.contigs.fasta
 ```
+### Making the assembly configuration file
+Note that this step uses the 'phase_s1' .bam and fasta files output from samtools in the last step. 
+
+You can make the script with a simple Bash scripts (NOT FINISHED). Start from base 'tutorial' folder.  Be sure to edit the 2 locations"/home/bender/Desktop/tutorial" to match your computer/path folder structure:
+
+```
+cd 2_clean-fastq
+echo "bams:" > ../phase_wf2.conf
+for i in *; \
+   do echo "    "$i": /home/bender/Desktop/btutorial/phase_s1/mapped_reads/"$i".fxm.sorted.md.bam"; \
+   done >> ../phase_wf2.conf
+echo "\n" > ../phase_wf2.conf
+echo "contigs:" > ../phase_wf2.conf
+for i in *; \
+   do echo "    "$i": /home/bender/Desktop/btutorial/phase_s1/references/"$i".contigs.fasta"; \
+   done >> ../phase_wf2.conf
+```
+
 Then run the following code to phase your data:
 ```
 phyluce_workflow --config phase_wf2.conf \
