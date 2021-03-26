@@ -461,12 +461,12 @@ rm  ../phase_wfC.conf; rm ../phase_wfD.conf
 ```
 
 
-Then run the following code to phase your data.  Do not use more than 8 cores - this process is super memory intensive (requires ca. 120 gbs for 8 cores):
+Then run the following code to phase your data.  Do not use more than 6 cores - this process is super memory intensive (requires ca. 120 gbs for 6 cores):
 ```
 phyluce_workflow --config phase_wf2.conf \
     --output phase_s2 \
     --workflow phasing \
-    --cores 19
+    --cores 6
 ```
 Right now, what you do with these files is left up to you (e.g. in terms of merging their contents and getting the data aligned). You can essentially group all the *.0.fasta and *.1.fasta files for all taxa together as new “assemblies” of data and start the phyluce analysis process over from "phyluce_assembly_match_contigs_to_probes" step.  Input your fasta files as contigs,  in place of the "--contigs 3_spades-assemblies/contigs" parameter.  For example 
 ```
