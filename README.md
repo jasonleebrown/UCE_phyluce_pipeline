@@ -383,7 +383,7 @@ contigs:
 ### Making the assembly configuration file
 Note that this step uses the 'spades contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor. 
 
-You can make the script with a simple Bash scripts (NOT FINISHED). Start from base 'tutorial' folder.  Be sure to edit the 2 locations"/home/bender/Desktop/tutorial" to match your computer/path folder structure:
+You can make the script with a simple Bash script. Start from base 'tutorial' folder.  Be sure to edit the 2 locations"/home/bender/Desktop/tutorial" to match your computer/path folder structure:
 
 ```
 cd 2_clean-fastq
@@ -444,7 +444,7 @@ contigs:
 ### Making the assembly configuration file
 Note that this step uses the 'phase_s1' .bam and fasta files output from samtools in the last step. 
 
-You can make the script with a simple Bash scripts (NOT FINISHED). Start from base 'tutorial' folder.  Be sure to edit the 2 locations"/home/bender/Desktop/tutorial" to match your computer/path folder structure:
+You can make the script with a simple Bash script. Start from base 'tutorial' folder.  Be sure to edit the 2 locations"/home/bender/Desktop/tutorial" to match your computer/path folder structure:
 
 ```
 cd 2_clean-fastq
