@@ -458,12 +458,12 @@ for i in *; \
    done >> ../phase_wf2.conf
 ```
 
-Then run the following code to phase your data:
+Then run the following code to phase your data.  Do not use more than 8 cores - this process is super memory intensive (requires ca. 120 gbs for 8 cores):
 ```
 phyluce_workflow --config phase_wf2.conf \
     --output phase_s2 \
     --workflow phasing \
-    --cores 12
+    --cores 8
 ```
 When code runs, make sure to look at the last line of text - this step crashes a lot. Note that if it crashes, from what I can tell - the output fasta files are completely fine to use.   
 
