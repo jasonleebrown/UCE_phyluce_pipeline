@@ -381,29 +381,32 @@ contigs:
 ```
 
 ### Making the assembly configuration file
-Note that this step uses the 'spades contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor.  An easy way to get a list of all your samples is to navigate to the '2_clean-fastq' and run the code below (for the file name for the start of each block) and then goto  '3_spades-assemblies/contigs' to get the end filename of the second block (again running the code below - note that you can change output to whatever).
+Note that this step uses the 'spades contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor. 
 
+You can make most of it with two simple Bash scripts (NOT FINISHED):
+TOP part
 ```
-ls > sample_list.txt
-```
-You can use these text files to create the above configuration file. You manually merge the data from the 'sample_list.txt' (from 2_clean-fastq) with your Illumiprocessor configuration file (see above) to create the first block.  
-
-You can make it with a simple Bash script (NOT FINISHED):
-```
-cd 3_spades-assemblies
-echo "[samples]" > ../assembly.conf
+cd 2_clean-fastq
+echo "[samples]" > ../phase_wf1_top.conf
 for i in *; \
-   do echo $i":/home/bender/Desktop/tutorial/2_clean-fastq/"$i"/split-adapter-quality-trimmed/"; \
-   done >> ../assembly.conf
+   do echo $i": /home/bender/Desktop/tutorial/2_clean-fastq/"$i"/split-adapter-quality-trimmed/"; \
+   done >> ../phase_wf1_top.conf
+```
+BOTTOM part
+```
+cd 2_clean-fastq
+echo "[samples]" > ../phase_wf1_bottom.conf
+for i in *; \
+   do echo $i": /home/bender/Desktop/tutorial/3_spades-assemblies/contigs/"$i".contigs.fasta"; \
+   done >> ../phase_wf1_bottom.conf
 ```
 
-
-Once your files has been created.
+Once your files has been created.  Merge them in a text editor and add the 'reads:' and 'contigs:' parts, and spaces if necessary. Save as 'phase_wf1.conf'
 
 Then run the following code to map your data.
 ```
 phyluce_workflow --config phase_wf1.conf \
-    --output phase1 \
+    --output phase_s1 \
     --workflow mapping \
     --cores 12
 ```
@@ -445,7 +448,7 @@ contigs:
 Then run the following code to phase your data:
 ```
 phyluce_workflow --config phase_wf2.conf \
-    --output phase2 \
+    --output phase_s2 \
     --workflow phasing \
     --cores 12
 ```
