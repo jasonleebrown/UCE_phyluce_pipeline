@@ -24,6 +24,7 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Getting summary statistics for our UCE loci](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#getting-summary-statistics-for-our-uce-loci)
 - [Sequence alignment](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sequence-alignment)
 - [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
+- [MitoGenome Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#mitogenome-pipeline)
 - [Locus filtering](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#locus-filtering)
     - [Filtering by completeness](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-completeness)
      - [Filtering by parsimony-informative sites](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-parsimony-informative-sites)
@@ -626,11 +627,11 @@ phyluce_align_get_trimal_trimmed_alignments_from_untrimmed \
 	--output-format nexus
 ```
 
-### Mitogenome Pipeline
+### Mitogenome Pipeline 
 _____________________________________________________________________________________________________________________________________________
 This pipeline recovers off-target sequences. This is now how I do mitochondrial assembly: I just use a mitochondrial genome from a close relative for the reference sequence instead of the UCE loci. There are also lots of nuclear loci (e.g. 28S) that can be reliably recovered across samples.
 
-
+WORK IN PROGRESS - DO NOT USE - YET
 #### Software Dependencies: 
 '''We specify the version used, but it probably doesn’t matter. If you hit any problems with any steps though, check the versions.
 EMBOSS (6.6.0.0)```conda install EMBOSS``` 
@@ -682,7 +683,7 @@ mkdir -p work_directory/angsd_bams
 mkdir -p work_directory/samples
 ```
 
-#### Twomey Step 3. Align per-sample reads to mtGenome reference and extract sequences
+####  MitoGenome Step 2. Align per-sample reads to mtGenome reference and extract sequences
 All you have to do here is place the read_map_UCE_loop_HaploidCall.sh script into the work_directory/samples folder, and run it. Results will appear in work_directory/fastas as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
 
 Make sure that you have copied 'usc_consensus_reference.fasta' to the folder below.
@@ -715,7 +716,7 @@ bash  angsd_Dofasta4_iupac0.2_minDepth_2.sh
 
 ```
 
-#### Twomey Step 4: Rearrange resulting fasta files into an alignment```
+####  MitoGenome Step 3: Rearrange resulting fasta files into an alignment```
 
 If the above steps worked correctly, your work_directory/‘angsd_bams’ or copy to work_directory/‘fasta’ folder should be filled with a fasta file for each sample. This step is to make these files into something useable for phylogenetics.
 
@@ -790,7 +791,7 @@ trimal -in concatenated.out -out trimal_gappyout.fasta -gappyout
 
 This alignment should now be ready to use (e.g., IQ-Tree).   However, I suggest you jump to locus filtering from this step.
 
-#### MitoGenome Step X. Make a reference for read-alignment
+#### MitoGenome Step X. Make a reference for read-alignment - redo and run again - start at step 1
 
 General goal here is to extract a consensus sequence for each UCE locus, and turn these into a reference fasta for read alignment.
 
@@ -829,7 +830,7 @@ This will make something like eight ht2 files. You’ll need these for the next 
 
 
 
-#### End of Twomey Pipeline
+#### End of MitoGenome Pipeline
 _____________________________________________________________________________________________________________________________________________
 
 
