@@ -715,6 +715,10 @@ To run script type:
 bash  angsd_Dofasta4_iupac0.2_minDepth_2.sh
 
 ```
+another way to convert bams to fasta.txt
+```
+samtools fasta AbassJB010n1-0182-ABIC.bam>test123.txt
+```
 
 ####  MitoGenome Step 3: Rearrange resulting fasta files into an alignment```
 
