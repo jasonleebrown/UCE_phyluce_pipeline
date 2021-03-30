@@ -631,7 +631,6 @@ phyluce_align_get_trimal_trimmed_alignments_from_untrimmed \
 _____________________________________________________________________________________________________________________________________________
 This pipeline recovers off-target sequences. This is now how I do mitochondrial assembly: I just use a mitochondrial genome from a close relative for the reference sequence instead of the UCE loci. There are also lots of nuclear loci (e.g. 28S) that can be reliably recovered across samples.
 
-WORK IN PROGRESS - DO NOT USE - YET
 #### Software Dependencies: 
 '''We specify the version used, but it probably doesn’t matter. If you hit any problems with any steps though, check the versions.
 EMBOSS (6.6.0.0)```conda install EMBOSS``` 
@@ -681,9 +680,9 @@ mkdir -p work_directory/angsd_bams2
 mkdir -p work_directory/samples
 ```
 ####  MitoGenome Step 2. Align per-sample reads to mtGenome reference and extract sequences
-**IMPORTANT** If you have a great mitogenome reference that is the same genus and complete - you only need to do Steps 1 & 2.  If you need to assemble a mitogenome for a genus without a readily available mitogenome - the it is best to do Steps 1-5. For your reference sequence, get a mitogenome from genbank for the closely related group.
+**IMPORTANT** If you have a great mitogenome reference that is the same genus and complete - you only need to do Steps 1-3.  If you need to assemble a mitogenome for a genus without a readily available mitogenome - then it is best to do Steps 1-5. For your first reference sequence get a mitogenome from genbank for the closely related group.
 
-All you have to do here is place the'bams_loopBWA-MEM-mt.sh' script into the 'work_directory/samples' folder, and run it. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
+All you have to do here is place the'bams_loopBWA-MEM-mt.sh' script into the 'work_directory/samples' folder, and run it. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:fi
 
 Make sure that you have copied you reference sequences 'consensus_reference.fasta' to the folder below.
 
