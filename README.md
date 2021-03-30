@@ -697,7 +697,7 @@ bwa index /home/bender/Desktop/tutorial/work_directory/reference_sets/consensus_
 
 Now run the bash script "bams_loopBWA-MEM-UCE.sh"- before you run it make sure you change the directories inside of the script.
 
-```bash bams_loopBWA-MEM-UCE.sh```
+```bash bams_loopBWA-MEM-mtDNA.sh```
 
 JLB Note 2/2021: If you error out - in the script "bash bams_loopBWA-MEM-UCE.sh", change: 
 ```samtools sort $sample.bam -o $sample.sorted.bam``` 
@@ -711,7 +711,7 @@ Go to ‘angsd_bams’ folder
 
 To run script type: 
 ```
-bash  angsd_Dofasta4_iupac0.2_minDepth_2.sh
+bash  angsd_Dofasta4_iupac0.2_minDepth_2_mtDNA.sh
 
 ```
 
@@ -772,7 +772,7 @@ bwa index /home/bender/Desktop/tutorial/work_directory/reference_sets/consensus_
 
 Now run the bash script "bams_loopBWA-MEM-UCE.sh"- before you run it make sure you change reference file and output directories inside of the script.
 
-```bash bams_loopBWA-MEM-mt.sh```
+```bash bams_loopBWA-MEM-mtDNA.sh```
 
 3. Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
 
@@ -780,7 +780,7 @@ Go to ‘angsd_bams2’ folder
 
 To run script type: 
 ```
-bash  angsd_Dofasta4_iupac0.2_minDepth_2.sh
+bash  angsd_Dofasta4_iupac0.2_minDepth_2_mtDNA.sh
 
 ```
 Concatenate all these resulting fasta files. Do this into a new subdirectory:
