@@ -636,11 +636,7 @@ WORK IN PROGRESS - DO NOT USE - YET
 '''We specify the version used, but it probably doesn’t matter. If you hit any problems with any steps though, check the versions.
 EMBOSS (6.6.0.0)```conda install EMBOSS``` 
 
-Hisat2 (2.1.0) ```conda install hisat2```
-
 Samtools (0.1.19)
-
-Seqtk (1.2) ```conda install seqtk```
 
 Muscle (3.8)
 
@@ -655,6 +651,7 @@ TrimAl (1.4)
 
 Angsd (x): ```conda install -c bioconda angsd```
 
+
 ####  MitoGenome Step 1. Organize a directory structure
 
 Make the following directories in whatever work directory you want:
@@ -664,37 +661,39 @@ work_directory/fastas  – This will hold the per-sample read alignment results.
 mkdir -p work_directory/fastas
 ```
 
-'work_directory/reference_sets/mtGenome' – This will hold your hisat2 index files and the 'mtGenome_reference.fasta' just created (you can copy that there)
+'work_directory/reference/mtGenome' – This will hold your hisat2 index files and the 'mtGenome_reference.fasta' just created (you can copy that there)
 
 ```
-mkdir -p work_directory/reference_sets/mtGenome
+mkdir -p work_directory/reference/mtGenome
 ```
 
 'work_directory/samples' – This holds your folders corresponding to each sample to be included in the phylogeny. To do this, go to the ‘2_clean-fastq’ folder of one of your phyluce runs. Copy (or link) these folders into this 'samples' directory.
 
 For example, for the samples directory, the path to your sample reads would be something like:
 work_directory/samples/amazonica_Iquitos_JLB08_0264/split-adapter-quality-trimmed
-work/directory/samples/benedicta_Pampa_Hermosa_0050/split-adapter-quality-trimmed
+work_directory/samples/benedicta_Pampa_Hermosa_0050/split-adapter-quality-trimmed
 etc.
 
 ```
 mkdir -p work_directory/reference_sets
 mkdir -p work_directory/angsd_bams
+mkdir -p work_directory/angsd_bams2
 mkdir -p work_directory/samples
 ```
-
 ####  MitoGenome Step 2. Align per-sample reads to mtGenome reference and extract sequences
-All you have to do here is place the read_map_UCE_loop_HaploidCall.sh script into the work_directory/samples folder, and run it. Results will appear in work_directory/fastas as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
+**IMPORTANT** If you have a great mitogenome reference that is the same genus and complete - you only need to do Steps 1 & 2.  If you need to assemble a mitogenome for a genus without a readily available mitogenome - the it is best to do Steps 1-5. For your reference sequence, get a mitogenome from genbank for the closely related group.
 
-Make sure that you have copied 'usc_consensus_reference.fasta' to the folder below.
+All you have to do here is place the'bams_loopBWA-MEM-mt.sh' script into the 'work_directory/samples' folder, and run it. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
 
-First index your UCE file
+Make sure that you have copied you reference sequences 'consensus_reference.fasta' to the folder below.
+
+1. First index your reference file 
 
 ```
-bwa index /home/bender/Desktop/tutorial/work_directory/reference_sets/UCE/uce_consensus_reference.fasta
+bwa index /home/bender/Desktop/tutorial/work_directory/reference_sets/consensus_reference.fasta
 ```
 
-Go to folder 'work_directory/samples'
+2. Go to folder 'work_directory/samples'
 
 Now run the bash script "bams_loopBWA-MEM-UCE.sh"- before you run it make sure you change the directories inside of the script.
 
@@ -706,7 +705,7 @@ to
 ```samtools sort $sample.bam $sample.sorted```
 
 
-Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
+3. Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
 
 Go to ‘angsd_bams’ folder
 
@@ -715,14 +714,10 @@ To run script type:
 bash  angsd_Dofasta4_iupac0.2_minDepth_2.sh
 
 ```
-another way to convert bams to fasta.txt
-```
-samtools fasta AbassJB010n1-0182-ABIC.bam>test123.txt
-```
 
-####  MitoGenome Step 3: Rearrange resulting fasta files into an alignment```
+####  MitoGenome Step 3: Rearrange resulting fasta files into an alignment
 
-If the above steps worked correctly, your work_directory/‘angsd_bams’ or copy to work_directory/‘fasta’ folder should be filled with a fasta file for each sample. This step is to make these files into something useable for phylogenetics.
+If the above steps worked correctly, your work_directory/‘angsd_bams’ should be filled with a fasta file for each sample. This step is to make these files into something useable for phylogenetics.
 
 1) First, concatenate all these resulting fasta files. Do this into a new subdirectory:
 
@@ -731,108 +726,69 @@ mkdir explode
 cat *fasta > explode/cat.fasta
 ```
 
-2) Enter the ‘explode’ directory. The cat.fasta needs to be exploded so that the fastas are arranged by locus rather than by sample:
-
-```
-awk '/^>/{split($1,a,"[|.]")}{print >> a[2]".fa"}' cat.fasta
-```
-
-IMPORTANT. If this didn't create 1000s of files, re-run this step with a slightly altered code (removing "." from search after pipe):
-```
-awk '/^>/{split($1,a,"[|]")}{print >> a[2]".fa"}' cat.fasta
-```
-
-
-3) Reformat headers. They currently look like: > sample_locality_001|uce-con_1 and need to lose the locus ID. Run this command on the directory of by-locus .fa files (will be thousands of files)
-
-```
-sed -i 's/|uce-.*//' *.fa
-```
-
-4) Run the seqret_loop.sh script in the same directory as all these .fa files. This will pad the lociso that they are all the same length (adding dashes to the sequences to make the lengths correct), so that they are recognized as alignments.
-
-JLB 12.2020: Note - make sure all files in this folder that are *.fa and *.fasta extensions are desired - I had a rouge .fa file ("bam.fa") other .fasta files in my folder that created a ton of confusion.  The files you want shoud be named to match UCE name.  I recommend creating a new folder or removing all other files from this directory (minus the .sh files)
-
-```
-bash seqret_loop.sh 
-```
-
-5) Even though these loci are already aligned (because the sequences were extracted from reads that aligned to a reference), I have found that re-aligning each locus with Muscle can fix some minor alignment issues (I think this has to do with indels). 
+2) Even though these loci are already aligned (because the sequences were extracted from reads that aligned to a reference), I have found that re-aligning each locus with Muscle can fix some minor alignment issues (I think this has to do with indels). 
  
-Next step, run the muscle_loop script.  Navigate up to the'seqret_output' folder and copy the 'muscle_loop.sh' script to this folder. The 'muscle_loop.sh' script can take a while, like a few hours.
-
 Now create a new output folder:
 
 ```
 mkdir muscle
 ```
-Then run the script:
+Then run muscle - this can take a bit:
 ```
-bash muscle_loop.sh
-```
-
-JLB 3.2021: IMPORTANT - if you plan to filter the data for completeness or for PIS - use the output from Muscle here as inputs.  Then you can return to these few scripts to contatenate 
-
-6) Concatenate loci with AMAS. To do this, enter the newly created 'muscle' directory and then run this script:
-
-```
-python  /home/bender/miniconda2/envs/phyluce/lib/python2.7/site-packages/amas/AMAS.py concat -i *.fasta -f fasta -d dna
+muscle -in cat.fasta -out muscle_cat.fasta
 ```
 
-JLB 12.2020: Note the specific location of "AMAS.py" (found when installing it see above)
+This alignment should now be ready to use (e.g., IQ-Tree).  
 
-7) The alignment will have a bunch of question marks in it. I guess these are from the read alignments. I replace them with – so that the alignments can be cleaned up with trimal (trimal will not touch question marks). It is possible this is a bad idea.
 
-```
-sed -i 's/?/-/g' concatenated.out
-```
-
-8) Last step is to clean up the alignments with trimal to remove columns composed of mostly missing data. The gappyout option gives an alignment roughly twice as long as the no_gaps option; in my experience the trees come out identical but with support values slightly higher when using gappyout.
-
-```
-trimal -in concatenated.out -out trimal_gappyout.fasta -gappyout
-```
-
-This alignment should now be ready to use (e.g., IQ-Tree).   However, I suggest you jump to locus filtering from this step.
-
-#### MitoGenome Step X. Make a reference for read-alignment - redo and run again - start at step 1
+#### MitoGenome Step 4. Make a fine-tunded reference for read-alignment 
 
 General goal here is to extract a consensus sequence for each UCE locus, and turn these into a reference fasta for read alignment.
 
-1) Run the emboss_UCE_consensus script in the directory containing all your UCE loci. These should be the loci that are aligned but not filtered, because even if a UCE was recovered only for a single sample, it could be useful for read alignment. Basically don’t throw out any loci at this stage.
+1) Run the 'emboss_consensus' script in the directory containing all your mitogenomes. 
 
-If you follow the phyluce pipeline, it should be this folder:
-"taxon-sets/all/mafft-fasta-internal-trimmed-gblocks-clean"
-
-Then put the script in that folder and run it.
-
-```
-./emboss_UCE_consensus_loop.sh
-```
 
 To run type: 
 
 ```
-bash emboss_UCE_consensus_loop.sh
+bash emboss_consensus_loop.sh
 ```
 
-This should spit out a new folder called ‘consensus’, where each locus is represented by a single sequence.
+This should spit out a new folder called ‘consensus’, where a new mitogenome reference is created. Place this new mitogenome reference into your reference folder.
 
-2) Concatenate these to a single fasta file (change to newly created consensus folder)
+####  MitoGenome Step 5.  Repeat mitogenome baiting and aligment
+
+Edit the the'bams_loopBWA-MEM-mt.sh' script into the 'work_directory/samples' folder to point to you new reference and change output to angsd_bams2. Then run the script. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
+
+Make sure that you have copied you reference sequences 'consensus_reference.fasta' to the folder below.
+
+1. First index your new reference file 
 
 ```
-cat *.fasta > uce_consensus_reference.fasta
+bwa index /home/bender/Desktop/tutorial/work_directory/reference_sets/consensus_reference2.fasta
 ```
 
-3) Index this file with hisat2 to turn it into a reference for read alignment
+2. Go to folder 'work_directory/samples'
+
+Now run the bash script "bams_loopBWA-MEM-UCE.sh"- before you run it make sure you change reference file and output directories inside of the script.
+
+```bash bams_loopBWA-MEM-mt.sh```
+
+3. Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
+
+Go to ‘angsd_bams2’ folder
+
+To run script type: 
+```
+bash  angsd_Dofasta4_iupac0.2_minDepth_2.sh
 
 ```
-hisat2-build uce_consensus_reference.fasta uce_consensus_index -p 6
+Concatenate all these resulting fasta files. Do this into a new subdirectory:
+
 ```
-
-This will make something like eight ht2 files. You’ll need these for the next steps.
-
-
+mkdir explode
+cat *fasta > explode/final_mitogenome.fasta
+```
 
 #### End of MitoGenome Pipeline
 _____________________________________________________________________________________________________________________________________________
