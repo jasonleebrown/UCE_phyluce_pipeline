@@ -37,7 +37,7 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Constructing gene trees with IQ-TREE for ASTRAL input](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#constructing-gene-trees-with-iq-tree-for-astral-input)
       - [Creating a mapping file for ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#creating-a-mapping-file-for-astral)
       - [Running ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-astral)
-   - [Bayesian analysis with BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#bayesian-analysis-with-beast)
+      - [Bayesian analysis with BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#bayesian-analysis-with-beast)
       - [Subsetting loci for BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#subsetting-loci-for-beast)
       - [Setting up a BEAST run with BEAUti](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#setting-up-a-beast-run-with-beauti)
       - [Running BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-beast)
@@ -694,17 +694,17 @@ bwa index /home/bender/Desktop/tutorial/work_directory/reference_sets/consensus_
 
 2. Go to folder 'work_directory/samples'
 
-Now run the bash script "bams_loopBWA-MEM-UCE.sh"- before you run it make sure you change the directories inside of the script.
+Now run the bash script "bams_loopBWA-MEM-mtDNA.sh"- before you run it make sure you change the directories inside of the script.
 
 ```bash bams_loopBWA-MEM-mtDNA.sh```
 
-JLB Note 2/2021: If you error out - in the script "bash bams_loopBWA-MEM-UCE.sh", change: 
+JLB Note 2/2021: If you error out - in the script "bash bams_loopBWA-MEM-mtDNA.sh", change: 
 ```samtools sort $sample.bam -o $sample.sorted.bam``` 
 to 
 ```samtools sort $sample.bam $sample.sorted```
 
 
-3. Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
+3. Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2_mtDNA.sh’
 
 Go to ‘angsd_bams’ folder
 
@@ -742,7 +742,7 @@ This alignment should now be ready to use (e.g., IQ-Tree).
 
 #### MitoGenome Step 4. Make a fine-tunded reference for read-alignment 
 
-General goal here is to extract a consensus sequence for each UCE locus, and turn these into a reference fasta for read alignment.
+General goal here is to extract a consensus sequence for your mitogenome and turn these into a reference fasta for read alignment.
 
 1) Run the 'emboss_consensus' script in the directory containing all your mitogenomes. 
 
@@ -757,7 +757,7 @@ This should spit out a new folder called ‘consensus’, where a new mitogenome
 
 ####  MitoGenome Step 5.  Repeat mitogenome baiting and aligment
 
-Edit the the'bams_loopBWA-MEM-mt.sh' script into the 'work_directory/samples' folder to point to you new reference and change output to angsd_bams2. Then run the script. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
+Edit the the'bams_loopBWA-MEM-mtDNA.sh' script into the 'work_directory/samples' folder to point to you new reference and change output to angsd_bams2. Then run the script. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
 
 Make sure that you have copied you reference sequences 'consensus_reference.fasta' to the folder below.
 
@@ -769,11 +769,11 @@ bwa index /home/bender/Desktop/tutorial/work_directory/reference_sets/consensus_
 
 2. Go to folder 'work_directory/samples'
 
-Now run the bash script "bams_loopBWA-MEM-UCE.sh"- before you run it make sure you change reference file and output directories inside of the script.
+Now run the bash script "bams_loopBWA-MEM-mtDNA.sh"- before you run it make sure you change reference file and output directories inside of the script.
 
 ```bash bams_loopBWA-MEM-mtDNA.sh```
 
-3. Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2.sh’
+3. Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2_mtDNA.sh’
 
 Go to ‘angsd_bams2’ folder
 
