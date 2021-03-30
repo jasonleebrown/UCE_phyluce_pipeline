@@ -639,15 +639,6 @@ Samtools (0.1.19)
 
 Muscle (3.8)
 
-AMAS (https://github.com/marekborowiec/AMAS) ```conda install AMAS``` and 
-```
-sudo apt-get install python3
-pip install amas
-```
-IMPORTANT - pay particular attendtion to where this script is installed.  For Bender it is located in: "/home/bender/miniconda2/envs/phyluce/lib/python2.7/site-packages/amas/AMAS.py"
-
-TrimAl (1.4)
-
 Angsd (x): ```conda install -c bioconda angsd```
 
 
