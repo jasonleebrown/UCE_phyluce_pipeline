@@ -629,7 +629,7 @@ phyluce_align_get_trimal_trimmed_alignments_from_untrimmed \
 
 ### Mitogenome Pipeline 
 _____________________________________________________________________________________________________________________________________________
-This pipeline recovers off-target sequences. This is now how I do mitochondrial assembly: I just use a mitochondrial genome from a close relative for the reference sequence instead of the UCE loci. There are also lots of nuclear loci (e.g. 28S) that can be reliably recovered across samples.
+This pipeline recovers off-target sequences- by Evan Twomey. 
 
 #### Software Dependencies: 
 '''We specify the version used, but it probably doesn’t matter. If you hit any problems with any steps though, check the versions.
