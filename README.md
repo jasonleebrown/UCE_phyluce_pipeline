@@ -484,6 +484,14 @@ Below is code that will add a prefix "iviiviii"
 for f in *.0.fasta ; do mv -- "$f" "iviiviii$f" ; done
 ```
 
+Code to remove ** MOVE SOMEWHERE ELSE LATER
+```
+for i in *iviiviii*; do
+    mv -- "$i" "${i//iviiviii/}"
+done
+```
+
+
 -------------------------------------OPTIONAL STEP - PHASING END-------------------------------
 
 ## Locus matching
