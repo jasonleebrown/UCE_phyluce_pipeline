@@ -477,6 +477,13 @@ phyluce_assembly_match_contigs_to_probes \
     --output 4_uce-search-results
 ```
 
+Note there is an issue with phased data being percieved as the replicates (the 0.fasta and 1.fasta) that causes the locus matching step to fail.  To avoid this add a prefix to one of the phased files (e.g. "0.fasta") that will be removed later (note add this step eventually).
+
+Below is code that will add a prefix "iviiviii"
+```
+for f in *.0.fasta ; do mv -- "$f" "iviiviii$f" ; done
+```
+
 -------------------------------------OPTIONAL STEP - PHASING END-------------------------------
 
 ## Locus matching
