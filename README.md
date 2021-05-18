@@ -348,6 +348,7 @@ In order listed, the summary stats printed to `assembly_stats.csv` will be:
 Phasing is the process of inferring haplotypes from genotype data.  This can be very useful for population-level analyses. We are phasing based on the pipeline The following workflow derives from Andermann et al. 2018 (https://doi.org/10.1093/sysbio/syy039) and the Phyluce pipeline (https://phyluce.readthedocs.io/en/latest/tutorial-two.html)
 
 To phase your UCE data, you need to have individual-specific "reference" contigs against which to align your raw reads.  Generally speaking, you can create these individual-specific reference contigs at several stages of the phyluce_ pipeline, and the stage at which you choose to do this may depend on the analyses that you are running.  That said, I think that the best way to proceed uses edge-trimmed exploded alignments as your reference contigs, aligns raw reads to those, and uses the exploded alignments and raw reads to phase your data.
+**NOTE BNG:** This process takes a ton of memory and for my project phasing 82 samples required me to break my samples into groups and change the number of cores during the second part of phasing, so be prepared for the long haul!
 
 ..attention::  We have not implemented code that you can
     use if you are trimming your alignment data with some other
@@ -407,6 +408,8 @@ phyluce_workflow --config phase_wf1.conf \
     --workflow mapping \
     --cores 12
 ```
+**NOTE BNG:** For 82 samples this part takes ~8 hours
+
 **Step 2: Mapping** 
 Before doing this step you need to make sure you have an edited pilon.py file.  To find the location of this file type "which pilon".  Open this up and look for the line with:
 ```
@@ -469,26 +472,29 @@ phyluce_workflow --config phase_wf2.conf \
     --workflow phasing \
     --cores 6
 ```
+**NOTE BNG:** After MUCH trial and error for my sample size of 82 I had to go through and locate the largest of my files and run those separately on 4 cores due to running out of memory. I also only ran about 10-12 samples at a time on 6 cores and had to transfer each group to an alternate storage off of bender and then at the end I put them all back in the same folder labeled phase_s2. This is the most panic inducing step due to the length of time, failure rate, and moving files around. Depending on the size of your samples and group size this step could take between ~2-8 days per group. 
+
+
+**NOTE BNG:** There is an issue with phased data being percieved as replicates (the .0.fasta and .1.fasta) that causes the locus matching step to fail and to say that the rest of the pipeline HATES the way phased reads are named is the understatement of the century. To avoid this and to be able to differeniate between your phased reads add -1A at the end for NAME.0.fasta and -2B at the end for NAME.1.fasta. Be warned that the following code is fairly crude but it gets the job done with little to no further sweat or tears.
+
+Below is code that will add ending to phased reads
+```
+for f in *.0.fasta ; do mv -- "$f" "$f-1A.fasta" ; done
+```
+Code to remove .0.fasta part of the name
+```
+for i in *.0.fasta*; do
+    mv -- "$i" "${i//.0.fasta/}"
+done
+```
+Don't forget to do the same thing for .1.fasta reads and changing syntax accordingly (-2B for .1.fasta). There now you should have files that the rest of the pipeline will tolerate. DO THIS before moving to locus matching.
+
 Right now, what you do with these files is left up to you (e.g. in terms of merging their contents and getting the data aligned). You can essentially group all the *.0.fasta and *.1.fasta files for all taxa together as new “assemblies” of data and start the phyluce analysis process over from "phyluce_assembly_match_contigs_to_probes" step.  Input your fasta files as contigs,  in place of the "--contigs 3_spades-assemblies/contigs" parameter.  For example 
 ```
 phyluce_assembly_match_contigs_to_probes \
     --contigs phase_s2/fasta \
     --probes uce-5k-probes.fasta \
     --output 4_uce-search-results
-```
-
-Note there is an issue with phased data being percieved as the replicates (the 0.fasta and 1.fasta) that causes the locus matching step to fail.  To avoid this add a prefix to one of the phased files (e.g. "0.fasta") that will be removed later (note add this step eventually).
-
-Below is code that will add a prefix "iviiviii"
-```
-for f in *.0.fasta ; do mv -- "$f" "iviiviii$f" ; done
-```
-
-Code to remove ** MOVE SOMEWHERE ELSE LATER
-```
-for i in *iviiviii*; do
-    mv -- "$i" "${i//iviiviii/}"
-done
 ```
 
 
@@ -575,6 +581,8 @@ phyluce_assembly_get_fastas_from_match_counts \
     --incomplete-matrix all-taxa-incomplete.incomplete \
     --log-path log
 ```
+**NOTE BNG:** If you are working with phased data make sure you change the code block for your phased data not for your 3_spades-assemblies. You would just be undoing everything you did during phasing.
+
 This is a good command to run over your lunch break if you have a lot of samples. For us, it should only take about a minute or two. This command generates a big .fasta file, `all-taxa-incomplete.fasta`, that contains each sample's set of UCE loci. I recommend against attempting to open the file in a GUI program to view it, as it is probably so big that it'll lock up your computer. You can use `less -S all-taxa-incomplete.fasta` to view it seamlessly in Terminal.
 
 If you look at the to-screen output of the previous command, it will tell you how many UCE loci were recovered for each sample. We targeted around 5,000 loci in total, but for most samples we retain ~1,500. This is pretty normal for our poison frog samples.
@@ -615,10 +623,25 @@ phyluce_align_seqcap_align \
 ```
 - The `--output-format` flag specifies the format of the alignment output. We are using [nexus](http://wiki.christophchamp.com/index.php?title=NEXUS_file_format) format here, a popular format that contains a bit more information than .fasta.
 - The `--taxa` flag specifies the number of taxa in the alignment. I have missed changing this before, and didn't encounter any problems, but it may have a role in parallelization or something performance-related.
+- **NOTE BNG:** It is very important to change the `--taxa` flag to the correct number as it heavily affected my PIS filtering
 - The `--aligner` flag is used to specify either `muscle` or `mafft`. 
 - Remember to specify the proper number of cores for your machine.
 
 This command creates a folder called `muscle-nexus` that has individual per-locus .fasta files, each containing a sequence alignment for that locus. You can easily check how many loci you have by checking how many .fasta files are in this folder; in our case, we have 2,019 (what a coincidence).  
+
+**NOTE BNG:** If you get an error running the previous code block, it is likely that you are running a different version of phyluce so use this code block instead:
+```
+phyluce_align_seqcap_align \
+    --input all-taxa-incomplete.fasta \
+    --output-format nexus \
+    --output muscle-nexus \
+    --taxa 6 \
+    --aligner muscle \
+    --cores 19 \
+    --incomplete-matrix \
+    --log-path log
+```
+The main change here is the `--input` flag from previous `--fasta` flag
 
 If all of your alignments are getting dropped (I've had this problem with newer versions of Phyluce), it's likely because you have edge-trimming turned on. Use the following command instead:
 ```
@@ -816,6 +839,8 @@ phyluce_align_get_only_loci_with_min_taxa \
 ```
 After using this command, we generate a new folder called `muscle-nexus-75p` (the 75p stands for 75 percent completeness). We filtered down from 2,019 to 1,665 loci. You can try other levels of completeness to see how it affects your retained-locus count.
 For instance, when I retain only loci possessed by 100% of taxa (e.g., all 6), I only retain 416 loci. Generally, as you increase the number of taxa, the odds of any locus being possessed by all of the taxa become lower. When I was working with >200 taxa in a previous project, a 100% complete matrix retained zero loci (meaning it was useless).
+
+**NOTE BNG:** If you receive an error it is likely due to not being supported on the version of phyluce you are using. If you are using version 1.7.1 switch back to the base phyluce (to refresh memory this was addressed at the very beginning)
 
 After filtering for completeness, we need to "clean up" the locus files. This can be done with the following command:
 ```
