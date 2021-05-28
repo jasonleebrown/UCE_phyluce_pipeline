@@ -695,7 +695,7 @@ mkdir -p work_directory/fastas
 mkdir -p work_directory/reference/mtGenome
 ```
 
-'work_directory/samples' – This holds your folders corresponding to each sample to be included in the phylogeny. To do this, go to the ‘2_clean-fastq’ folder of one of your phyluce runs. Copy (or link) these folders into this 'samples' directory.
+'work_directory/samples' – This holds your folders corresponding to each sample to be included in the phylogeny. To do this, go to the ‘2_clean-fastq’ folder of one of your phyluce runs. Copy (or link) these folders into this 'samples' directory.  Note you need to do this - do not work from '2_clean-fastq'.
 
 For example, for the samples directory, the path to your sample reads would be something like:
 work_directory/samples/amazonica_Iquitos_JLB08_0264/split-adapter-quality-trimmed
