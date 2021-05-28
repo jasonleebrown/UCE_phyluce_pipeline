@@ -732,6 +732,7 @@ JLB Note 2/2021: If you error out - in the script "bash bams_loopBWA-MEM-mtDNA.s
 to 
 ```samtools sort $sample.bam $sample.sorted```
 
+JLB NOTE: If you get an error regarding syntax in first lines - copy the .sh files into a new text file and save it. Use that.
 
 3. Next run the script ‘angsd_Dofasta4_iupac0.2_minDepth_2_mtDNA.sh’
 
@@ -742,6 +743,7 @@ To run script type:
 bash  angsd_Dofasta4_iupac0.2_minDepth_2_mtDNA.sh
 
 ```
+JLB NOTE: If angsd didn't function properly, run it in base (not in phyluce-1.7.1).
 
 ####  MitoGenome Step 3: Rearrange resulting fasta files into an alignment
 
