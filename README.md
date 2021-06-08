@@ -1578,6 +1578,29 @@ conda install snp-sites
 sudo apt install rand
 ```
 
+##OPTIONAL STEP - ADJUST TAXA INCLUDED
+#given you may need to adjut which taxa are include for analyses of SNP data use this to remove individuals
+Step1 explode taxa
+
+```
+phyluce_assembly_explode_get_fastas_file --input all-taxa-incomplete.fasta  --output exploded-SNP  --by-taxon
+
+```
+
+Step2-  manually delete
+
+Step3 - concatenate
+
+go to "explode-SNP"
+
+```
+mkdir concat
+cat *fasta > concat/cat.fasta
+```
+NOTE:: USE THIS FILE IN NEXT STEP INPLACE OF "all-taxa-incomplete.fasta"
+
+##END OPTIONAL STEP
+
 CREATE MSA IN FASTA BY LOCUS
 ## Go to "5_taxon-sets\all" folder
 
