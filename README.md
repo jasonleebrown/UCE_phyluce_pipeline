@@ -1567,10 +1567,77 @@ This alignment should now be ready to use (e.g., IQ-Tree).   However, I suggest 
 _____________________________________________________________________________________________________________________________________________
 
 
+Code to be implimented, but not formatted
 
+##CALLING SNPs
+_______________________________________________________________________________________________    
+conda install snp-sites
+sudo apt install rand
+
+CREATE MSA IN FASTA BY LOCUS
+###Go to "all" folder
+
+###Now split by loci (change values)
+
+phyluce_align_seqcap_align \
+    --input all-taxa-incomplete.fasta \
+    --output-format fasta \
+    --output muscle-fasta \
+    --taxa 186 \
+    --aligner muscle \
+    --cores 19 \
+    --incomplete-matrix \
+    --log-path log
     
-    
-    
+
+CALL SNPS
+
+mkdir muscle-fasta/SNP
+mkdir muscle-fasta/backup
+mkdir muscle-fasta/SNP/randomSNP
+copy fasta files in muscle-fasta to backup
+
+#### example snp sites -"-c" for complete SNP coverage
+###snp-sites -c -o 148-test.txt uce-148.fasta
+
+##loop to run through all fasta MSAs and find SNPS. 
+for i in *.fasta; do snp-sites -c -o SNP/$i.fa $i;done
+#not it will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
+
+##loop to randomly select one SNP from each locus. 
+for i in *.fa; do nn=$(awk 'FNR==2{ print length}' $i );mm=$(rand -N 1 -M $nn -e -d '\n');  awk '{if(/^>/)print $0; else print substr($0,'$mm',1)}' $i > randomSNP/$i; echo "processing: " $i; done
+
+## clean headers (note this is bit clunky, but I didnt want to add text qualifiers that will break with other taxa allignments. Get over it.)
+sed -i 's/_/???/' *.fa
+sed -i 's/>uce-.*???/>/' *.fa
+
+
+### now concatinate
+phyluce_align_concatenate_alignments --alignments randomSNP --input fasta --output cat.rndSNP --phylip
+
+## convert phylip to fasta
+#this removes the nexus header, lines 1-5 (specified by '1,5d'); input file= use-77.nexus
+sed '1,5d' cat.rndSNP.phylip >step1
+#this adds ">" to each line
+sed 's/.\{0\}/>/' step1 >step2
+#this adds a line break after each species
+sed 's/ /&\n/' step2 > cat.rndSNP.fasta
+
+## filter for completeness, once again.
+snp-sites -c -o cat.rndSNPcomp.fasta cat.rndSNP.fasta
+
+________________________________________________________________________________________________________________________________
+code to convert nexus to fasta file (brute force method)
+
+#this removes the nexus header, lines 1-5 (specified by '1,5d'); input file= use-77.nexus
+sed '1,5d' uce-77.nexus >step1
+#this removes the nexus footer - the ';' plus 'linebreak' plus 'end;'
+sed -z 's/;\nend;\n//g' step1 >step2
+#this adds ">" to each line
+sed 's/.\{0\}/>/' step2 >step3
+#this adds a linebreak after file name.  Be sure to count how many spaces you have in filename,  here there were 32 (specified by {32\}
+sed 's/.\{32\}/&\n/' step3 >output.fasta
+
     
     
     
