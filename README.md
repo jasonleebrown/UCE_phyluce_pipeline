@@ -1571,14 +1571,19 @@ Code to be implimented, but not formatted
 
 ##CALLING SNPs
 _______________________________________________________________________________________________    
+things to install (if needed)
+
+```
 conda install snp-sites
 sudo apt install rand
+```
 
 CREATE MSA IN FASTA BY LOCUS
-###Go to "all" folder
+## Go to "5_taxon-sets\all" folder
 
-###Now split by loci (change values)
+## Now split by loci (change values to match your data / computer)
 
+```
 phyluce_align_seqcap_align \
     --input all-taxa-incomplete.fasta \
     --output-format fasta \
@@ -1588,55 +1593,94 @@ phyluce_align_seqcap_align \
     --cores 19 \
     --incomplete-matrix \
     --log-path log
+```
     
 
 CALL SNPS
 
+## create directories 
+```
 mkdir muscle-fasta/SNP
 mkdir muscle-fasta/backup
 mkdir muscle-fasta/SNP/randomSNP
+```
+
+## add code to do this, until then do this manually
 copy fasta files in muscle-fasta to backup
 
-#### example snp sites -"-c" for complete SNP coverage
-###snp-sites -c -o 148-test.txt uce-148.fasta
 
-##loop to run through all fasta MSAs and find SNPS. 
+## loop to run through all fasta MSAs and find SNPS. 
+Go up to 'muscle-fasta' directory
+Run this:
+```
 for i in *.fasta; do snp-sites -c -o SNP/$i.fa $i;done
-#not it will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
+```
 
-##loop to randomly select one SNP from each locus. 
+Note that it will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
+
+## loop to randomly select one SNP from each locus. 
+Go up to 'SNP' directory
+```
 for i in *.fa; do nn=$(awk 'FNR==2{ print length}' $i );mm=$(rand -N 1 -M $nn -e -d '\n');  awk '{if(/^>/)print $0; else print substr($0,'$mm',1)}' $i > randomSNP/$i; echo "processing: " $i; done
+```
 
-## clean headers (note this is bit clunky, but I didnt want to add text qualifiers that will break with other taxa allignments. Get over it.)
+## clean headers (removes UCE-xxxx from each sample name)
+Go up to 'randomSNP' directory
+```
 sed -i 's/_/???/' *.fa
 sed -i 's/>uce-.*???/>/' *.fa
+```
 
-
-### now concatinate
+## concatinate loci to single alignment
+Go down to 'SNP' directory
+```
 phyluce_align_concatenate_alignments --alignments randomSNP --input fasta --output cat.rndSNP --phylip
+```
 
 ## convert phylip to fasta
-#this removes the nexus header, lines 1-5 (specified by '1,5d'); input file= use-77.nexus
+Go up to 'cat.rndSNP' folder and run these three lines of code.
+
+This removes the nexus header, lines 1-5 (specified by '1,5d'); input file= cat.rndSNP.phylip
+```
 sed '1,5d' cat.rndSNP.phylip >step1
-#this adds ">" to each line
+```
+
+This adds ">" to each line
+```
 sed 's/.\{0\}/>/' step1 >step2
-#this adds a line break after each species
+```
+
+This adds a line break after each species
+```
 sed 's/ /&\n/' step2 > cat.rndSNP.fasta
+```
 
 ## filter for completeness, once again.
+```
 snp-sites -c -o cat.rndSNPcomp.fasta cat.rndSNP.fasta
+```
+
+Whooo Hooo - use however you want.  Now you have a randomly selected SNP from each UCE locus that is complete for all taxa included.  
 
 ________________________________________________________________________________________________________________________________
 code to convert nexus to fasta file (brute force method)
 
-#this removes the nexus header, lines 1-5 (specified by '1,5d'); input file= use-77.nexus
+## this removes the nexus header, lines 1-5 (specified by '1,5d'); input file= use-77.nexus
+```
 sed '1,5d' uce-77.nexus >step1
-#this removes the nexus footer - the ';' plus 'linebreak' plus 'end;'
+```
+## this removes the nexus footer - the ';' plus 'linebreak' plus 'end;'
+```
 sed -z 's/;\nend;\n//g' step1 >step2
-#this adds ">" to each line
+```
+## this adds ">" to each line
+```
 sed 's/.\{0\}/>/' step2 >step3
-#this adds a linebreak after file name.  Be sure to count how many spaces you have in filename,  here there were 32 (specified by {32\}
+```
+## this adds a linebreak after file name.  Be sure to count how many spaces you have in filename,  here there were 32 (specified by {32\}
+```
 sed 's/.\{32\}/&\n/' step3 >output.fasta
+```
 
     
     
