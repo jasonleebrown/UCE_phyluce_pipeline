@@ -1704,7 +1704,15 @@ sed 's/.\{0\}/>/' step2 >step3
 ```
 sed 's/.\{32\}/&\n/' step3 >output.fasta
 ```
-
-    
+________________________________________________________________________________________________________________________________
+DAPC bits
+```
+library("adegenet")
+dapc<-fasta2DNAbin("D:\\cat.rndSNPcomp.fasta")
+obj <- DNAbin2genind(dapc, polyThres=0.05)
+grp<-find.clusters(obj,max.n.clust=30)
+dapc1 <- dapc(obj, grp$grp,n.pca= 80, var.contrib = FALSE, scale = TRUE)
+scatter(dapc1, scree.da=TRUE, bg="white", pch=20, cell=0, cstar=0, solid=.4, cex=3,clab=0, leg=TRUE, txt.leg=paste("Cluster",1:4))
+```
     
     
