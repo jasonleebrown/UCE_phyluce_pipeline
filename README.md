@@ -849,15 +849,15 @@ Because of these two things, it means that this process likely needs to be done 
 
 To edit taxa in an alignment do the following three steps.
 
-### Step 1. Explode allignment by taxa
+#### Step 1. Explode allignment by taxa
 ```
 phyluce_assembly_explode_get_fastas_file --input all-taxa-incomplete.fasta  --output exploded-SNP  --by-taxon
 
 ```
-### Step 2. Delete unwanted individuals 
+#### Step 2. Delete unwanted individuals 
 Go to the output folder "exploded-SNP" and manually delete anything that you dont want
 
-### Step3 - Concatenate wanted files back into single fasta
+#### Step3 - Concatenate wanted files back into single fasta
 
 Navigate to "explode-SNP" in the terminal and type:
 
@@ -889,7 +889,7 @@ phyluce_align_seqcap_align \
 ```
     
 
-#### Call SNPs per locus
+#### 2. Call SNPs per locus
 
 Now we have to create few directories for our output files.  Working from the same directory as previous step, type:
 ```
@@ -898,14 +898,14 @@ mkdir muscle-fasta/backup
 mkdir muscle-fasta/SNP/randomSNP
 ```
 
-#### Back-up 'muscle-fasta' files. 
+#### 3. Back-up 'muscle-fasta' files. 
 Sometimes this pipeline does wierd things. Its best back things up.  
 Copy the output muscle files into another folder. Type:
 ```
 cp -a muscle-fasta/. muscle-fasta/backup
 ```
 
-#### The step that actually calls the SNPs
+#### 4. The step that actually calls the SNPs
 Now we will loop through all fasta of loci and find SNPS.
 
 From the 'muscle-fasta' directory, run this:
@@ -916,14 +916,14 @@ for i in *.fasta; do snp-sites -c -o SNP/$i.fa $i;done
 
 IMPORTANT. The output likely will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
 
-#### Randomly select one SNP from each locus
+#### 5. Randomly select one SNP from each locus
 
 Go to output 'SNP' directory and run:
 ```
 for i in *.fa; do nn=$(awk 'FNR==2{ print length}' $i );mm=$(rand -N 1 -M $nn -e -d '\n');  awk '{if(/^>/)print $0; else print substr($0,'$mm',1)}' $i > randomSNP/$i; echo "processing: " $i; done
 ```
 
-#### Scrub sequence headers in fasta files
+#### 6. Scrub sequence headers in fasta files
 This script removes UCE-xxxx (e.g., uce-5432) from each sample name.  Run this from the 'randomSNP' directory.
 
 ```
@@ -931,14 +931,14 @@ sed -i 's/_/???/' *.fa
 sed -i 's/>uce-.*???/>/' *.fa
 ```
 
-#### Concatenate loci to single alignment
+#### 7. Concatenate loci to single alignment
 
 Go down to 'SNP' directory and run:
 ```
 phyluce_align_concatenate_alignments --alignments randomSNP --input fasta --output cat.rndSNP --phylip
 ```
 
-#### Convert Phylip to Fasta (optional step)
+#### 8. Convert Phylip to Fasta (optional step)
 Most population genetic programs cannot use a phylip or nexus file.  To convert it FASTA use the following code.
 
 Go up to 'cat.rndSNP' folder and run these three lines of code.
@@ -959,7 +959,7 @@ Step 3. Adds a line break after each species
 sed 's/ /&\n/' step2 > cat.rndSNP.fasta
 ```
 
-#### Last, filter SNPS for completeness (optional).
+#### 9. Last, filter SNPS for completeness (optional).
 Most programs require no missing data for SNPs.  If that is the case, you need to run this:
 
 ```
@@ -969,7 +969,6 @@ snp-sites -c -o cat.rndSNPcomp.fasta cat.rndSNP.fasta
 Whooo Hooo - now use these files however you want.  The output is a randomly selected SNP from each UCE locus that is complete for all taxa included.  
 
 ________________________________________________________________________________________________________________________________
-
 
 
 ### Locus filtering
