@@ -343,15 +343,15 @@ The loop will loop through every file ending in .fasta located in the `3_spades-
 In order listed, the summary stats printed to `assembly_stats.csv` will be:
 >sample,contigs,total bp,mean length,95 CI length,min,max,median,contigs >1kb
 
--------------------------------------OPTIONAL STEP - PHASING START-------------------------------
+_____________________________________________________________________________________________________________________________________________
 ### Phasing Haplotypes
-(work in progress)
+#### Optional Step
 **NOTE JLB: SEE** https://phyluce.readthedocs.io/en/latest/daily-use/daily-use-4-workflows.html & https://github.com/faircloth-lab/phyluce/issues/222
-
 
 Phasing is the process of inferring haplotypes from genotype data.  This can be very useful for population-level analyses. We are phasing based on the pipeline The following workflow derives from Andermann et al. 2018 (https://doi.org/10.1093/sysbio/syy039) and the Phyluce pipeline (https://phyluce.readthedocs.io/en/latest/tutorial-two.html)
 
 To phase your UCE data, you need to have individual-specific "reference" contigs against which to align your raw reads.  Generally speaking, you can create these individual-specific reference contigs at several stages of the phyluce_ pipeline, and the stage at which you choose to do this may depend on the analyses that you are running.  That said, I think that the best way to proceed uses edge-trimmed exploded alignments as your reference contigs, aligns raw reads to those, and uses the exploded alignments and raw reads to phase your data.
+
 **NOTE BNG:** This process takes a ton of memory and for my project phasing 82 samples required me to break my samples into groups and change the number of cores during the second part of phasing, so be prepared for the long haul!
 
 ..attention::  We have not implemented code that you can
@@ -364,7 +364,7 @@ Phasing requires two steps and the use of an update-to-date version of phyluce. 
 conda activate phyluce-1.7.1
 ```
 
-**Step 1: Mapping**.  
+**Phasing Step 1: Mapping**.  
 The “mapping” workflow precedes all other workflows and is responsible for mapping reads to contigs, marking duplicates, computing coverage, and outputting BAM files representing the mapped reads. In order to run this new workflow, create a YAML-formatted configuration file that contains the names and paths (relative or absolute) to your contigs and your trimmed reads:
 
 **phase_wf1.conf**
@@ -414,7 +414,7 @@ phyluce_workflow --config phase_wf1.conf \
 ```
 **NOTE BNG:** For 82 samples this part takes ~8 hours
 
-**Step 2: Mapping** 
+**Phasing Step 2: Mapping** 
 Before doing this step you need to make sure you have an edited pilon.py file.  To find the location of this file type "which pilon".  Open this up and look for the line with:
 ```
 default_jvm_mem_opts = [....]
@@ -501,8 +501,7 @@ phyluce_assembly_match_contigs_to_probes \
     --output 4_uce-search-results
 ```
 
-
--------------------------------------OPTIONAL STEP - PHASING END-------------------------------
+_____________________________________________________________________________________________________________________________________________
 
 ## Locus matching
 The next step is going to be a sequence of PHYLUCE commands that essentially takes your assemblies, finds the UCEs inside of them, and then conveniently packages them so that you can later align them.
