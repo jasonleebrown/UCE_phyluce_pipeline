@@ -45,6 +45,7 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
 - [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
 - [Convert Nexus to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-nexus-to-fasta-file)
 - [Convert Phylip to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-phylip-to-fasta-file)
+- [Code graveyard](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#code-graveyard)
 
 ## Directory structure and example files
 In this tutorial I will be using a Linux machine (named Bender) for all steps. We need to start by creating a directory to put the example data in.  
@@ -1657,7 +1658,7 @@ sed 's/.\{32\}/&\n/' step3 >output.fasta
 ```
 _____________________________________________________________________________________________________________________________________________
 
-### Convert Phylip to Fasta 
+### Convert Phylip to Fasta file
 **Brute force method** I am sure there is a better way to do this. However, I haven't found anything that will handle very large genomic files.  Note that not all phylip files are the same - thus, this code might need to be adapted.
 
 To convert a Phylip file to FASTA use the following code.
