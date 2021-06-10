@@ -43,7 +43,7 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Running BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-beast)
       - [Processing BEAST output](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#processing-beast-output)
 - [Population Genetic anlyses](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#population-genetic-analyses)
-      - [DAPC](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#DAPC)
+   - [DAPC](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#DAPC)
 - [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
 - [Convert Nexus to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-nexus-to-fasta-file)
 - [Convert Phylip to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-phylip-to-fasta-file)
