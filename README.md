@@ -43,6 +43,8 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Running BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-beast)
       - [Processing BEAST output](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#processing-beast-output)
 - [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
+- [Nexus to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#nexus-to-fasta)
+- [Phylip to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#phylip-to-fasta)
 
 ## Directory structure and example files
 In this tutorial I will be using a Linux machine (named Bender) for all steps. We need to start by creating a directory to put the example data in.  
@@ -666,7 +668,7 @@ phyluce_align_get_trimal_trimmed_alignments_from_untrimmed \
 	--output-format nexus
 ```
 
-### Mitogenome Pipeline 
+## Mitogenome Pipeline 
 _____________________________________________________________________________________________________________________________________________
 This pipeline recovers off-target sequences- by Evan Twomey. 
 
@@ -681,7 +683,7 @@ Muscle (3.8)
 Angsd (x): ```conda install -c bioconda angsd```
 
 
-####  MitoGenome Step 1. Organize a directory structure
+###  MitoGenome Step 1. Organize a directory structure
 
 Make the following directories in whatever work directory you want:
 work_directory/fastas  – This will hold the per-sample read alignment results. Empty for now.
@@ -709,7 +711,7 @@ mkdir -p work_directory/angsd_bams
 mkdir -p work_directory/angsd_bams2
 mkdir -p work_directory/samples
 ```
-####  MitoGenome Step 2. Align per-sample reads to mtGenome reference and extract sequences
+###  MitoGenome Step 2. Align per-sample reads to mtGenome reference and extract sequences
 **IMPORTANT** If you have a great mitogenome reference that is the same genus and complete - you only need to do Steps 1-3.  If you need to assemble a mitogenome for a genus without a readily available mitogenome - then it is best to do Steps 1-5. For your first reference sequence get a mitogenome from genbank for the closely related group.
 
 All you have to do here is place the'bams_loopBWA-MEM-mt.sh' script into the 'work_directory/samples' folder, and run it. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:fi
@@ -746,7 +748,7 @@ bash  angsd_Dofasta4_iupac0.2_minDepth_2_mtDNA.sh
 ```
 JLB NOTE: If angsd didn't function properly, run it in base (not in phyluce-1.7.1).
 
-####  MitoGenome Step 3: Rearrange resulting fasta files into an alignment
+###  MitoGenome Step 3: Rearrange resulting fasta files into an alignment
 
 If the above steps worked correctly, your work_directory/‘angsd_bams’ should be filled with a fasta file for each sample. This step is to make these files into something useable for phylogenetics.
 
@@ -772,7 +774,7 @@ muscle -in cat.fasta -out muscle_cat.fasta
 This alignment should now be ready to use (e.g., IQ-Tree).  
 
 
-#### MitoGenome Step 4. Make a fine-tunded reference for read-alignment 
+### MitoGenome Step 4. Make a fine-tunded reference for read-alignment 
 
 General goal here is to extract a consensus sequence for your mitogenome and turn these into a reference fasta for read alignment.
 
@@ -787,7 +789,7 @@ bash emboss_consensus_loop.sh
 
 This should spit out a new folder called ‘consensus’, where a new mitogenome reference is created. Place this new mitogenome reference into your reference folder.
 
-####  MitoGenome Step 5.  Repeat mitogenome baiting and aligment
+###  MitoGenome Step 5.  Repeat mitogenome baiting and aligment
 
 Edit the the'bams_loopBWA-MEM-mtDNA.sh' script into the 'work_directory/samples' folder to point to you new reference and change output to angsd_bams2. Then run the script. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:
 
@@ -822,15 +824,15 @@ cat *fasta > explode/final_mitogenome.fasta
 ```
 
 
-### Calling SNPs
+## Calling SNPs
 _______________________________________________________________________________________________    
 
-This pipeline uses the'all-taxa-incomplete.fasta' outputs from the 'Extracting UCE locus data' step (above).  BreAnn and myself created this because other pipelines added to many uncessary steps or were dependent on other programing languages (perl or python) and we couldn't get them to work for us.  
+This pipeline uses the'all-taxa-incomplete.fasta' outputs from the [Extracting UCE locus data](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#extracting-uce-locus-data) step.  BreAnn and myself (JLB) created this because other pipelines added to many uncessary steps or were dependent on other programing languages (perl or python) and we couldn't get them to work for us.  
 
 #### What this pipeline does?
 This pipeline takes UCE data (phased or standard) and calls all the SNPs per each locus. Then it counts and randomly selects a SNP from each locus.  Lastly, if concatanates all the SNPs into a single alignment and then loci with missing data are filtered.  
 
-If you want all SNPs for a dataset (and not a single SNP from each UCE loci), simple get a mutiple sequence allignment in Fasta format (see sections: 'Sequence alignment' and 'Converting a Nexus file to Fasta') and then run: ```snp-sites -c -o input.fasta.name.here``` (note that -c will output only complete loci).
+If you want all SNPs for a dataset (and not a single SNP from each UCE loci), simple get a mutiple sequence allignment in Fasta format (see sections: [Concatenating alignments](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#concatenating-alignments) and 'Converting a Nexus file to Fasta') and then run: ```snp-sites -c -o input.fasta.name.here``` (note that -c will output only complete loci).
 
 #### Software Dependencies: 
 
@@ -843,7 +845,7 @@ conda install snp-sites
 sudo apt install rand
 ```
 
-#### Pre-analysis step. Adjusting taxa included (OPTIONAL) 
+### Pre-analysis step. Adjusting taxa included (OPTIONAL) 
 Turns out SNP calling and sequence completeness is highly dependent on the taxa included in anlysis. For example, you will recover lots of SNPs if outgroups are included because there exisits a lot more geneic divesity.  However, for some anlysis, like a DAPC, you do not want outgroups included.   Further, most of these pop gen analyses do not allow for missing data.   Turns out the broader taxonomically you go and the more samples you include - the higher the probably of missing data across valuable loci.  
 Because of these two things, it means that this process likely needs to be done multiple times per student to accomondate analyses.   
 
@@ -869,9 +871,9 @@ cat *fasta > concat/cat.fasta
 IMPORTANT! If do this step, besure to use this file in the next step in placed "all-taxa-incomplete.fasta"
 
 
-#### SNPs Pipeline 
+### SNPs Pipeline 
 
-#### 1. Split multiple sequence alignment by UCE loci 
+### SNP Step 1. Split multiple sequence alignment by UCE loci 
 
 Go to "5_taxon-sets\all" folder.  Now split the 'all-taxa-incomplete.fasta' or 'cat.fasta' (if you removed individuals from analyses, remember that this file is in a different folder).   Be sure to update values to match your computer (cores) and datafile (taxa). This is the longest step (will take 20 minutes to a few hours).  
 
@@ -889,7 +891,7 @@ phyluce_align_seqcap_align \
 ```
     
 
-#### 2. Call SNPs per locus
+### SNP Step 2. Call SNPs per locus
 
 Now we have to create few directories for our output files.  Working from the same directory as previous step, type:
 ```
@@ -898,14 +900,14 @@ mkdir muscle-fasta/backup
 mkdir muscle-fasta/SNP/randomSNP
 ```
 
-#### 3. Back-up 'muscle-fasta' files. 
+### SNP Step 3. Back-up 'muscle-fasta' files. 
 Sometimes this pipeline does wierd things. Its best back things up.  
 Copy the output muscle files into another folder. Type:
 ```
 cp -a muscle-fasta/. muscle-fasta/backup
 ```
 
-#### 4. The step that actually calls the SNPs
+### SNP Step 4. The step that actually calls the SNPs
 Now we will loop through all fasta of loci and find SNPS.
 
 From the 'muscle-fasta' directory, run this:
@@ -916,14 +918,14 @@ for i in *.fasta; do snp-sites -c -o SNP/$i.fa $i;done
 
 IMPORTANT. The output likely will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
 
-#### 5. Randomly select one SNP from each locus
+### SNP Step 5. Randomly select one SNP from each locus
 
 Go to output 'SNP' directory and run:
 ```
 for i in *.fa; do nn=$(awk 'FNR==2{ print length}' $i );mm=$(rand -N 1 -M $nn -e -d '\n');  awk '{if(/^>/)print $0; else print substr($0,'$mm',1)}' $i > randomSNP/$i; echo "processing: " $i; done
 ```
 
-#### 6. Scrub sequence headers in fasta files
+### SNP Step  6. Scrub sequence headers in fasta files
 This script removes UCE-xxxx (e.g., uce-5432) from each sample name.  Run this from the 'randomSNP' directory.
 
 ```
@@ -931,14 +933,14 @@ sed -i 's/_/???/' *.fa
 sed -i 's/>uce-.*???/>/' *.fa
 ```
 
-#### 7. Concatenate loci to single alignment
+### SNP Step 7. Concatenate loci to single alignment
 
 Go down to 'SNP' directory and run:
 ```
 phyluce_align_concatenate_alignments --alignments randomSNP --input fasta --output cat.rndSNP --phylip
 ```
 
-#### 8. Convert Phylip to Fasta (optional step)
+### SNP Step 8. Convert Phylip to Fasta (optional step)
 Most population genetic programs cannot use a phylip or nexus file.  To convert it FASTA use the following code.
 
 Go up to 'cat.rndSNP' folder and run these three lines of code.
@@ -959,7 +961,7 @@ Step 3. Adds a line break after each species
 sed 's/ /&\n/' step2 > cat.rndSNP.fasta
 ```
 
-#### 9. Last, filter SNPS for completeness (optional).
+### SNP Step 9. Last, filter SNPS for completeness (optional).
 Most programs require no missing data for SNPs.  If that is the case, you need to run this:
 
 ```
