@@ -898,67 +898,75 @@ mkdir muscle-fasta/backup
 mkdir muscle-fasta/SNP/randomSNP
 ```
 
-## Back-up 'muscle-fasta' files. 
+#### Back-up 'muscle-fasta' files. 
 Sometimes this pipeline does wierd things. Its best back things up.  
 Copy the output muscle files into another folder. Type:
 ```
 cp -a muscle-fasta/. muscle-fasta/backup
 ```
 
-#### Time to call SNPs
-Now we willl loop through all fasta of loci and find SNPS.
+#### The step that actually calls the SNPs
+Now we will loop through all fasta of loci and find SNPS.
 
-To do this Go up to 'muscle-fasta' directory
-Run this:
+From the 'muscle-fasta' directory, run this:
+
 ```
 for i in *.fasta; do snp-sites -c -o SNP/$i.fa $i;done
 ```
 
-Note that it will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
+IMPORTANT. The output likely will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
 
-## loop to randomly select one SNP from each locus. 
-Go up to 'SNP' directory
+#### Randomly select one SNP from each locus
+
+Go to output 'SNP' directory and run:
 ```
 for i in *.fa; do nn=$(awk 'FNR==2{ print length}' $i );mm=$(rand -N 1 -M $nn -e -d '\n');  awk '{if(/^>/)print $0; else print substr($0,'$mm',1)}' $i > randomSNP/$i; echo "processing: " $i; done
 ```
 
-## clean headers (removes UCE-xxxx from each sample name)
-Go up to 'randomSNP' directory
+#### Scrub sequence headers in fasta files
+This script removes UCE-xxxx (e.g., uce-5432) from each sample name.  Run this from the 'randomSNP' directory.
+
 ```
 sed -i 's/_/???/' *.fa
 sed -i 's/>uce-.*???/>/' *.fa
 ```
 
-## concatinate loci to single alignment
-Go down to 'SNP' directory
+#### Concatenate loci to single alignment
+
+Go down to 'SNP' directory and run:
 ```
 phyluce_align_concatenate_alignments --alignments randomSNP --input fasta --output cat.rndSNP --phylip
 ```
 
-## convert phylip to fasta
+#### Convert Phylip to Fasta (optional step)
+Most population genetic programs cannot use a phylip or nexus file.  To convert it FASTA use the following code.
+
 Go up to 'cat.rndSNP' folder and run these three lines of code.
 
-This removes the nexus header, lines 1-5 (specified by '1,5d'); input file= cat.rndSNP.phylip
+Step 1. Remove the phylip header in line 1 (specified by '1d'. For more lines, say the first five lines, use:'1,5d').
+
 ```
 sed '1d' cat.rndSNP.phylip >step1
 ```
 
-This adds ">" to each line
+Step 2. Adds ">" to each line
 ```
 sed 's/.\{0\}/>/' step1 >step2
 ```
 
-This adds a line break after each species
+Step 3. Adds a line break after each species
 ```
 sed 's/ /&\n/' step2 > cat.rndSNP.fasta
 ```
 
-## filter for completeness, once again.
+#### Last, filter SNPS for completeness (optional).
+Most programs require no missing data for SNPs.  If that is the case, you need to run this:
+
 ```
 snp-sites -c -o cat.rndSNPcomp.fasta cat.rndSNP.fasta
 ```
 
-Whooo Hooo - use however you want.  Now you have a randomly selected SNP from each UCE locus that is complete for all taxa included.  
+Whooo Hooo - now use these files however you want.  The output is a randomly selected SNP from each UCE locus that is complete for all taxa included.  
 
 ________________________________________________________________________________________________________________________________
 
