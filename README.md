@@ -686,25 +686,27 @@ Angsd (x): ```conda install -c bioconda angsd```
 ###  MitoGenome Step 1. Organize a directory structure
 
 Make the following directories in whatever work directory you want:
-work_directory/fastas  – This will hold the per-sample read alignment results. Empty for now.
+-'work_directory/fastas' will hold the per-sample read alignment results. Empty for now.
 
 ```
 mkdir -p work_directory/fastas
 ```
 
-'work_directory/reference/mtGenome' – This will hold your hisat2 index files and the 'mtGenome_reference.fasta' just created (you can copy that there)
+-'work_directory/reference/mtGenome' will hold your hisat2 index files and the 'mtGenome_reference.fasta' 
 
 ```
 mkdir -p work_directory/reference/mtGenome
 ```
 
-'work_directory/samples' – This holds your folders corresponding to each sample to be included in the phylogeny. To do this, go to the ‘2_clean-fastq’ folder of one of your phyluce runs. Copy (or link) these folders into this 'samples' directory.  Note you need to do this - do not work from '2_clean-fastq'.
+-'work_directory/samples' holds your folders corresponding to each sample to be included in the phylogeny. To do this, go to the ‘2_clean-fastq’ folder of one of your phyluce runs. Copy (or link) these folders into this 'samples' directory.  Note you need to do this - do not work from '2_clean-fastq'.
 
 For example, for the samples directory, the path to your sample reads would be something like:
 work_directory/samples/amazonica_Iquitos_JLB08_0264/split-adapter-quality-trimmed
 work_directory/samples/benedicta_Pampa_Hermosa_0050/split-adapter-quality-trimmed
 etc.
 
+
+-Last, make a few other folders required
 ```
 mkdir -p work_directory/reference_sets
 mkdir -p work_directory/angsd_bams
@@ -714,7 +716,7 @@ mkdir -p work_directory/samples
 ###  MitoGenome Step 2. Align per-sample reads to mtGenome reference and extract sequences
 **IMPORTANT** If you have a great mitogenome reference that is the same genus and complete - you only need to do Steps 1-3.  If you need to assemble a mitogenome for a genus without a readily available mitogenome - then it is best to do Steps 1-5. For your first reference sequence get a mitogenome from genbank for the closely related group.
 
-All you have to do here is place the'bams_loopBWA-MEM-mt.sh' script into the 'work_directory/samples' folder, and run it. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments:fi
+All you have to do here is place the'bams_loopBWA-MEM-mt.sh' script into the 'work_directory/samples' folder, and run it. Results will appear in 'work_directory/angsd_bams' as each sample finishes. However, you need to be sure that the directories are correct. I like to use full paths to minimize ambiguity. Here’s the whole script, with some comments
 
 Make sure that you have copied you reference sequences 'consensus_reference.fasta' to the folder below.
 
@@ -731,6 +733,7 @@ Now run the bash script "bams_loopBWA-MEM-mtDNA.sh"- before you run it make sure
 ```bash bams_loopBWA-MEM-mtDNA.sh```
 
 JLB Note 2/2021: If you error out - in the script "bash bams_loopBWA-MEM-mtDNA.sh", change: 
+
 ```samtools sort $sample.bam -o $sample.sorted.bam``` 
 to 
 ```samtools sort $sample.bam $sample.sorted```
@@ -746,7 +749,7 @@ To run script type:
 bash  angsd_Dofasta4_iupac0.2_minDepth_2_mtDNA.sh
 
 ```
-JLB NOTE: If angsd didn't function properly, run it in base (not in phyluce-1.7.1).
+**JLB NOTE:** If angsd didn't function properly, run it in base terminal (not in phyluce-1.7.1).
 
 ###  MitoGenome Step 3: Rearrange resulting fasta files into an alignment
 
@@ -766,6 +769,7 @@ Now create a new output folder:
 ```
 mkdir muscle
 ```
+
 Then run muscle - this can take a bit:
 ```
 muscle -in cat.fasta -out muscle_cat.fasta
@@ -776,7 +780,7 @@ This alignment should now be ready to use (e.g., IQ-Tree).
 
 ### MitoGenome Step 4. Make a fine-tunded reference for read-alignment 
 
-General goal here is to extract a consensus sequence for your mitogenome and turn these into a reference fasta for read alignment.
+General goal here is to extract a consensus sequence for your mitogenome from steps 1-3 and turn it into a reference fasta for refining your called mitogenomes.
 
 1) Run the 'emboss_consensus' script in the directory containing all your mitogenomes. 
 
