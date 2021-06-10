@@ -916,7 +916,7 @@ From the 'muscle-fasta' directory, run this:
 for i in *.fasta; do snp-sites -c -o SNP/$i.fa $i;done
 ```
 
-IMPORTANT. The output likely will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
+-IMPORTANT. The output likely will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
 
 ### SNP Step 5. Randomly select one SNP from each locus
 
@@ -968,16 +968,16 @@ Most programs require no missing data for SNPs.  If that is the case, you need t
 snp-sites -c -o cat.rndSNPcomp.fasta cat.rndSNP.fasta
 ```
 
-Whooo Hooo - now use these files however you want.  The output is a randomly selected SNP from each UCE locus that is complete for all taxa included.  
+-Whooo Hooo - now use these files however you want.  The output is a randomly selected SNP from each UCE locus that is complete for all taxa included.  
 
 ________________________________________________________________________________________________________________________________
 
 
-### Locus filtering
+## Locus filtering
 Locus filtering is the final step before phylogenetic analysis can happen. Filtering out uninformative or largely incomplete loci can improve performance and efficiency. In our pipeline there are generally two types of locus filtering we'll be performing:
 - **Filtering by completeness:** This step is technically optional but you should still do it. It removes loci that are only possessed by a few taxa, which can bias your results if left alone.
 - **Filtering by parsimony-informative sites:** This is an optional step that can be useful if you want to filter to a pre-specified number of loci, or further pare down your locus set to be even more informative. A [parsimony-informative site](https://en.wikipedia.org/wiki/Informative_site) is a column in the alignment for which there are at least two different character states, each possessed by at least two taxa. This means that the site can be used to differentiate clades for that character.
-#### Filtering by completeness
+### Filtering by completeness
 Filtering by completeness means that you are removing loci that are possessed only by a number of taxa below a certain threshold. Another way to think about it is that if you have a 75% complete matrix, it means that all retained loci are possessed by at least 75% of taxa. So, as you increase completeness, it generally *decreases* the number of loci that will be retained, which sounds paradoxical at first. We use the following command to retain a 75% complete matrix:
 ```
 phyluce_align_get_only_loci_with_min_taxa \
@@ -1005,7 +1005,7 @@ This adds a new folder called `muscle-nexus-clean-75p` that contains the same al
 rm -r muscle-nexus-75p
 ```
 `rm` is the "trash" command of Bash. The `-r` flag specifies that you want to trash "recursively", meaning that you can trash a directory as well as all of the files and directories inside of it.
-#### Filtering by parsimony-informative sites
+### Filtering by parsimony-informative sites
 Filtering by parsimony-informative sites (PIS) generally means you are filtering out loci that have below a certain number of PIS. Loci with low information content can bias your results so it's good to filter them out. To calculate how many PIS are in each locus, and perform various types of filtering, we will use an R script written by Brown lab alumnus [Connor French](https://github.com/connor-french) that makes use of the package [Phyloch](https://rdrr.io/github/fmichonneau/phyloch/man/phyloch-package.html). If you haven't already, download `pars_inform.R` from the `example-files` directory of this repository.
 
 To use R in the terminal, you have to have it installed on your system. Then just type in `R`. Until you leave R, the terminal will now assume all of your commands are written in R, instead of Bash.
@@ -1398,109 +1398,22 @@ We now use TreeAnnotator to visualize our posterior "tree-cloud" as a single tre
 
 After you click "Run," the program will run for a few moments and spit out `beast_n50.treefile`. Since this was a pretty flawed BEAST run, our output isn't anything visualizable as it has very very short branch lengths - but this exercise took you through the motions of doing a Bayesian divergence time analysis in BEAST. 
     
-    
-**JLB Install notes** to be used alongside the Phyluce [install guide](https://phyluce.readthedocs.io/en/latest/installation.html#path-configuration)
+ ________________________________________________________________________________________________________________________________
 
-If you do a new install, please install java 1.7 and switch to it before installing conda and phyluce, seriously.  
-To install Java 7 type "sudo apt-get install openjdk-7-jre". If this doesn't work [see](https://askubuntu.com/questions/1034387/how-can-i-install-jdk7-on-ubuntu-18-04-lts-64bit)
-To switch (on a Linux machine), use the following command: `sudo update-alternatives --config java`. The terminal will prompt you to enter the computer's password. Do so, and then select which version of Java to use. In this case, you will want to switch to Java 7 (for me, the choice looks like `/usr/lib/jvm/jdk1.7.0_80/bin/java`). 
+### Running DAPC
+I've found running DAPCs mostly intuitive.  To be honest most our results are hyper-segregated - and for some reason this feels underwhelming.  To run this phase the data and complete phyluce pipeline. Then following Calling SNPS pipeline.  The Fasta file output from that is read for use in R. Install R package 'Adegenet'.
 
--Quick place to find [miniconda](https://docs.conda.io/en/latest/miniconda.html)
-To install then 'cd to download folder' and 'bash Miniconda2-latest-Linux-x86_64.sh'
-
--If python doesnt show 'anaconda...' type 'export PATH=$HOME/miniconda2/bin:$PATH'
--To add channels:
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-
-Where to get older [GATK] - minght not be needed (https://console.cloud.google.com/storage/browser/gatk-software/package-archive/gatk?ref=https:%2F%2Fwww.biostars.org%2Fp%2F437847%2F)
-
-To install java from conda (not actually needed) 'conda install -c anaconda java-1.7.0-openjdk-cos6-x86_64' 
-
-### Running Trinity to assemble cleaned reads
-
-There is a known issue with Trinity that causes it to crash when singltons are included in analyses. Thus we can exlude them (in place) by renaming them with the following code (run from '2_clean_fastq' folder):
 ```
-find . -iname "*READ-singleton.fastq.gz" -exec rename 's/READ-singleton.fastq.gz/_iiixXxXxiii.fastq.gz/' '{}' \;
+library("adegenet")
+dapc<-fasta2DNAbin("D:\\cat.rndSNPcomp.fasta")
+obj <- DNAbin2genind(dapc, polyThres=0.05)
+grp<-find.clusters(obj,max.n.clust=30)
+dapc1 <- dapc(obj, grp$grp,n.pca= 80, var.contrib = FALSE, scale = TRUE)
+scatter(dapc1, scree.da=TRUE, bg="white", pch=20, cell=0, cstar=0, solid=.4, cex=3,clab=0, leg=TRUE, txt.leg=paste("Cluster",1:4))
 ```
-
-To change back (after running trinity) type:
-```
-find . -iname "*_iiixXxXxiii.fastq.gz" -exec rename 's/_iiixXxXxiii.fastq.gz/READ-singleton.fastq.gz/' '{}' \;
-```
- 
-With the assembly configuration file completed, we can now run Trinity. Use the following PHYLUCE command:
-```
-phyluce_assembly_assemblo_trinity \
-    --conf assembly.conf \
-    --output 3_trinity-assemblies \
-    --clean \
-    --cores 19
-```
-- `--clean` specifies that you want to remove extraneous temporary files. This makes the output directory much smaller.
-
-Hopefully your run works the first time. This is generally one of the longest-duration steps in the pipeline - each assembly generally takes an hour to complete with 19 cores. For a set of 96 samples, this process can take most of a working week. I like to run it over a weekend. For these six samples, the run took about four and a half hours with 19 cores.
-
-When the assemblies have finished, you should have a folder called `3_trinity-assemblies` in your `tutorial` folder. Using the command:
-```
-ls 3_trinity-assemblies
-```
-should display:
-```
-AbassJB010n1-0182-ABIC_trinity      AhahnJLB17-087-0586-AFIG_trinity  contigs
-AbassJLB07-740-1-0189-ABIJ_trinity  ApeteJLB07-001-0008-AAAI_trinity
-AflavMTR19670-0522-AFCC_trinity     AtrivJMP26720-0524-AFCE_trinity
-```
-**JLB Note 8/2020:** This is the longest step.  I suggest for going through this tutorial that you run only 1 or 2 samples. To do this, edit your 'conf.assembly' file in basic text editor amd remove all but a few samples.  If - or when - this works for you with no issues, I then suggest you download the other assembled files from [here](https://u.pcloud.link/publink/show?code=XZsHyJXZR6gC4LBHdrFjCfkJSp4AdYY528Rk) for use for the remaining tutorial.  Please use the files you created*, only copying the missing files here.  *this will help us troubleshoot any issues you may encounter during this step - sometimes they are not obvious
-
-The assembly has generated a set of six folders (one per sample) as well as a folder named `contigs`. Inside each sample folder, you will find a `Trinity.fasta` file that contains the assembly, as well as a `contigs.fasta` link that links to that .fasta file. The `contigs` folder further contains links to each sample's .fasta file.
-#### Troubleshooting Trinity
-Generally, the most common error with Trinity will generally be caused by specifying incorrect file paths in your configuration file. Double-check them to make sure they're correct. 
-
-Other possible issues can arise if you copied the trimmed reads over from another directory without preserving folder structure. This can break the symlinks (symbolic links) that are in the `raw-reads` subfolder of each sample's folder. They need to be replaced for Trinity to function. You can do that with the following Bash commands:
-```
-cd 2_clean-fastq
-echo "-READ1.fastq.gz" > reads.txt
-echo "-READ2.fastq.gz" >> reads.txt
-ls > taxa.txt
-for j in $(cat reads.txt); \
-   do for i in $(cat taxa.txt); \
-         do ln -s $i/split-adapter-quality-trimmed/$i$j $i/raw-reads/$i$j; \
-         done; \
-   done
-cd ..
-```
-This creates two files: the first, `reads.txt`, contains a list of two file endings that will be looped over to construct proper symlink names; the second, `taxa.txt`, contains a simple list of all of the samples in the `2_clean-fastq` folder. The next command is a set of two nested `for` loops that basically reads as "For both file endings listed in `reads.txt`, and then for every sample listed in `taxa.txt`, generate a symlink in the `raw-reads` directory for that sample that leads to the corresponding .fastq.gz file in the `split-adapter-quality-trimmed` folder for this sample".
-
-**JLB Notes 8/2020:** I received the error 'jellyfish: not found', I solved this by reinstalling Jellyfish using this code: 'conda install jellyfish=2.2.3'.
-
-**JLB Notes 10/2020:** This has offically been my most rage inducing issue - aside from the switching java bullshit [see bottom]: 'Error: gzip: stdout: Broken pipe' was found in the log files of a Trinity for each sample. Turns out this is a known Trinity bug - the temp fix is remove the 'singleton' reads from each of the 'split-adapter-quality-trimmed' folders in folder '2_clean-fastq'. For details [see](https://github.com/faircloth-lab/phyluce/issues/159). 
-
-More Bash tips:
-- The `ln` command generates links. Using the `-s` flag generates symbolic links, which we desire here. The first argument is the file to be linked to, and the second argument is the name and path of the link to be generated.
-- The `cat` command at its most basic level prints a file. It stands for "concatenate" and can be used to combine files if you specify more than one. In `for` loops, the construct `$(cat taxa.txt)` (using `taxa.txt` as an example file) can be used to loop over each line in that file.
-### Viewing assembly summary stats
-You can use a PHYLUCE command embedded in a simple `for` loop to generate a .csv file containing assembly summary stats. You may wish to put some of them in a publication, or to use them to check that your assembly went well.
-```
-for i in 3_trinity-assemblies/contigs/*.fasta;
-do
-    phyluce_assembly_get_fasta_lengths --input $i --csv;
-done > assembly_stats.csv
-```
-''Column key'': # samples,contigs,total bp,mean length,95 CI length,min length,max length,median legnth,contigs >1kb
-
-The loop will loop through every file ending in .fasta located in the `3_trinity-assemblies/contigs` folder, and then process it using the `phyluce_assembly_get_fasta_lengths` script. (Note that these are not actual .fasta files, but links to them.)
-
-In order listed, the summary stats printed to `assembly_stats.csv` will be:
->sample,contigs,total bp,mean length,95 CI length,min,max,median,contigs >1kb
-
-
-    
-    
 
 ### Twomey Pipeline
-#### Twomey Data Polishing Pipeline - OPTIONAL, but highly encouraged 
+#### OPTIONAL, but highly encouraged 
 _____________________________________________________________________________________________________________________________________________
 This pipeline takes your current results and realligns them to concencus sequences generated from all your input sequences. The need for this arrose when Evan Twomey was checking loci-level allignments and he noted several taxa where mis-alligned at the end.  
 
@@ -1713,34 +1626,148 @@ trimal -in concatenated.out -out trimal_gappyout.fasta -gappyout
 This alignment should now be ready to use (e.g., IQ-Tree).   However, I suggest you jump to locus filtering from this step.
 
 #### End of Twomey Pipeline
-_____________________________________________________________________________________________________________________________________________
-code to convert nexus to fasta file (brute force method)
 
-## this removes the nexus header, lines 1-5 (specified by '1,5d'); input file= use-77.nexus
+
+_____________________________________________________________________________________________________________________________________________
+### Convert nexus to fasta file
+**Brute force method** I am sure there is a better way to do this. However, I haven't found anything that will handle very large genomic files.  Note that not all nexus files are the same - thus, this code might need to be adapted.
+
+To convert Nexus file to FASTA use the following code.
+
+#### Remove header
+This removes the nexus header, lines 1-5 (specified by '1,5d'); here the input file= use-77.nexus
 ```
 sed '1,5d' uce-77.nexus >step1
 ```
-## this removes the nexus footer - the ';' plus 'linebreak' plus 'end;'
+
+#### Remove footer
+This removes the nexus footer - the ';' plus 'linebreak' plus 'end;'
+
 ```
 sed -z 's/;\nend;\n//g' step1 >step2
 ```
-## this adds ">" to each line
+#### Add '>' to each line
 ```
 sed 's/.\{0\}/>/' step2 >step3
 ```
-## this adds a linebreak after file name.  Be sure to count how many spaces you have in filename,  here there were 32 (specified by {32\}
+## Adds a linebreak after sequence id.  
+Be sure to count how many spaces you have in sequence name, this includes the '>' and spaces before the nucleotide data start (e.g., ">Dauratus_JLBXX-23a          ACTGGG"). Here there were 32 (specified by {32\})
 ```
 sed 's/.\{32\}/&\n/' step3 >output.fasta
 ```
-________________________________________________________________________________________________________________________________
-DAPC bits
+_____________________________________________________________________________________________________________________________________________
+
+### Convert Phylip to Fasta fasta 
+**Brute force method** I am sure there is a better way to do this. However, I haven't found anything that will handle very large genomic files.  Note that not all phylip files are the same - thus, this code might need to be adapted.
+
+To convert a Phylip file to FASTA use the following code.
+
+Step 1. Remove the phylip header in line 1 (specified by '1d'. For more lines, say the first five lines, use:'1,5d').
+
 ```
-library("adegenet")
-dapc<-fasta2DNAbin("D:\\cat.rndSNPcomp.fasta")
-obj <- DNAbin2genind(dapc, polyThres=0.05)
-grp<-find.clusters(obj,max.n.clust=30)
-dapc1 <- dapc(obj, grp$grp,n.pca= 80, var.contrib = FALSE, scale = TRUE)
-scatter(dapc1, scree.da=TRUE, bg="white", pch=20, cell=0, cstar=0, solid=.4, cex=3,clab=0, leg=TRUE, txt.leg=paste("Cluster",1:4))
+sed '1d' cat.rndSNP.phylip >step1
 ```
-    
-    
+
+Step 2. Adds ">" to each line
+```
+sed 's/.\{0\}/>/' step1 >step2
+```
+
+Step 3. Adds a line break after each species
+```
+sed 's/ /&\n/' step2 > cat.rndSNP.fasta
+```
+
+_____________________________________________________________________________________________________________________________________________
+
+## Code graveyard
+Below are bits of code they we are not ready to completely purge, however it is no longer part of our central analyses pipelines. RIP
+
+#### Installing older version of Java
+Where to get older [GATK] - minght not be needed (https://console.cloud.google.com/storage/browser/gatk-software/package-archive/gatk?ref=https:%2F%2Fwww.biostars.org%2Fp%2F437847%2F)
+
+To install java from conda (not actually needed) 'conda install -c anaconda java-1.7.0-openjdk-cos6-x86_64' 
+
+### Running Trinity to assemble cleaned reads
+
+**TRINITY is no longer supported by phyluce.**
+
+There is a known issue with Trinity that causes it to crash when singltons are included in analyses. Thus we can exlude them (in place) by renaming them with the following code (run from '2_clean_fastq' folder):
+```
+find . -iname "*READ-singleton.fastq.gz" -exec rename 's/READ-singleton.fastq.gz/_iiixXxXxiii.fastq.gz/' '{}' \;
+```
+
+To change back (after running trinity) type:
+```
+find . -iname "*_iiixXxXxiii.fastq.gz" -exec rename 's/_iiixXxXxiii.fastq.gz/READ-singleton.fastq.gz/' '{}' \;
+```
+ 
+With the assembly configuration file completed, we can now run Trinity. Use the following PHYLUCE command:
+```
+phyluce_assembly_assemblo_trinity \
+    --conf assembly.conf \
+    --output 3_trinity-assemblies \
+    --clean \
+    --cores 19
+```
+- `--clean` specifies that you want to remove extraneous temporary files. This makes the output directory much smaller.
+
+Hopefully your run works the first time. This is generally one of the longest-duration steps in the pipeline - each assembly generally takes an hour to complete with 19 cores. For a set of 96 samples, this process can take most of a working week. I like to run it over a weekend. For these six samples, the run took about four and a half hours with 19 cores.
+
+When the assemblies have finished, you should have a folder called `3_trinity-assemblies` in your `tutorial` folder. Using the command:
+```
+ls 3_trinity-assemblies
+```
+should display:
+```
+AbassJB010n1-0182-ABIC_trinity      AhahnJLB17-087-0586-AFIG_trinity  contigs
+AbassJLB07-740-1-0189-ABIJ_trinity  ApeteJLB07-001-0008-AAAI_trinity
+AflavMTR19670-0522-AFCC_trinity     AtrivJMP26720-0524-AFCE_trinity
+```
+**JLB Note 8/2020:** This is the longest step.  I suggest for going through this tutorial that you run only 1 or 2 samples. To do this, edit your 'conf.assembly' file in basic text editor amd remove all but a few samples.  If - or when - this works for you with no issues, I then suggest you download the other assembled files from [here](https://u.pcloud.link/publink/show?code=XZsHyJXZR6gC4LBHdrFjCfkJSp4AdYY528Rk) for use for the remaining tutorial.  Please use the files you created*, only copying the missing files here.  *this will help us troubleshoot any issues you may encounter during this step - sometimes they are not obvious
+
+The assembly has generated a set of six folders (one per sample) as well as a folder named `contigs`. Inside each sample folder, you will find a `Trinity.fasta` file that contains the assembly, as well as a `contigs.fasta` link that links to that .fasta file. The `contigs` folder further contains links to each sample's .fasta file.
+
+#### Troubleshooting Trinity
+Generally, the most common error with Trinity will generally be caused by specifying incorrect file paths in your configuration file. Double-check them to make sure they're correct. 
+
+Other possible issues can arise if you copied the trimmed reads over from another directory without preserving folder structure. This can break the symlinks (symbolic links) that are in the `raw-reads` subfolder of each sample's folder. They need to be replaced for Trinity to function. You can do that with the following Bash commands:
+```
+cd 2_clean-fastq
+echo "-READ1.fastq.gz" > reads.txt
+echo "-READ2.fastq.gz" >> reads.txt
+ls > taxa.txt
+for j in $(cat reads.txt); \
+   do for i in $(cat taxa.txt); \
+         do ln -s $i/split-adapter-quality-trimmed/$i$j $i/raw-reads/$i$j; \
+         done; \
+   done
+cd ..
+```
+This creates two files: the first, `reads.txt`, contains a list of two file endings that will be looped over to construct proper symlink names; the second, `taxa.txt`, contains a simple list of all of the samples in the `2_clean-fastq` folder. The next command is a set of two nested `for` loops that basically reads as "For both file endings listed in `reads.txt`, and then for every sample listed in `taxa.txt`, generate a symlink in the `raw-reads` directory for that sample that leads to the corresponding .fastq.gz file in the `split-adapter-quality-trimmed` folder for this sample".
+
+**JLB Notes 8/2020:** I received the error 'jellyfish: not found', I solved this by reinstalling Jellyfish using this code: 'conda install jellyfish=2.2.3'.
+
+**JLB Notes 10/2020:** This has offically been my most rage inducing issue - aside from the switching java bullshit [see bottom]: 'Error: gzip: stdout: Broken pipe' was found in the log files of a Trinity for each sample. Turns out this is a known Trinity bug - the temp fix is remove the 'singleton' reads from each of the 'split-adapter-quality-trimmed' folders in folder '2_clean-fastq'. For details [see](https://github.com/faircloth-lab/phyluce/issues/159). 
+
+More Bash tips:
+- The `ln` command generates links. Using the `-s` flag generates symbolic links, which we desire here. The first argument is the file to be linked to, and the second argument is the name and path of the link to be generated.
+- The `cat` command at its most basic level prints a file. It stands for "concatenate" and can be used to combine files if you specify more than one. In `for` loops, the construct `$(cat taxa.txt)` (using `taxa.txt` as an example file) can be used to loop over each line in that file.
+### Viewing assembly summary stats
+You can use a PHYLUCE command embedded in a simple `for` loop to generate a .csv file containing assembly summary stats. You may wish to put some of them in a publication, or to use them to check that your assembly went well.
+```
+for i in 3_trinity-assemblies/contigs/*.fasta;
+do
+    phyluce_assembly_get_fasta_lengths --input $i --csv;
+done > assembly_stats.csv
+```
+''Column key'': # samples,contigs,total bp,mean length,95 CI length,min length,max length,median legnth,contigs >1kb
+
+The loop will loop through every file ending in .fasta located in the `3_trinity-assemblies/contigs` folder, and then process it using the `phyluce_assembly_get_fasta_lengths` script. (Note that these are not actual .fasta files, but links to them.)
+
+In order listed, the summary stats printed to `assembly_stats.csv` will be:
+>sample,contigs,total bp,mean length,95 CI length,min,max,median,contigs >1kb
+
+
+       
+
