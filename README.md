@@ -42,6 +42,8 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Setting up a BEAST run with BEAUti](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#setting-up-a-beast-run-with-beauti)
       - [Running BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-beast)
       - [Processing BEAST output](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#processing-beast-output)
+- [Population Genetic anlyses](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#population-genetic-analyses)
+      - [DAPC](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#DAPC)
 - [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
 - [Convert Nexus to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-nexus-to-fasta-file)
 - [Convert Phylip to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-phylip-to-fasta-file)
@@ -1403,16 +1405,28 @@ We now use TreeAnnotator to visualize our posterior "tree-cloud" as a single tre
 After you click "Run," the program will run for a few moments and spit out `beast_n50.treefile`. Since this was a pretty flawed BEAST run, our output isn't anything visualizable as it has very very short branch lengths - but this exercise took you through the motions of doing a Bayesian divergence time analysis in BEAST. 
     
  ________________________________________________________________________________________________________________________________
+## Population Genetic Analyses
 
-### Running DAPC
-I've found running DAPCs mostly intuitive.  To be honest most our results are hyper-segregated - and for some reason this feels underwhelming.  To run this phase the data and complete phyluce pipeline. Then following Calling SNPS pipeline.  The Fasta file output from that is read for use in R. Install R package 'Adegenet'.
+### DAPC
+I've found running DAPC analyses are mostly intuitive.  To be honest most our results are hyper-segregated - and for some reason this feels underwhelming.  To run this phase the data and complete phyluce pipeline. Then following 'Calling SNPS' pipeline.  The Fasta file output from that is ready for use in R. Install R package 'Adegenet'.
 
 ```
+### activate adegenet
 library("adegenet")
+
+### import fasta file in R
 dapc<-fasta2DNAbin("D:\\cat.rndSNPcomp.fasta")
+
+### covert to genID object
 obj <- DNAbin2genind(dapc, polyThres=0.05)
+
+### find number of clusters for DAPC
 grp<-find.clusters(obj,max.n.clust=30)
+
+### run DAPC - change 'n.pca' to refelect PC number selected above)
 dapc1 <- dapc(obj, grp$grp,n.pca= 80, var.contrib = FALSE, scale = TRUE)
+
+### Plot results
 scatter(dapc1, scree.da=TRUE, bg="white", pch=20, cell=0, cstar=0, solid=.4, cex=3,clab=0, leg=TRUE, txt.leg=paste("Cluster",1:4))
 ```
 
