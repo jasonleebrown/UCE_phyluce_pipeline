@@ -23,8 +23,8 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Getting .fasta files for each sample and UCE locus](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#getting-fasta-files-for-each-sample-and-uce-locus)
       - [Getting summary statistics for our UCE loci](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#getting-summary-statistics-for-our-uce-loci)
 - [Sequence alignment](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sequence-alignment)
-- [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
 - [MitoGenome Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#mitogenome-pipeline)
+- [Calling SNPs](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#calling-SNPs)
 - [Locus filtering](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#locus-filtering)
     - [Filtering by completeness](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-completeness)
      - [Filtering by parsimony-informative sites](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#filtering-by-parsimony-informative-sites)
@@ -42,6 +42,7 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Setting up a BEAST run with BEAUti](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#setting-up-a-beast-run-with-beauti)
       - [Running BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-beast)
       - [Processing BEAST output](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#processing-beast-output)
+- [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
 
 ## Directory structure and example files
 In this tutorial I will be using a Linux machine (named Bender) for all steps. We need to start by creating a directory to put the example data in.  
@@ -820,8 +821,147 @@ mkdir explode
 cat *fasta > explode/final_mitogenome.fasta
 ```
 
-#### End of MitoGenome Pipeline
-_____________________________________________________________________________________________________________________________________________
+
+### Calling SNPs
+_______________________________________________________________________________________________    
+
+This pipeline uses the'all-taxa-incomplete.fasta' outputs from the 'Extracting UCE locus data' step (above).  BreAnn and myself created this because other pipelines added to many uncessary steps or were dependent on other programing languages (perl or python) and we couldn't get them to work for us.  
+
+#### What this pipeline does?
+This pipeline takes UCE data (phased or standard) and calls all the SNPs per each locus. Then it counts and randomly selects a SNP from each locus.  Lastly, if concatanates all the SNPs into a single alignment and then loci with missing data are filtered.  
+
+If you want all SNPs for a dataset (and not a single SNP from each UCE loci), simple get a mutiple sequence allignment in Fasta format (see sections: 'Sequence alignment' and 'Converting a Nexus file to Fasta') and then run: ```snp-sites -c -o input.fasta.name.here``` (note that -c will output only complete loci).
+
+#### Software Dependencies: 
+
+Make sure 'SNP-sites' and 'rand' are installed.
+
+If not, type:
+
+```
+conda install snp-sites
+sudo apt install rand
+```
+
+#### Pre-analysis step. Adjusting taxa included (OPTIONAL) 
+Turns out SNP calling and sequence completeness is highly dependent on the taxa included in anlysis. For example, you will recover lots of SNPs if outgroups are included because there exisits a lot more geneic divesity.  However, for some anlysis, like a DAPC, you do not want outgroups included.   Further, most of these pop gen analyses do not allow for missing data.   Turns out the broader taxonomically you go and the more samples you include - the higher the probably of missing data across valuable loci.  
+Because of these two things, it means that this process likely needs to be done multiple times per student to accomondate analyses.   
+
+To edit taxa in an alignment do the following three steps.
+
+### Step 1. Explode allignment by taxa
+```
+phyluce_assembly_explode_get_fastas_file --input all-taxa-incomplete.fasta  --output exploded-SNP  --by-taxon
+
+```
+### Step 2. Delete unwanted individuals 
+Go to the output folder "exploded-SNP" and manually delete anything that you dont want
+
+### Step3 - Concatenate wanted files back into single fasta
+
+Navigate to "explode-SNP" in the terminal and type:
+
+```
+mkdir concat
+cat *fasta > concat/cat.fasta
+```
+
+IMPORTANT! If do this step, besure to use this file in the next step in placed "all-taxa-incomplete.fasta"
+
+
+#### SNPs Pipeline 
+
+#### 1. Split multiple sequence alignment by UCE loci 
+
+Go to "5_taxon-sets\all" folder.  Now split the 'all-taxa-incomplete.fasta' or 'cat.fasta' (if you removed individuals from analyses, remember that this file is in a different folder).   Be sure to update values to match your computer (cores) and datafile (taxa). This is the longest step (will take 20 minutes to a few hours).  
+
+Run this code:
+```
+phyluce_align_seqcap_align \
+    --input all-taxa-incomplete.fasta \
+    --output-format fasta \
+    --output muscle-fasta \
+    --taxa 186 \
+    --aligner muscle \
+    --cores 19 \
+    --incomplete-matrix \
+    --log-path log
+```
+    
+
+#### Call SNPs per locus
+
+Now we have to create few directories for our output files.  Working from the same directory as previous step, type:
+```
+mkdir muscle-fasta/SNP
+mkdir muscle-fasta/backup
+mkdir muscle-fasta/SNP/randomSNP
+```
+
+## Back-up 'muscle-fasta' files. 
+Sometimes this pipeline does wierd things. Its best back things up.  
+Copy the output muscle files into another folder. Type:
+```
+cp -a muscle-fasta/. muscle-fasta/backup
+```
+
+#### Time to call SNPs
+Now we willl loop through all fasta of loci and find SNPS.
+
+To do this Go up to 'muscle-fasta' directory
+Run this:
+```
+for i in *.fasta; do snp-sites -c -o SNP/$i.fa $i;done
+```
+
+Note that it will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
+
+## loop to randomly select one SNP from each locus. 
+Go up to 'SNP' directory
+```
+for i in *.fa; do nn=$(awk 'FNR==2{ print length}' $i );mm=$(rand -N 1 -M $nn -e -d '\n');  awk '{if(/^>/)print $0; else print substr($0,'$mm',1)}' $i > randomSNP/$i; echo "processing: " $i; done
+```
+
+## clean headers (removes UCE-xxxx from each sample name)
+Go up to 'randomSNP' directory
+```
+sed -i 's/_/???/' *.fa
+sed -i 's/>uce-.*???/>/' *.fa
+```
+
+## concatinate loci to single alignment
+Go down to 'SNP' directory
+```
+phyluce_align_concatenate_alignments --alignments randomSNP --input fasta --output cat.rndSNP --phylip
+```
+
+## convert phylip to fasta
+Go up to 'cat.rndSNP' folder and run these three lines of code.
+
+This removes the nexus header, lines 1-5 (specified by '1,5d'); input file= cat.rndSNP.phylip
+```
+sed '1d' cat.rndSNP.phylip >step1
+```
+
+This adds ">" to each line
+```
+sed 's/.\{0\}/>/' step1 >step2
+```
+
+This adds a line break after each species
+```
+sed 's/ /&\n/' step2 > cat.rndSNP.fasta
+```
+
+## filter for completeness, once again.
+```
+snp-sites -c -o cat.rndSNPcomp.fasta cat.rndSNP.fasta
+```
+
+Whooo Hooo - use however you want.  Now you have a randomly selected SNP from each UCE locus that is complete for all taxa included.  
+
+________________________________________________________________________________________________________________________________
+
 
 
 ### Locus filtering
@@ -1565,127 +1705,6 @@ This alignment should now be ready to use (e.g., IQ-Tree).   However, I suggest 
 
 #### End of Twomey Pipeline
 _____________________________________________________________________________________________________________________________________________
-
-
-Code to be implimented, but not formatted
-
-##CALLING SNPs
-_______________________________________________________________________________________________    
-things to install (if needed)
-
-```
-conda install snp-sites
-sudo apt install rand
-```
-
-##OPTIONAL STEP - ADJUST TAXA INCLUDED
-#given you may need to adjut which taxa are include for analyses of SNP data use this to remove individuals
-Step1 explode taxa
-
-```
-phyluce_assembly_explode_get_fastas_file --input all-taxa-incomplete.fasta  --output exploded-SNP  --by-taxon
-
-```
-
-Step2-  manually delete
-
-Step3 - concatenate
-
-go to "explode-SNP"
-
-```
-mkdir concat
-cat *fasta > concat/cat.fasta
-```
-NOTE:: USE THIS FILE IN NEXT STEP INPLACE OF "all-taxa-incomplete.fasta"
-
-##END OPTIONAL STEP
-
-CREATE MSA IN FASTA BY LOCUS
-## Go to "5_taxon-sets\all" folder
-
-## Now split by loci (change values to match your data / computer)
-
-```
-phyluce_align_seqcap_align \
-    --input all-taxa-incomplete.fasta \
-    --output-format fasta \
-    --output muscle-fasta \
-    --taxa 186 \
-    --aligner muscle \
-    --cores 19 \
-    --incomplete-matrix \
-    --log-path log
-```
-    
-
-CALL SNPS
-
-## create directories 
-```
-mkdir muscle-fasta/SNP
-mkdir muscle-fasta/backup
-mkdir muscle-fasta/SNP/randomSNP
-```
-
-## add code to do this, until then do this manually
-copy fasta files in muscle-fasta to backup
-
-
-## loop to run through all fasta MSAs and find SNPS. 
-Go up to 'muscle-fasta' directory
-Run this:
-```
-for i in *.fasta; do snp-sites -c -o SNP/$i.fa $i;done
-```
-
-Note that it will say "No SNPs were detected so there is nothing to output" alot - this is normal. These are loci with no SNPs. 
-
-## loop to randomly select one SNP from each locus. 
-Go up to 'SNP' directory
-```
-for i in *.fa; do nn=$(awk 'FNR==2{ print length}' $i );mm=$(rand -N 1 -M $nn -e -d '\n');  awk '{if(/^>/)print $0; else print substr($0,'$mm',1)}' $i > randomSNP/$i; echo "processing: " $i; done
-```
-
-## clean headers (removes UCE-xxxx from each sample name)
-Go up to 'randomSNP' directory
-```
-sed -i 's/_/???/' *.fa
-sed -i 's/>uce-.*???/>/' *.fa
-```
-
-## concatinate loci to single alignment
-Go down to 'SNP' directory
-```
-phyluce_align_concatenate_alignments --alignments randomSNP --input fasta --output cat.rndSNP --phylip
-```
-
-## convert phylip to fasta
-Go up to 'cat.rndSNP' folder and run these three lines of code.
-
-This removes the nexus header, lines 1-5 (specified by '1,5d'); input file= cat.rndSNP.phylip
-```
-sed '1,5d' cat.rndSNP.phylip >step1
-```
-
-This adds ">" to each line
-```
-sed 's/.\{0\}/>/' step1 >step2
-```
-
-This adds a line break after each species
-```
-sed 's/ /&\n/' step2 > cat.rndSNP.fasta
-```
-
-## filter for completeness, once again.
-```
-snp-sites -c -o cat.rndSNPcomp.fasta cat.rndSNP.fasta
-```
-
-Whooo Hooo - use however you want.  Now you have a randomly selected SNP from each UCE locus that is complete for all taxa included.  
-
-________________________________________________________________________________________________________________________________
 code to convert nexus to fasta file (brute force method)
 
 ## this removes the nexus header, lines 1-5 (specified by '1,5d'); input file= use-77.nexus
