@@ -43,8 +43,8 @@ This is a tutorial for the phylogenomic workflow used by the Brown lab, where we
       - [Running BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-beast)
       - [Processing BEAST output](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#processing-beast-output)
 - [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
-- [Nexus to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#nexus-to-fasta)
-- [Phylip to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#phylip-to-fasta)
+- [Convert Nexus to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-nexus-to-fasta-file)
+- [Convert Phylip to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-phylip-to-fasta-file)
 
 ## Directory structure and example files
 In this tutorial I will be using a Linux machine (named Bender) for all steps. We need to start by creating a directory to put the example data in.  
@@ -1650,14 +1650,14 @@ sed -z 's/;\nend;\n//g' step1 >step2
 ```
 sed 's/.\{0\}/>/' step2 >step3
 ```
-## Adds a linebreak after sequence id.  
+#### Adds a linebreak after sequence id.  
 Be sure to count how many spaces you have in sequence name, this includes the '>' and spaces before the nucleotide data start (e.g., ">Dauratus_JLBXX-23a          ACTGGG"). Here there were 32 (specified by {32\})
 ```
 sed 's/.\{32\}/&\n/' step3 >output.fasta
 ```
 _____________________________________________________________________________________________________________________________________________
 
-### Convert Phylip to Fasta fasta 
+### Convert Phylip to Fasta 
 **Brute force method** I am sure there is a better way to do this. However, I haven't found anything that will handle very large genomic files.  Note that not all phylip files are the same - thus, this code might need to be adapted.
 
 To convert a Phylip file to FASTA use the following code.
