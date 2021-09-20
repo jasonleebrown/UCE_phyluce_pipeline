@@ -2,6 +2,9 @@ NOTE: this repository was intially created by Wilson X Guillory [wxgillo](https:
 
 # brownlab-workflow
 This is a tutorial for the phylogenomic workflow used by the Brown lab, where we use [UCEs](https://www.ultraconserved.org/) to uncover evolutionary histories, mostly in Neotropical poison frogs (Dendrobatidae). In this tutorial I provide sample data and take you through the steps of read processing, sequence assembly, read-to-locus matching, and sequence alignment, and finally provide a few examples of phylogenetic analyses that can be performed on UCE data.
+
+PowerPoint Overview of NGS: [LINK] (https://github.com/jasonleebrown/UCE_phyluce_pipeline/BioinfoNGS_indroduction.pptx)
+
 ## Contents
 - [Directory structure and example files](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#directory-structure-and-example-files)
    - [Using miniconda2](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#using-miniconda2)
