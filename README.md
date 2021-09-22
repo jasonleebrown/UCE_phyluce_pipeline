@@ -206,6 +206,7 @@ illumiprocessor \
     --r2 _R2 \
     --cores 4
  ```
+ **Update JLB 9/2021**: Okay. At the moment Illumiprocessor only works on Bender (using 'base' or 'phyluce', but not 'phyluce-1.7.1').  This is because all newer version of phyluce (v1.7.1) have been installed using a python 3.6.  In the future, another version of phyluce-1.7.1 needs to be installed using the python 2.7 version of bioconda/miniconda. ALSO, if you make this file in windows, you MUST download one of the example illumiprocessor files and copy the text into this document. Hell I probably will always do this, because this was a difficult bug to find. This is because there are subtle text file differences that are not obvious that cause Illumiprocessor to error out staing "'Names' section is missing.".  Thus, do this every time.  I also encourage you also to look at my example for Plates 8 an 9 and compare this document to the raws sequence reads (note how P001 = 001 in sequnce tag etc.).  Last, remove all spaces and underscores from output file name in your .config file.     
  
 >*Note that a \ backslash in Bash "escapes" the next character. In this particular command, the backslashes are escaping the invisible \n newline character, so that each argument can be written on a separate line for visual clarity. The entire command is generally written on a single line, but this becomes hard to read as arguments are added.*
 
