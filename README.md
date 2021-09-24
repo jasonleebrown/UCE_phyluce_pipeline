@@ -359,7 +359,7 @@ ________________________________________________________________________________
 #### Optional Step
 **NOTE JLB: SEE** https://phyluce.readthedocs.io/en/latest/daily-use/daily-use-4-workflows.html & https://github.com/faircloth-lab/phyluce/issues/222
 
-Phasing is the process of inferring haplotypes from genotype data.  This can be very useful for population-level analyses. We are phasing based on the pipeline The following workflow derives from Andermann et al. 2018 (https://doi.org/10.1093/sysbio/syy039) and the Phyluce pipeline (https://phyluce.readthedocs.io/en/latest/tutorial-two.html)
+Phasing is the process of inferring haplotypes from genotype data.  This can be very useful for population-level analyses. We are phasing based on the pipeline derived from Andermann et al. 2018 (https://doi.org/10.1093/sysbio/syy039) and the Phyluce pipeline (https://phyluce.readthedocs.io/en/latest/tutorial-two.html)
 
 To phase your UCE data, you need to have individual-specific "reference" contigs against which to align your raw reads.  Generally speaking, you can create these individual-specific reference contigs at several stages of the phyluce_ pipeline, and the stage at which you choose to do this may depend on the analyses that you are running.  That said, I think that the best way to proceed uses edge-trimmed exploded alignments as your reference contigs, aligns raw reads to those, and uses the exploded alignments and raw reads to phase your data.
 
