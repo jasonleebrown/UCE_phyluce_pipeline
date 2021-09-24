@@ -290,7 +290,6 @@ With the assembly configuration file completed, we can now run Spades (note that
 phyluce_assembly_assemblo_spades \
     --conf assembly.conf \
     --output 3_spades-assemblies \
-    --clean \
     --memory 124 \
     --cores 19
 ```
