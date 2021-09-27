@@ -400,7 +400,7 @@ contigs:
 ### Making the assembly configuration file
 Note that this step uses the 'spades contigs' and the 'split-adapter-qaulity-trimmed' samples output from Illumiprocessor. 
 
-You can make the script with a simple Bash script. Start from base 'tutorial' folder.  Be sure to edit the 2 locations"/home/bender/Desktop/tutorial" to match your computer/path folder structure:
+You can make the script with a simple Bash script. Start from base 'tutorial' folder.  Be sure to edit the 2 locations"/home/bender/Desktop/tutorial" to match your computer/path folder structure.   **Proof this config file. Often a random non-sequence file will be added to sample list in both these config files.**
 
 ```
 cd 2_clean-fastq
@@ -423,7 +423,9 @@ phyluce_workflow --config phase_wf1.conf \
     --workflow mapping \
     --cores 12
 ```
-**NOTE BNG:** For 82 samples this part takes ~8 hours
+**NOTE BNG:** For 82 samples this part takes ~8 hours on Bender (using 12 cores)
+**NOTE JLB:** For 58 samples this part takes ~5 hours on Walle (using 35 cores).
+
 
 **Phasing Step 2: Mapping** 
 Before doing this step you need to make sure you have an edited pilon.py file.  To find the location of this file type "which pilon".  Open this up and look for the line with:
@@ -488,6 +490,8 @@ phyluce_workflow --config phase_wf2.conf \
     --cores 6
 ```
 **NOTE BNG:** After MUCH trial and error for my sample size of 82 I had to go through and locate the largest of my files and run those separately on 4 cores due to running out of memory. I also only ran about 10-12 samples at a time on 6 cores and had to transfer each group to an alternate storage off of bender and then at the end I put them all back in the same folder labeled phase_s2. This is the most panic inducing step due to the length of time, failure rate, and moving files around. Depending on the size of your samples and group size this step could take between ~2-8 days per group. 
+
+**NOTE JLB:** First attempt at 58 samples using all samples and 10 cores on Wall-E.  We will see if I run into memory issues.
 
 
 **NOTE BNG:** There is an issue with phased data being percieved as replicates (the .0.fasta and .1.fasta) that causes the locus matching step to fail and to say that the rest of the pipeline HATES the way phased reads are named is the understatement of the century. To avoid this and to be able to differeniate between your phased reads add -1A at the end for NAME.0.fasta and -2B at the end for NAME.1.fasta. Be warned that the following code is fairly crude but it gets the job done with little to no further sweat or tears.
