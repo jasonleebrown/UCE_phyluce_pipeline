@@ -1026,6 +1026,9 @@ rm -r muscle-nexus-75p
 ### Filtering by parsimony-informative sites
 Filtering by parsimony-informative sites (PIS) generally means you are filtering out loci that have below a certain number of PIS. Loci with low information content can bias your results so it's good to filter them out. To calculate how many PIS are in each locus, and perform various types of filtering, we will use an R script written by Brown lab alumnus [Connor French](https://github.com/connor-french) that makes use of the package [Phyloch](https://rdrr.io/github/fmichonneau/phyloch/man/phyloch-package.html). If you haven't already, download `pars_inform.R` from the `example-files` directory of this repository.
 
+JLB: Note on installing phyloch. Phyloch cannot be install via traditional manners. To install: Download Phyloch from: http://www.christophheibl.de/Rpackages.html.  Then activate Phyluce and turn on R (by typing "R" in terminal), the type:```install.packages("~/Downloads/phyloch_1.5-3.tar.gz", repos=NULL)```
+
+
 To use R in the terminal, you have to have it installed on your system. Then just type in `R`. Until you leave R, the terminal will now assume all of your commands are written in R, instead of Bash.
 
 Generally my procedure here is to simply open `pars_inform.R` in a text editor and copy-and-paste commands in chunks into the terminal. You will need to alter parts of the file to suit your needs. The first part of the file looks like this:
