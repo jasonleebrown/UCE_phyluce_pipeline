@@ -1009,9 +1009,15 @@ phyluce_align_get_only_loci_with_min_taxa \
 After using this command, we generate a new folder called `muscle-nexus-75p` (the 75p stands for 75 percent completeness). We filtered down from 2,019 to 1,665 loci. You can try other levels of completeness to see how it affects your retained-locus count.
 For instance, when I retain only loci possessed by 100% of taxa (e.g., all 6), I only retain 416 loci. Generally, as you increase the number of taxa, the odds of any locus being possessed by all of the taxa become lower. When I was working with >200 taxa in a previous project, a 100% complete matrix retained zero loci (meaning it was useless).
 
-**NOTE BNG:** If you receive an error it is likely due to not being supported on the version of phyluce you are using. If you are using version 1.7.1 switch back to the base phyluce (to refresh memory this was addressed at the very beginning)
 
-After filtering for completeness, we need to "clean up" the locus files. This can be done with the following command:
+After filtering for completeness, we need to "clean up" the locus files. This can be done with the following command (on version 1.7.1):
+```phyluce_align_remove_locus_name_from_files\
+    --alignments muscle-nexus-75p \
+    --output muscle-nexus-clean-75p \
+    --cores 19
+```
+
+**NOTE BNG:** If you receive an error it is likely due to not being supported on the version of phyluce you are using. If you are using version 1.7.1 switch back to the base phyluce (to refresh memory this was addressed at the very beginning)
 ```
 phyluce_align_remove_locus_name_from_nexus_lines \
     --alignments muscle-nexus-75p \
@@ -1026,7 +1032,7 @@ rm -r muscle-nexus-75p
 ### Filtering by parsimony-informative sites
 Filtering by parsimony-informative sites (PIS) generally means you are filtering out loci that have below a certain number of PIS. Loci with low information content can bias your results so it's good to filter them out. To calculate how many PIS are in each locus, and perform various types of filtering, we will use an R script written by Brown lab alumnus [Connor French](https://github.com/connor-french) that makes use of the package [Phyloch](https://rdrr.io/github/fmichonneau/phyloch/man/phyloch-package.html). If you haven't already, download `pars_inform.R` from the `example-files` directory of this repository.
 
-JLB: Note on installing phyloch. Phyloch cannot be install via traditional manners. To install: Download Phyloch from: http://www.christophheibl.de/Rpackages.html.  Then activate Phyluce and turn on R (by typing "R" in terminal), the type:```install.packages("~/Downloads/phyloch_1.5-3.tar.gz", repos=NULL)```
+**JLB: Note on installing phyloch. 10/2021** Phyloch cannot be install via traditional manners. To install: Download Phyloch from: http://www.christophheibl.de/Rpackages.html.  Then activate Phyluce and turn on R (by typing "R" in terminal), the type:```install.packages("~/Downloads/phyloch_1.5-3.tar.gz", repos=NULL)```
 
 
 To use R in the terminal, you have to have it installed on your system. Then just type in `R`. Until you leave R, the terminal will now assume all of your commands are written in R, instead of Bash.
