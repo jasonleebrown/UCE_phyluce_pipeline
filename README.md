@@ -38,6 +38,7 @@ PowerPoint Overview of NGS: [LINK](https://github.com/jasonleebrown/UCE_phyluce_
 - [Phylogenetic analysis](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#phylogenetic-analysis)
    - [Maximum likelihood analysis with RAxML](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#maximum-likelihood-analysis-with-raxml)
    - [Maximum likelihood analysis with IQ-TREE](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#maximum-likelihood-analysis-with-iq-tree)
+   - [SOWH Test topology test in SOWHAT](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sowh-test)
    - [Coalescent analysis with ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#coalescent-analysis-with-astral)
       - [Constructing gene trees with IQ-TREE for ASTRAL input](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#constructing-gene-trees-with-iq-tree-for-astral-input)
       - [Creating a mapping file for ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#creating-a-mapping-file-for-astral)
@@ -1314,6 +1315,20 @@ When the command is done running, the folder `muscle-nexus-iqtree-genetrees-75p_
 cat *.treefile > ../muscle-nexus-astral_3/gene_trees.newick
 ```
 This file is stored in the `muscle-nexus-astral_3` folder in `all`. It should contain a list of 385 trees. This is the main input for ASTRAL.
+
+### Maximum likelihood analysis with IQ-TREE
+To run a SOWH test, a simulation-based topology test.   Go to Wall-E (this doesn't work on Bender - I've wasted way too much time troubleshooting this.  Move on).   You need two things: an alignment in Phylip format and a constraint tree (see SOWH folder in example documents). I used Mesquite to convert a nexus file to Phylip format.  Mesquite is nice because you can specify length of text for taxon name. Often programs truncate individual ID because they convert to Phylip format allowing only 10 chracter filenames. I also use Mesquite to create a constraint tree - import a 'best tree' and then use the tree window to adjust it to reflect your alternative hypothesis (usualy a prior reslt that is different from yours).  
+
+In terminal navigate to the desktop folder 'sowhat' and type:
+
+```
+sowhat --constraint=H/H1.txt --aln=rani_a.phy --raxml_model=GTRGAMMA --dir=H1.output/run1c --name=H1 --reps=100 --rax='/usr/bin/raxmlHPC-PTHREADS -T 20'
+```
+The --reps specifies the number of replicates and the '--rax ... -T' specifies the number of cores to use.
+
+After 10 reps, a 'sowhat.results.txt' document will be written in output folder.  For large datasets this can take several hours.  Each test at 100 reps takes about 36 hours to complete for your example dataset.  
+
+
 #### Creating a mapping file for ASTRAL
 The next step is to create a mapping file that categorizes each of your samples by species, which allows ASTRAL to coalesce multiple samples of the same species into a single tip. Note that if your sample already has only one sample per species, you do not need a mapping file, and ASTRAL will correctly assume that that is the case.
 
