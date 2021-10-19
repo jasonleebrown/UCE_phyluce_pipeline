@@ -38,12 +38,12 @@ PowerPoint Overview of NGS: [LINK](https://github.com/jasonleebrown/UCE_phyluce_
 - [Phylogenetic analysis](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#phylogenetic-analysis)
    - [Maximum likelihood analysis with RAxML](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#maximum-likelihood-analysis-with-raxml)
    - [Maximum likelihood analysis with IQ-TREE](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#maximum-likelihood-analysis-with-iq-tree)
-   - [SOWH Test topology test in SOWHAT](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sowh-test)
+   - [SOWH topology test in SOWHAT](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#sowh-topology-test)
    - [Coalescent analysis with ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#coalescent-analysis-with-astral)
       - [Constructing gene trees with IQ-TREE for ASTRAL input](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#constructing-gene-trees-with-iq-tree-for-astral-input)
       - [Creating a mapping file for ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#creating-a-mapping-file-for-astral)
       - [Running ASTRAL](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-astral)
-      - [Bayesian analysis with BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#bayesian-analysis-with-beast)
+    - [Bayesian analysis with BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#bayesian-analysis-with-beast)
       - [Subsetting loci for BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#subsetting-loci-for-beast)
       - [Setting up a BEAST run with BEAUti](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#setting-up-a-beast-run-with-beauti)
       - [Running BEAST](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#running-beast)
@@ -1316,8 +1316,8 @@ cat *.treefile > ../muscle-nexus-astral_3/gene_trees.newick
 ```
 This file is stored in the `muscle-nexus-astral_3` folder in `all`. It should contain a list of 385 trees. This is the main input for ASTRAL.
 
-### Maximum likelihood analysis with IQ-TREE
-To run a SOWH test, a simulation-based topology test.   Go to Wall-E (this doesn't work on Bender - I've wasted way too much time troubleshooting this.  Move on).   You need two things: an alignment in Phylip format and a constraint tree (see SOWH folder in example documents). I used Mesquite to convert a nexus file to Phylip format.  Mesquite is nice because you can specify length of text for taxon name. Often programs truncate individual ID because they convert to Phylip format allowing only 10 chracter filenames. I also use Mesquite to create a constraint tree - import a 'best tree' and then use the tree window to adjust it to reflect your alternative hypothesis (usualy a prior reslt that is different from yours).  
+### SOWH topology test
+To run a SOWH test, a simulation-based topology test, go to Wall-E (this doesn't work on Bender - I've wasted way too much time troubleshooting this.  Move on).  You need two things: an alignment in Phylip format and a constraint tree (see SOWH folder in example documents). I used Mesquite to convert a nexus file to Phylip format.  Mesquite is nice because you can specify length of text for taxon name. Often programs truncate individual ID because they convert to Phylip format allowing only 10 chracter filenames. I also use Mesquite to create a constraint tree - import a 'best tree' and then use the tree window to adjust it to reflect your alternative hypothesis (usualy a prior reslt that is different from yours). Remember to collapse topologies outside/inside of constraint (see example files) 
 
 In terminal navigate to the desktop folder 'sowhat' and type:
 
