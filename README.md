@@ -53,6 +53,7 @@ PowerPoint Overview of NGS: [LINK](https://github.com/jasonleebrown/UCE_phyluce_
 - [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
 - [Convert Nexus to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-nexus-to-fasta-file)
 - [Convert Phylip to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-phylip-to-fasta-file)
+- [Machuruku - hacking a timetree file for input](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#hacking-machuruku-tree)
 - [Code graveyard](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#code-graveyard)
 
 ## Directory structure and example files
@@ -1733,6 +1734,11 @@ sed 's/ /&\n/' step2 > cat.rndSNP.fasta
 ```
 
 _____________________________________________________________________________________________________________________________________________
+### Hacking Muchruku treefile
+**Brute force method** Occasionally, for various reseasons - R stats and treefiles do not play well.   If your tree file is opening, but not displaying upper and lower confidence intervales, you have to option to manually input tree values.  See this excel file for details.
+
+
+
 
 ## Code graveyard
 Below are bits of code they we are not ready to completely purge, however it is no longer part of our central analyses pipelines. RIP
