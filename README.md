@@ -1735,7 +1735,7 @@ sed 's/ /&\n/' step2 > cat.rndSNP.fasta
 
 _____________________________________________________________________________________________________________________________________________
 ### Hacking Machuruku treefile
-**Brute force method** Occasionally, for various reseasons - R stats and treefiles do not play well.   If your tree file is opening, but not displaying the upper and lower confidence intervals, you have the option to manually input the missing CI values.  See [this Excel file](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/other_files/machuruku_manual_tree_input.xlsx) for details.
+**Brute force method** Occasionally, for various reasons R stats and treefiles do not play well.   If your tree file is opening, but not displaying the upper and lower confidence intervals, you have the option to manually input the missing CI values.  See [this Excel file](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/other_files/machuruku_manual_tree_input.xlsx) for details.
 
 
 
