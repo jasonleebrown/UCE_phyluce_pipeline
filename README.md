@@ -1734,7 +1734,7 @@ sed 's/ /&\n/' step2 > cat.rndSNP.fasta
 ```
 
 _____________________________________________________________________________________________________________________________________________
-### Hacking Muchruku treefile
+### Hacking Machuruku treefile
 **Brute force method** Occasionally, for various reseasons - R stats and treefiles do not play well.   If your tree file is opening, but not displaying upper and lower confidence intervales, you have to option to manually input tree values.  See this excel file for details.
 
 
