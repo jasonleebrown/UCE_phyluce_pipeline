@@ -53,7 +53,7 @@ PowerPoint Overview of NGS: [LINK](https://github.com/jasonleebrown/UCE_phyluce_
 - [Twomey Pipeline](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#twomey-pipeline)
 - [Convert Nexus to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-nexus-to-fasta-file)
 - [Convert Phylip to Fasta](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#convert-phylip-to-fasta-file)
-- [Machuruku - hacking a timetree file for input](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#hacking-machuruku-tree)
+- [Machuruku - hacking a timetree file for input](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#Hacking-Machuruku-treefile)
 - [Code graveyard](https://github.com/jasonleebrown/UCE_phyluce_pipeline/blob/master/README.md#code-graveyard)
 
 ## Directory structure and example files
